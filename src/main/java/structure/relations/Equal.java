@@ -1,6 +1,6 @@
-package relations;
+package structure.relations;
 
-import elements.Element;
+import structure.elements.Element;
 
 import java.util.ArrayList;
 import java.util.Comparator;

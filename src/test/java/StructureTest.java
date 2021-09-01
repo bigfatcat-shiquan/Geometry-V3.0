@@ -1,11 +1,14 @@
-import elements.*;
-import relations.Equal;
+import structure.elements.*;
+import structure.relations.Equal;
 
-public class Geometry3Test {
+/**
+ * 数据结构功能定义层测试篇
+ * */
+public class StructureTest {
 
     public static void main(String[] args) throws Exception {
 
-//        测试用例1，验证边、加和、乘积元素的使用正确
+        /*测试用例1，验证边、加和、乘积元素的使用正确*/
         Segment x1 = Segment.segment("A", "B");
         Segment x2 = Segment.segment("A", "C");
         Segment x3 = Segment.segment("C", "A");
@@ -39,26 +42,26 @@ public class Geometry3Test {
         System.out.print(z5 + "\n");
         System.out.print("\n");
 //        3AC+AB
-//        {elements.Segment@677327b6=3, elements.Segment@1540e19d=1}
-//        [elements.Segment@677327b6, elements.Segment@1540e19d]
+//        {structure.elements.Segment@677327b6=3, structure.elements.Segment@1540e19d=1}
+//        [structure.elements.Segment@677327b6, structure.elements.Segment@1540e19d]
 //        2AB+6AC
-//        {elements.Segment@677327b6=6, elements.Segment@1540e19d=2}
-//        [elements.Segment@677327b6, elements.Segment@1540e19d]
+//        {structure.elements.Segment@677327b6=6, structure.elements.Segment@1540e19d=2}
+//        [structure.elements.Segment@677327b6, structure.elements.Segment@1540e19d]
 //        true
-//        elements.Segment@1540e19d
-//        elements.Segment@677327b6
-//        elements.Segment@677327b6
+//        structure.elements.Segment@1540e19d
+//        structure.elements.Segment@677327b6
+//        structure.elements.Segment@677327b6
 //        (2AB+6AC)^2*AC
-//        {elements.Segment@677327b6=1, elements.SumUnits@14ae5a5=2}
-//        [elements.Segment@677327b6, elements.SumUnits@14ae5a5]
+//        {structure.elements.Segment@677327b6=1, structure.elements.SumUnits@14ae5a5=2}
+//        [structure.elements.Segment@677327b6, structure.elements.SumUnits@14ae5a5]
 //        (2AB+6AC)^2*AC
-//        {elements.Segment@677327b6=1, elements.SumUnits@14ae5a5=2}
-//        [elements.Segment@677327b6, elements.SumUnits@14ae5a5]
+//        {structure.elements.Segment@677327b6=1, structure.elements.SumUnits@14ae5a5=2}
+//        [structure.elements.Segment@677327b6, structure.elements.SumUnits@14ae5a5]
 //        true
-//        elements.MultiplyUnits@7f31245a
-//        elements.MultiplyUnits@7f31245a
+//        structure.elements.MultiplyUnits@7f31245a
+//        structure.elements.MultiplyUnits@7f31245a
 
-//        测试用例2，验证角、角度、加和元素的使用正确
+        /*测试用例2，验证角、角度、加和元素的使用正确*/
         Angle a1 = Angle.angle("C", "B", "A");
         Angle a2 = Angle.angle("D", "B", "A");
         Angle a3 = Angle.angle("A", "B", "D");
@@ -94,28 +97,28 @@ public class Geometry3Test {
         System.out.print(s4.equals(s5) + "\n");
         System.out.print("\n");
 //        3∠ABD+∠ABC
-//        {elements.Angle@6d6f6e28=1, elements.Angle@135fbaa4=3}
-//        [elements.Angle@6d6f6e28, elements.Angle@135fbaa4]
+//        {structure.elements.Angle@6d6f6e28=1, structure.elements.Angle@135fbaa4=3}
+//        [structure.elements.Angle@6d6f6e28, structure.elements.Angle@135fbaa4]
 //        2∠ABC+6∠ABD
-//        {elements.Angle@6d6f6e28=2, elements.Angle@135fbaa4=6}
-//        [elements.Angle@6d6f6e28, elements.Angle@135fbaa4]
+//        {structure.elements.Angle@6d6f6e28=2, structure.elements.Angle@135fbaa4=6}
+//        [structure.elements.Angle@6d6f6e28, structure.elements.Angle@135fbaa4]
 //        true
-//        elements.Angle@6d6f6e28
-//        elements.Angle@135fbaa4
-//        elements.Angle@135fbaa4
-//        elements.Degree@45ee12a7
-//        elements.Degree@45ee12a7
+//        structure.elements.Angle@6d6f6e28
+//        structure.elements.Angle@135fbaa4
+//        structure.elements.Angle@135fbaa4
+//        structure.elements.Degree@45ee12a7
+//        structure.elements.Degree@45ee12a7
 //        true
 //        true
 //        180°+2∠ABC+6∠ABD
-//        {elements.Degree@45ee12a7=1, elements.Angle@6d6f6e28=2, elements.Angle@135fbaa4=6}
-//        [elements.Degree@45ee12a7, elements.Angle@6d6f6e28, elements.Angle@135fbaa4]
+//        {structure.elements.Degree@45ee12a7=1, structure.elements.Angle@6d6f6e28=2, structure.elements.Angle@135fbaa4=6}
+//        [structure.elements.Degree@45ee12a7, structure.elements.Angle@6d6f6e28, structure.elements.Angle@135fbaa4]
 //        180°+2∠ABC+6∠ABD
-//        {elements.Degree@45ee12a7=1, elements.Angle@6d6f6e28=2, elements.Angle@135fbaa4=6}
-//        [elements.Degree@45ee12a7, elements.Angle@6d6f6e28, elements.Angle@135fbaa4]
+//        {structure.elements.Degree@45ee12a7=1, structure.elements.Angle@6d6f6e28=2, structure.elements.Angle@135fbaa4=6}
+//        [structure.elements.Degree@45ee12a7, structure.elements.Angle@6d6f6e28, structure.elements.Angle@135fbaa4]
 //        true
 
-//        测试用例3，验证元素类附属方法的正确
+        /*测试用例3，验证元素类附属方法的正确*/
         System.out.print(x1.isComplex() + "\n");
         System.out.print(z1.isComplex() + "\n");
         System.out.print(x1.getLength() + "\n");
@@ -140,7 +143,7 @@ public class Geometry3Test {
 //        [A, C]
 //        180
 
-//        测试用例4，验证复合元素类相关附属方法的正确
+        /*测试用例4，验证复合元素类相关附属方法的正确*/
         System.out.print(x1.isSubOf(z1) + "\n");
         System.out.print(z1.isSubOf(z2) + "\n");
         System.out.print(z2.isSubOf(z4) + "\n");
@@ -189,7 +192,7 @@ public class Geometry3Test {
 //        true
 //        true
 
-//        测试用例5，验证等量关系类相关附属方法的正确
+        /*测试用例5，验证等量关系类相关附属方法的正确*/
         Equal e1 = Equal.equal(a1, a2);
         Equal e2 = Equal.equal(a1, a4);
         Equal e3 = Equal.equal(a1, a5);
@@ -205,20 +208,21 @@ public class Geometry3Test {
         System.out.print(e2.equals(e3) + "\n");
         System.out.print(e2.getInnerSetOf(e3) + "\n");
         System.out.print(e2.getExceptSetOf(e3) + "\n");
+        System.out.print(e1.isContainedOf(e1) + "\n");
+        System.out.print(e2.isContainedOf(Equal.equal(e2.getInnerSetOf(e3))) + "\n");
 //        ∠ABC=∠ABD
 //        180°=∠ABC
 //        180°=∠ABC
-//        [elements.Angle@6d6f6e28, elements.Angle@135fbaa4]
-//        [elements.Angle@6d6f6e28, elements.Degree@45ee12a7]
-//        [elements.Angle@6d6f6e28, elements.Degree@45ee12a7]
-//        [elements.Angle@135fbaa4]
-//        [elements.Angle@135fbaa4]
-//        [elements.Angle@6d6f6e28]
+//        [structure.elements.Angle@6d6f6e28, structure.elements.Angle@135fbaa4]
+//        [structure.elements.Angle@6d6f6e28, structure.elements.Degree@45ee12a7]
+//        [structure.elements.Angle@6d6f6e28, structure.elements.Degree@45ee12a7]
+//        [structure.elements.Angle@135fbaa4]
+//        [structure.elements.Angle@135fbaa4]
+//        [structure.elements.Angle@6d6f6e28]
 //        true
-//        [elements.Angle@6d6f6e28, elements.Degree@45ee12a7]
+//        [structure.elements.Angle@6d6f6e28, structure.elements.Degree@45ee12a7]
 //        []
-
-
+//        2*true
 
     }
 

@@ -1,4 +1,4 @@
-package elements;
+package structure.elements;
 
 import java.util.HashMap;
 
