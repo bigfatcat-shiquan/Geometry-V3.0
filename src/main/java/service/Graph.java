@@ -36,10 +36,10 @@ public class Graph {
     private final HashSet<Equal> angle_equals_set;
 
     /**可以组成的三角形的集合：这个图上的任意不共线的三个点纳入该集合*/
-    private HashSet<HashSet<String>> triangles_set;
+    private final HashSet<HashSet<String>> triangles_set;
 
     /**可以组成的三点共线的集合：这个图上的任意共线的三个点纳入该集合*/
-    private HashSet<String[]> collinear_set;
+    private final HashSet<String[]> collinear_set;
 
     /**定义图对象的构造函数*/
     public Graph(String graph_name) {
@@ -176,8 +176,15 @@ public class Graph {
 
     /**
      * 进行推导：
+     * 参数1，deduce_no，意义为指示本次推导是第几批次，如deduce_no=1，说明是该图对象进行第一次推导，如=2，说明是第二次推导
+     * 参数2，max_complex_len，限制推导涉及的复合元素的最大长度，机器自动推导经常会耗费时间推导冗长表达式，诸如∠1+∠2+∠3+∠4+...=180°
      * */
-    public void deduceByAll(Integer deduce_no) {
+    public void deduceByAll(Integer deduce_no, Integer max_complex_len) throws Exception {
+        if (deduce_no == 1) {
+            this.deduceByBasicSpace();
+        }
+        this.deduceByEquivalenceTransform("seg", max_complex_len);
+        this.deduceByEquivalenceTransform("ang", max_complex_len);
 
     }
 
@@ -191,7 +198,7 @@ public class Graph {
      * 该方法在图中所有点位置确定之后，仅调用一次即可推导出所有的结论，因此如果没有新增辅助点，该方法仅需调用一次
      * */
     public void deduceByBasicSpace() throws Exception {
-        // 先计算确定哪些三点集合是共线的，哪些三点集合是不共线可以组成三角形的
+        // 先计算确定哪些三点组是共线的，哪些三点组是不共线可以组成三角形的
         HashSet<HashSet<String>> all_three_point_combinations = this.getThreePointCombinations();
         this.triangles_set.addAll(all_three_point_combinations);
         for (HashSet<String> combination_1 : all_three_point_combinations) {
@@ -202,13 +209,14 @@ public class Graph {
             }
         }
         // 遍历任意共线的三点组，运用规则1和规则2
+        HashSet<String> out_points;
         for (String[] collinear_array : this.collinear_set) {
             // 规则1
             this.addEqual("seg", Segment.segment(collinear_array[0], collinear_array[2]),
                     SumUnits.sumUnits(Segment.segment(collinear_array[0], collinear_array[1]),
                             Segment.segment(collinear_array[1], collinear_array[2])));
             // 规则2
-            HashSet<String> out_points = new HashSet<>(this.points_set);
+            out_points = new HashSet<>(this.points_set);
             Arrays.asList(collinear_array).forEach(out_points::remove);
             for (String out_point : out_points) {
                 if (this.isCollinear(new HashSet<>(Arrays.asList(out_point,
@@ -225,8 +233,98 @@ public class Graph {
                 }
             }
         }
-        //
+        // 遍历任意不共线的三点组，运用规则3
+        HashSet<String> the_combination;
+        String[] points_aside;
+        for (HashSet<String> combination_1 : this.triangles_set) {
+            out_points = new HashSet<>(this.points_set);
+            out_points.removeAll(combination_1);
+            for (String point_vertex : combination_1) {
+                the_combination = new HashSet<>(combination_1);
+                the_combination.remove(point_vertex);
+                points_aside = the_combination.toArray(new String[2]);
+                for (String out_point : out_points) {
+                    double degree_value_1 = this.getDegreeValue(out_point, point_vertex, points_aside[0]);
+                    double degree_value_2 = this.getDegreeValue(out_point, point_vertex, points_aside[1]);
+                    double degree_sum = this.getDegreeValue(points_aside[0], point_vertex, points_aside[1]);
+                    if (degree_value_1 > 5 && degree_value_2 > 5 &&
+                            abs(degree_sum - degree_value_1 - degree_value_2) < 2){
+                        this.addEqual("ang", Angle.angle(points_aside[0], point_vertex, points_aside[1]),
+                                SumUnits.sumUnits(Angle.angle(out_point, point_vertex, points_aside[0]),
+                                                  Angle.angle(out_point, point_vertex, points_aside[1])));
+                    }
+                }
+            }
+        }
+    }
 
+    /**
+     * 推导方法二：依据数学等式的等价转化规则
+     * 主要规则内容如下：
+     * 1，等价替换：假设有边AB+BM=MN，BM=BC，则可以得出AB+BM=AB+BC=MN
+     * 2，等价抵消：假设有边AB+BM=AB+BC，则可以得出BM=BC
+     * 3，乘法分配律：假设有(AE+EB)*AC=AB*AC，则可以得出AE*AC+EB*AC=AB*AC
+     * 4，乘法结合律：假设有AE*AC+EB*AC=AB*AC，则可以得出(AE+EB)*AC=AB*AC
+     * 该方法属于通过基本的代数等式运算发掘新的等量关系，虽然它们看似非常简单，属于常识性的东西，但计算机是不知道的，需要遍历寻找并挖掘
+     * */
+    public void deduceByEquivalenceTransform(String equal_type, Integer max_complex_len) throws Exception {
+        // 判断是等价发掘边类型的等量关系，还是角类型的
+        HashSet<Equal> the_equals_set;
+        switch (equal_type) {
+            case "seg":
+                the_equals_set = this.segment_equals_set;
+                break;
+            case "ang":
+                the_equals_set = this.angle_equals_set;
+                break;
+            default:
+                throw new IllegalStateException("输入的等量关系类型既不是边类型也不是角类型！" + equal_type);
+        }
+        // 推导过程中最复杂耗时的模块，最难优化的地方：遍历所有已知的等量关系内的所有元素，寻找满足上述4条等价转化规则的情况
+        // 遍历所有的等式中的所有复合元素
+        for (Equal equal_1 : the_equals_set) {
+            for (Element complex_unit_1 : equal_1.getUnits_set()) {
+                if (!complex_unit_1.isComplex()) continue;
+                // 寻找满足规则1，可以进行等价替换的情况
+                // 比如有一个AB+CD+EF，循环选取它的下属元素，比如第一个选取AB
+                for (Element complex_unit_1_sub_1 : ((ComplexElement) complex_unit_1).getSubUnits()) {
+                    // 遍历所有的等式，寻找哪个等式里面含有AB
+                    for (Equal equal_2 : the_equals_set) {
+                        if (equal_2.getUnits_set().contains(complex_unit_1_sub_1)) {
+                            // 比如找到了一个等式为AB=MN=PQ，那么这里面的MN、PQ均可以替换掉上面AB+CD+EF中的AB，组成新的加和元素
+                            // 然后将新的加和元素和旧的加和元素的相等关系，即MN+CD+EF=PQ+CD+EF=AB+CD+EF添加进图对象中
+                            for (Element equal_2_unit_1 : equal_2.getExceptSetOf(complex_unit_1_sub_1)) {
+                                ComplexElement new_complex_unit;
+                                if (complex_unit_1 instanceof SumUnits) {
+                                    new_complex_unit = SumUnits.sumUnits(equal_2_unit_1,
+                                            ((SumUnits) complex_unit_1).getExceptOf(complex_unit_1_sub_1));
+                                } else {
+                                    new_complex_unit = MultiplyUnits.multiplyUnits(equal_2_unit_1,
+                                            ((ComplexElement) complex_unit_1).getExceptOf(complex_unit_1_sub_1));
+                                }
+                                // 判断新复合元素的长度有无超过限制参数的要求
+                                if (new_complex_unit.getLength() > max_complex_len) continue;
+                                this.addEqual(equal_type, complex_unit_1, new_complex_unit);
+                            }
+                        }
+                    }
+                }
+                // 寻找满足规则2，可以进行等价抵消的情况
+                // 遍历当前这个复合元素所在的等式，寻找另一个复合元素，如果两个之间有重合部分则可适用等价抵消规则
+                for (Element complex_unit_2 : equal_1.getExceptSetOf(complex_unit_1)) {
+                    if (!complex_unit_2.isSameClassOf(complex_unit_1)) continue;
+                    Element inner_unit = ((ComplexElement) complex_unit_1).getInnerOf((ComplexElement) complex_unit_2);
+                    if (inner_unit != null && !complex_unit_1.equals(complex_unit_2)) {
+                        this.addEqual(equal_type, ((ComplexElement) complex_unit_1).getExceptOf(inner_unit),
+                                                  ((ComplexElement) complex_unit_2).getExceptOf(inner_unit));
+                    }
+                }
+                // 寻找满足规则3，可以进行乘法分配律的情况
+
+                // 寻找满足规则4，可以进行乘法结合律的情况
+
+            }
+        }
     }
 
     /**工具：获取该图对象中所有的三点组合，例如该图中有4个点，A、B、C、D，则返回一个集合，包含ABC、ABD、ACD、BCD*/
@@ -284,16 +382,19 @@ public class Graph {
 
     /**工具：判断指定的三点集合在该图对象中是否共线，若共线，则依次返回三个点组成的数组，若不共线，则返回三个null组成的数组*/
     public String[] isCollinear(HashSet<String> one_combination) {
+        HashSet<String> the_combination;
+        String[] points_aside;
+        double dis1, dis2;
         // 遍历三个点，假设一个点作为中轴点，中轴点的意思为假设A、B、C依次在一条直线上，那么B即为中轴点
         for (String point_vertex : one_combination) {
-            HashSet<String> points_aside = new HashSet<>(one_combination);
-            points_aside.remove(point_vertex);
-            String[] point_aside = points_aside.toArray(new String[2]);
+            the_combination = new HashSet<>(one_combination);
+            the_combination.remove(point_vertex);
+            points_aside = the_combination.toArray(new String[2]);
             // 计算和判断两端的点之间距离是否等于两端的点到中轴点的距离之和，如果是，则说明共线，按顺序返回此三点数组
-            double dis1 = getDistance(point_aside[0], point_aside[1]);
-            double dis2 = getDistance(point_vertex, point_aside[0]) + getDistance(point_vertex, point_aside[1]);
+            dis1 = getDistance(points_aside[0], points_aside[1]);
+            dis2 = getDistance(point_vertex, points_aside[0]) + getDistance(point_vertex, points_aside[1]);
             if (abs(dis1 - dis2) < 0.02) {
-                return new String[]{point_aside[0], point_vertex, point_aside[1]};
+                return new String[]{points_aside[0], point_vertex, points_aside[1]};
             }
         }
         return new String[]{null, null, null};
