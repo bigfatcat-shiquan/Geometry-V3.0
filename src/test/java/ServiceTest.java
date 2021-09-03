@@ -57,15 +57,24 @@ public class ServiceTest {
         System.out.print(t1.getDistance("C", "D") + "\n");
         System.out.print(Arrays.toString(t1.isCollinear(new HashSet<>(Arrays.asList("C", "D", "E")))) + "\n");
         System.out.print(Arrays.toString(t1.isCollinear(new HashSet<>(Arrays.asList("B", "D", "E")))) + "\n");
+        System.out.print("\n");
 //        10个三点集合
 //        2.0
 //        [D, C, E]
 //        [null, null, null]
 
 
-
         /*测试用例3，测试Graph图类推导功能模块，通过已知等量关系发现更多等量关系的功能正确*/
-
+        // 测试基本空间推导功能
+        Graph t2 = new Graph("中国联赛第二题");
+        t2.addPoint("A", 0.0, 0.0);
+        t2.addPoint("B", 3.5, -1.5);
+        t2.addPoint("C", 3.5, 2.5);
+        t2.addPoint("D", 3.5, 0.0);
+        t2.deduceByBasicSpace();
+        t2.displayGraphInfo();
+        System.out.print("\n");
+        // 测试等价转化推导功能
 
 
     }

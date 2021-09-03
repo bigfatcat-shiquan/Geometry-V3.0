@@ -175,6 +175,37 @@ public class Graph {
     }
 
     /**
+     * 打印展示该图对象的当前时刻信息，包括
+     * 1.当前图对象的名称，所有点坐标信息
+     * 2.当前图对象的所有共线三点组、不共线三点组（三角形）
+     * 3.当前图对象的所有边等量关系式、所有角等量关系式
+     * */
+    public void displayGraphInfo() {
+        System.out.print("图对象名称： " + this.graph_name + "\n");
+        System.out.print("点个数： " + this.points_set.size() + "\n");
+        for (String point : this.points_set) {
+            System.out.print("    " + point + "  (" + this.getPoint_location_x(point) + ", "
+                                                    + this.getPoint_location_y(point) + ")\n");
+        }
+        System.out.print("共线三点组个数:  " + this.collinear_set.size() + "\n");
+        for (String[] three_point_combination : this.collinear_set) {
+            System.out.print("    " + Arrays.toString(three_point_combination) + "\n");
+        }
+        System.out.print("不共线三点组个数:  " + this.triangles_set.size() + "\n");
+        for (HashSet<String> three_point_combination : this.triangles_set) {
+            System.out.print("    " + three_point_combination + "\n");
+        }
+        System.out.print("已发现的边相等关系式个数:  " + this.segment_equals_set.size() + "\n");
+        for (Equal equal : this.segment_equals_set) {
+            System.out.print("    " + equal.getGeometry_key() + "\n");
+        }
+        System.out.print("已发现的角相等关系式个数:  " + this.angle_equals_set.size() + "\n");
+        for (Equal equal : this.angle_equals_set) {
+            System.out.print("    " + equal.getGeometry_key() + "\n");
+        }
+    }
+
+    /**
      * 进行推导：
      * 参数1，deduce_no，意义为指示本次推导是第几批次，如deduce_no=1，说明是该图对象进行第一次推导，如=2，说明是第二次推导
      * 参数2，max_complex_len，限制推导涉及的复合元素的最大长度，机器自动推导经常会耗费时间推导冗长表达式，诸如∠1+∠2+∠3+∠4+...=180°
@@ -320,7 +351,15 @@ public class Graph {
                     }
                 }
                 // 寻找满足规则3，可以进行乘法分配律的情况
-
+                if (complex_unit_1 instanceof MultiplyUnits) {
+                    for (Element complex_unit_1_sub_1 : ((MultiplyUnits) complex_unit_1).getSubUnits()) {
+                        if (complex_unit_1_sub_1 instanceof SumUnits) {
+                            Element complex_unit_1_sub_2 = ((MultiplyUnits) complex_unit_1).getExceptOf(
+                                                                                        complex_unit_1_sub_1);
+                            
+                        }
+                    }
+                }
                 // 寻找满足规则4，可以进行乘法结合律的情况
 
             }
