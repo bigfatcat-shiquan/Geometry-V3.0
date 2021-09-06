@@ -302,10 +302,10 @@ public class Graph {
         HashSet<Equal> the_equals_set;
         switch (equal_type) {
             case "seg":
-                the_equals_set = this.segment_equals_set;
+                the_equals_set = new HashSet<>(this.segment_equals_set);
                 break;
             case "ang":
-                the_equals_set = this.angle_equals_set;
+                the_equals_set = new HashSet<>(this.angle_equals_set);
                 break;
             default:
                 throw new IllegalStateException("输入的等量关系类型既不是边类型也不是角类型！" + equal_type);

@@ -92,6 +92,7 @@ public class ServiceTest {
         t2.addEqual("seg", x3, x7);
         t2.deduceByEquivalenceTransform("seg", 4);
         t2.deduceByEquivalenceTransform("seg", 4);
+        t2.deduceByEquivalenceTransform("seg", 4);
         t2.displayGraphInfo();
         System.out.print("\n");
     }
