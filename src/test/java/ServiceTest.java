@@ -1,5 +1,8 @@
 import service.Graph;
+import structure.elements.Element;
+import structure.elements.MultiplyUnits;
 import structure.elements.Segment;
+import structure.elements.SumUnits;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -74,9 +77,23 @@ public class ServiceTest {
         t2.deduceByBasicSpace();
         t2.displayGraphInfo();
         System.out.print("\n");
-        // 测试等价转化推导功能
-
-
+        // 测试等价转化推导功能, AB*(CD+MN)+PQ*(CD+MN)+BQ=BQ+AQ, MN=NP
+        Element x1 = Segment.segment("A", "B");
+        Element x2 = Segment.segment("C", "D");
+        Element x3 = Segment.segment("M", "N");
+        Element x4 = Segment.segment("P", "Q");
+        Element x5 = Segment.segment("B", "Q");
+        Element x6 = Segment.segment("A", "Q");
+        Element x7 = Segment.segment("N", "P");
+        Element s1 = SumUnits.sumUnits(MultiplyUnits.multiplyUnits(x1, SumUnits.sumUnits(x2, x3)),
+                                       MultiplyUnits.multiplyUnits(x4, SumUnits.sumUnits(x2, x3)));
+        t2 = new Graph("中国联赛第二题");
+        t2.addEqual("seg", SumUnits.sumUnits(x5, s1), SumUnits.sumUnits(x5, x6));
+        t2.addEqual("seg", x3, x7);
+        t2.deduceByEquivalenceTransform("seg", 4);
+        t2.deduceByEquivalenceTransform("seg", 4);
+        t2.displayGraphInfo();
+        System.out.print("\n");
     }
 
 }

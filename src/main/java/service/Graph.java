@@ -3,10 +3,8 @@ package service;
 import structure.elements.*;
 import structure.relations.Equal;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
+import java.util.Map.Entry;
 
 import static java.lang.Math.*;
 
@@ -297,6 +295,7 @@ public class Graph {
      * 3，乘法分配律：假设有(AE+EB)*AC=AB*AC，则可以得出AE*AC+EB*AC=AB*AC
      * 4，乘法结合律：假设有AE*AC+EB*AC=AB*AC，则可以得出(AE+EB)*AC=AB*AC
      * 该方法属于通过基本的代数等式运算发掘新的等量关系，虽然它们看似非常简单，属于常识性的东西，但计算机是不知道的，需要遍历寻找并挖掘
+     * 备注：该方法是整个程序中最耗时、也最容易遗漏情况的环节，目前虽然尽可能考虑到了所有情况，但仍可能存在遍历未覆盖到的情况
      * */
     public void deduceByEquivalenceTransform(String equal_type, Integer max_complex_len) throws Exception {
         // 判断是等价发掘边类型的等量关系，还是角类型的
@@ -317,13 +316,13 @@ public class Graph {
             for (Element complex_unit_1 : equal_1.getUnits_set()) {
                 if (!complex_unit_1.isComplex()) continue;
                 // 寻找满足规则1，可以进行等价替换的情况
-                // 比如有一个AB+CD+EF，循环选取它的下属元素，比如第一个选取AB
+                // 比如有一个AB*MN+CD*EF，循环选取它的下属元素，比如第一个选取AB*MN
                 for (Element complex_unit_1_sub_1 : ((ComplexElement) complex_unit_1).getSubUnits()) {
-                    // 遍历所有的等式，寻找哪个等式里面含有AB
+                    // 遍历所有的等式，寻找哪个等式里面含有AB*MN
                     for (Equal equal_2 : the_equals_set) {
                         if (equal_2.getUnits_set().contains(complex_unit_1_sub_1)) {
-                            // 比如找到了一个等式为AB=MN=PQ，那么这里面的MN、PQ均可以替换掉上面AB+CD+EF中的AB，组成新的加和元素
-                            // 然后将新的加和元素和旧的加和元素的相等关系，即MN+CD+EF=PQ+CD+EF=AB+CD+EF添加进图对象中
+                            // 比如找到了一个等式为AB*MN=BC*PQ，那么这里面的BC*PQ可以替换掉上面AB*MN+CD*EF中的AB*MN，组成新的加和元素
+                            // 然后将新的加和元素和旧的加和元素的相等关系，即AB*MN+CD*EF=BC*PQ+CD*EF添加进图对象中
                             for (Element equal_2_unit_1 : equal_2.getExceptSetOf(complex_unit_1_sub_1)) {
                                 ComplexElement new_complex_unit;
                                 if (complex_unit_1 instanceof SumUnits) {
@@ -339,9 +338,36 @@ public class Graph {
                             }
                         }
                     }
+                    // 还可以寻找哪个等式里含有AB*MN的下属元素AB或MN
+                    if (!complex_unit_1_sub_1.isComplex()) continue;
+                    for (Element complex_unit_1_sub_1_sub_1 : ((ComplexElement) complex_unit_1_sub_1).getSubUnits()) {
+                        // 遍历所有的等式，寻找哪个等式里面含有AB或MN，后续过程与前面相同
+                        for (Equal equal_2 : the_equals_set) {
+                            if (equal_2.getUnits_set().contains(complex_unit_1_sub_1_sub_1)) {
+                                for (Element equal_2_unit_1 : equal_2.getExceptSetOf(complex_unit_1_sub_1_sub_1)) {
+                                    ComplexElement new_complex_unit;
+                                    Element excepted_unit = ((ComplexElement) complex_unit_1_sub_1).getExceptOf(
+                                                                                        complex_unit_1_sub_1_sub_1);
+                                    if (complex_unit_1 instanceof SumUnits) {
+                                        new_complex_unit = SumUnits.sumUnits(
+                                                ((SumUnits) complex_unit_1).getExceptOf(complex_unit_1_sub_1),
+                                                MultiplyUnits.multiplyUnits(equal_2_unit_1, excepted_unit)
+                                        );
+                                    } else {
+                                        new_complex_unit = MultiplyUnits.multiplyUnits(
+                                                ((ComplexElement) complex_unit_1).getExceptOf(complex_unit_1_sub_1),
+                                                SumUnits.sumUnits(equal_2_unit_1, excepted_unit)
+                                        );
+                                    }
+                                    if (new_complex_unit.getLength() > max_complex_len) continue;
+                                    this.addEqual(equal_type, complex_unit_1, new_complex_unit);
+                                }
+                            }
+                        }
+                    }
                 }
                 // 寻找满足规则2，可以进行等价抵消的情况
-                // 遍历当前这个复合元素所在的等式，寻找另一个复合元素，如果两个之间有重合部分则可适用等价抵消规则
+                // 遍历当前这个复合元素所在的等式，寻找另一个相同类型的复合元素，如果两个之间有重合部分则可适用等价抵消规则
                 for (Element complex_unit_2 : equal_1.getExceptSetOf(complex_unit_1)) {
                     if (!complex_unit_2.isSameClassOf(complex_unit_1)) continue;
                     Element inner_unit = ((ComplexElement) complex_unit_1).getInnerOf((ComplexElement) complex_unit_2);
@@ -350,18 +376,85 @@ public class Graph {
                                                   ((ComplexElement) complex_unit_2).getExceptOf(inner_unit));
                     }
                 }
+                // 规则3和规则4一般情况只有边等量关系会出现，角或角度一般不会出现乘积
+                if (equal_type.equals("ang")) continue;
                 // 寻找满足规则3，可以进行乘法分配律的情况
+                // 寻找类似AC*(AE+EB)或AC*(AE+EB)+...这样的复合元素结构
                 if (complex_unit_1 instanceof MultiplyUnits) {
                     for (Element complex_unit_1_sub_1 : ((MultiplyUnits) complex_unit_1).getSubUnits()) {
                         if (complex_unit_1_sub_1 instanceof SumUnits) {
                             Element complex_unit_1_sub_2 = ((MultiplyUnits) complex_unit_1).getExceptOf(
                                                                                         complex_unit_1_sub_1);
-                            
+                            HashMap<Element, Integer> temp = ((SumUnits) complex_unit_1_sub_1).getUnit_counts();
+                            HashMap<Element, Integer> result_unit_counts = new HashMap<>();
+                            for (Entry<Element, Integer> temp_entry : temp.entrySet()) {
+                                result_unit_counts.put(MultiplyUnits.multiplyUnits(complex_unit_1_sub_2,
+                                                                    temp_entry.getKey()), temp_entry.getValue());
+                            }
+                            SumUnits new_complex_unit = SumUnits.sumUnits(result_unit_counts);
+                            this.addEqual(equal_type, complex_unit_1, new_complex_unit);
+                        }
+                    }
+                } else if (complex_unit_1 instanceof SumUnits) {
+                    // 如果是AC*(AE+EB)+...这样的结构，需要把符合规则3的乘积的那部分单独拎出来
+                    for (Element complex_unit_1_sub : ((SumUnits) complex_unit_1).getSubUnits()) {
+                        if (!(complex_unit_1_sub instanceof MultiplyUnits)) continue;
+                        for (Element complex_unit_1_sub_sub_1 : ((MultiplyUnits) complex_unit_1_sub).getSubUnits()) {
+                            if (complex_unit_1_sub_sub_1 instanceof SumUnits) {
+                                Element complex_unit_1_sub_sub_2 = ((MultiplyUnits) complex_unit_1_sub).getExceptOf(
+                                                                                            complex_unit_1_sub_sub_1);
+                                HashMap<Element, Integer> temp = ((SumUnits) complex_unit_1_sub_sub_1).getUnit_counts();
+                                HashMap<Element, Integer> result_unit_counts = new HashMap<>();
+                                for (Entry<Element, Integer> temp_entry : temp.entrySet()) {
+                                    result_unit_counts.put(MultiplyUnits.multiplyUnits(complex_unit_1_sub_sub_2,
+                                            temp_entry.getKey()), temp_entry.getValue());
+                                }
+                                SumUnits new_complex_unit = SumUnits.sumUnits(result_unit_counts);
+                                Element excepted_unit = ((SumUnits) complex_unit_1).getExceptOf(complex_unit_1_sub);
+                                this.addEqual(equal_type, complex_unit_1_sub, new_complex_unit);
+                                this.addEqual(equal_type, complex_unit_1, SumUnits.sumUnits(excepted_unit,
+                                                                                            new_complex_unit));
+                            }
                         }
                     }
                 }
                 // 寻找满足规则4，可以进行乘法结合律的情况
-
+                // 寻找AE*AC+EB*AC+...这样的复合元素结构
+                if (complex_unit_1 instanceof SumUnits) {
+                    for (Element complex_unit_1_sub_1 : ((SumUnits) complex_unit_1).getSubUnits()) {
+                        //遍历这个复合元素的下属元素，寻找有无乘积元素
+                        if (!(complex_unit_1_sub_1 instanceof MultiplyUnits)) continue;
+                        // 比如找到了这个复合元素其中有一项为一个乘积元素AE*AC，那么求剩下的部分
+                        Element complex_unit_1_sub_2 = ((SumUnits) complex_unit_1).getExceptOf(complex_unit_1_sub_1);
+                        // 检测剩下的部分的结构，是否同样含有AE或AC可以满足乘法结合律的情况
+                        if (complex_unit_1_sub_2 instanceof SumUnits) {
+                            for (Element complex_unit_1_sub_2_sub : ((SumUnits) complex_unit_1_sub_2).getSubUnits()) {
+                                if (complex_unit_1_sub_2_sub instanceof MultiplyUnits
+                                        && !complex_unit_1_sub_2_sub.equals(complex_unit_1_sub_1)) {
+                                    Element inner_unit = ((MultiplyUnits) complex_unit_1_sub_1).getInnerOf(
+                                            (MultiplyUnits) complex_unit_1_sub_2_sub);
+                                    if (inner_unit == null) continue;
+                                    Element excepted_unit = ((SumUnits) complex_unit_1_sub_2).getExceptOf(
+                                            complex_unit_1_sub_2_sub);
+                                    Element new_complex_unit = SumUnits.sumUnits(excepted_unit,
+                                            MultiplyUnits.multiplyUnits(inner_unit, SumUnits.sumUnits(
+                                                    ((MultiplyUnits) complex_unit_1_sub_1).getExceptOf(inner_unit),
+                                                    ((MultiplyUnits) complex_unit_1_sub_2_sub).getExceptOf(inner_unit)
+                                            )));
+                                    this.addEqual(equal_type, complex_unit_1, new_complex_unit);
+                                }
+                            }
+                        } else if (complex_unit_1_sub_2 instanceof MultiplyUnits) {
+                            Element inner_unit = ((MultiplyUnits) complex_unit_1_sub_1).getInnerOf(
+                                    (MultiplyUnits) complex_unit_1_sub_2);
+                            if (complex_unit_1_sub_1.equals(complex_unit_1_sub_2) || inner_unit == null) continue;
+                            Element new_complex_unit = MultiplyUnits.multiplyUnits(inner_unit,
+                                    SumUnits.sumUnits(((MultiplyUnits) complex_unit_1_sub_1).getExceptOf(inner_unit),
+                                            ((MultiplyUnits) complex_unit_1_sub_2).getExceptOf(inner_unit)));
+                            this.addEqual(equal_type, complex_unit_1, new_complex_unit);
+                        }
+                    }
+                }
             }
         }
     }
