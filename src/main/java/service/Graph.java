@@ -214,7 +214,8 @@ public class Graph {
         }
         this.deduceByEquivalenceTransform("seg", max_complex_len);
         this.deduceByEquivalenceTransform("ang", max_complex_len);
-
+        this.deduceByTheorem();
+        this.deduceByCustomTheorem();
     }
 
     /**
@@ -232,7 +233,7 @@ public class Graph {
         this.triangles_set.addAll(all_three_point_combinations);
         for (HashSet<String> combination_1 : all_three_point_combinations) {
             String[] collinear_point_array = this.isCollinear(combination_1);
-            if (collinear_point_array[0] != null) {
+            if (collinear_point_array != null) {
                 this.triangles_set.remove(combination_1);
                 this.collinear_set.add(collinear_point_array);
             }
@@ -249,7 +250,7 @@ public class Graph {
             Arrays.asList(collinear_array).forEach(out_points::remove);
             for (String out_point : out_points) {
                 if (this.isCollinear(new HashSet<>(Arrays.asList(out_point,
-                        collinear_array[0], collinear_array[1])))[0] == null) {
+                        collinear_array[0], collinear_array[1]))) == null) {
                     this.addEqual("ang", Degree.degree(180),
                             SumUnits.sumUnits(Angle.angle(out_point, collinear_array[1], collinear_array[0]),
                                               Angle.angle(out_point, collinear_array[1], collinear_array[2])));
@@ -296,6 +297,7 @@ public class Graph {
      * 4，乘法结合律：假设有AE*AC+EB*AC=AB*AC，则可以得出(AE+EB)*AC=AB*AC
      * 该方法属于通过基本的代数等式运算发掘新的等量关系，虽然它们看似非常简单，属于常识性的东西，但计算机是不知道的，需要遍历寻找并挖掘
      * 备注：该方法是整个程序中最耗时、也最容易遗漏情况的环节，目前虽然尽可能考虑到了所有情况，但仍可能存在遍历未覆盖到的情况
+     * 目前采取的思路是，分为两种嵌套的情况，即加法套乘法和乘法套加法，遍历寻找这两种嵌套形式下满足上述规则的情况，即可递归得出尽可能多的等价式
      * */
     public void deduceByEquivalenceTransform(String equal_type, Integer max_complex_len) throws Exception {
         // 判断是等价发掘边类型的等量关系，还是角类型的
@@ -338,7 +340,7 @@ public class Graph {
                             }
                         }
                     }
-                    // 还可以寻找哪个等式里含有AB*MN的下属元素AB或MN
+                    // 还可以寻找哪个等式里含有AB*MN的下属元素AB或MN，也就是AB*MN+CD*EF的下下属元素
                     if (!complex_unit_1_sub_1.isComplex()) continue;
                     for (Element complex_unit_1_sub_1_sub_1 : ((ComplexElement) complex_unit_1_sub_1).getSubUnits()) {
                         // 遍历所有的等式，寻找哪个等式里面含有AB或MN，后续过程与前面相同
@@ -422,7 +424,7 @@ public class Graph {
                 // 寻找AE*AC+EB*AC+...这样的复合元素结构
                 if (complex_unit_1 instanceof SumUnits) {
                     for (Element complex_unit_1_sub_1 : ((SumUnits) complex_unit_1).getSubUnits()) {
-                        //遍历这个复合元素的下属元素，寻找有无乘积元素
+                        // 遍历这个复合元素的下属元素，寻找有无乘积元素
                         if (!(complex_unit_1_sub_1 instanceof MultiplyUnits)) continue;
                         // 比如找到了这个复合元素其中有一项为一个乘积元素AE*AC，那么求剩下的部分
                         Element complex_unit_1_sub_2 = ((SumUnits) complex_unit_1).getExceptOf(complex_unit_1_sub_1);
@@ -458,6 +460,55 @@ public class Graph {
             }
         }
     }
+
+    /**
+     * 推导方法三：依据经典欧式几何中的定理
+     * 主要规则内容如下：
+     * 1，三角形内角和定理：内角和为180°
+     * 2，等腰三角形定理：三角形内部，等角所对为等边，等边所对为等角
+     * 3，全等三角形定理：SSS、SAS、AAS、ASA
+     * 4，相似三角形定理：SS、SA、AA
+     * 5，共圆四边形定理（四点共圆）：共圆四边形内对角互补，圆周角相等，满足其一，则其他亦成立
+     * 该方法即为利用经典的欧式几何定理来发掘新的等量关系，致力于以高性能、不重不漏的方式遍历每组点集合，排查任何可能适用上述定理规则的情况
+     * */
+    public void deduceByTheorem() throws Exception {
+        // 以三角形点组为遍历单元，进行遍历
+        String[] triangle_1_array;
+        HashSet<HashSet<String>> rest_triangles_set;
+        for (HashSet<String> triangle_1 : this.triangles_set) {
+            // 对每个三角形应用规则1
+            triangle_1_array = triangle_1.toArray(new String[3]);
+            this.addEqual("ang",
+                    SumUnits.sumUnits(Angle.angle(triangle_1_array[1], triangle_1_array[0], triangle_1_array[2]),
+                            SumUnits.sumUnits(Angle.angle(triangle_1_array[0], triangle_1_array[1], triangle_1_array[2]),
+                                              Angle.angle(triangle_1_array[0], triangle_1_array[2], triangle_1_array[1]))
+                    ), Degree.degree(180));
+            // 检查每个三角形，是否满足规则2，为等腰三角形
+            String[] isosceles_result = this.isIsosceles(triangle_1);
+            
+            // 再遍历另一个三角形，组成三角形对
+            rest_triangles_set = new HashSet<>(this.triangles_set);
+            rest_triangles_set.remove(triangle_1);
+            for (HashSet<String> triangle_2 : rest_triangles_set) {
+                // 判断这对三角形是否满足规则3，全等三角形定理
+                String[][] congruent_result = this.isCongruent(triangle_1, triangle_2);
+
+                // 判断这对三角形是否满足规则4，相似三角形定理
+
+            }
+        }
+    }
+
+    /**
+     * 推导方法四：依据自定义补充定理
+     * 主要规则内容如下：
+     * 1，待补充
+     * 2，待补充
+     * 3，待补充
+     * 上述三个推导方法所使用的规则为常见的几何代数基本公理以及经典定理，在此之外的补充定理可以通过重写该方法进行添加
+     * 添加补充定理可以加快某些特定几何问题的推导速度，如内心定理、重心定理等，这些定理虽然可以通过基本定理去证明，但仍至关重要
+     * */
+    public void deduceByCustomTheorem() {}
 
     /**工具：获取该图对象中所有的三点组合，例如该图中有4个点，A、B、C、D，则返回一个集合，包含ABC、ABD、ACD、BCD*/
     public HashSet<HashSet<String>> getThreePointCombinations() {
@@ -529,7 +580,97 @@ public class Graph {
                 return new String[]{points_aside[0], point_vertex, points_aside[1]};
             }
         }
-        return new String[]{null, null, null};
+        return null;
+    }
+
+    /**工具：判断指定的三角形（三点集合）在该图对象中是否为等腰三角形，若是，则依次返回一个三点数组，第一个点为顶点，若否，返回null*/
+    public String[] isIsosceles(HashSet<String> one_triangle) throws Exception {
+        HashSet<String> the_triangle;
+        String[] points_aside;
+        // 遍历三个点，假设一个点为顶点
+        for (String point_vertex : one_triangle) {
+            the_triangle = new HashSet<>(one_triangle);
+            the_triangle.remove(point_vertex);
+            points_aside = the_triangle.toArray(new String[2]);
+            // 判断顶点到两个侧点的距离相等是否已知，或两个侧角相等是否已知
+            if (this.queryEqual("seg", Segment.segment(points_aside[0], point_vertex),
+                                                 Segment.segment(points_aside[1], point_vertex)) ||
+                this.queryEqual("ang", Angle.angle(point_vertex, points_aside[0], points_aside[1]),
+                                                 Angle.angle(point_vertex, points_aside[1], points_aside[0]))
+            ) {
+                return new String[]{point_vertex, points_aside[0], points_aside[1]};
+            }
+        }
+        return null;
+    }
+
+    /**工具：判断指定的一对三角形（三点集合）在该图对象中是否全等，若是，则返回一个2×3数组，即两个三角形的各自三个对应点，若否，返回null*/
+    public String[][] isCongruent(HashSet<String> triangle_1, HashSet<String> triangle_2) throws Exception {
+        HashSet<String> triangle_1_copy;
+        HashSet<String> triangle_2_copy;
+        String[] points_aside_1;
+        String[] points_aside_2;
+        // 两个三角形各自遍历三个点，并各自假设一个点为顶点
+        for (String point_vertex_1 : triangle_1) {
+            triangle_1_copy = new HashSet<>(triangle_1);
+            triangle_1_copy.remove(point_vertex_1);
+            points_aside_1 = triangle_1_copy.toArray(new String[2]);
+            for (String point_vertex_2 : triangle_2) {
+                triangle_2_copy = new HashSet<>(triangle_2);
+                triangle_2_copy.remove(point_vertex_2);
+                points_aside_2 = triangle_2_copy.toArray(new String[2]);
+                // 如果满足 A 或 S 顶角或顶角所对边相等
+                if (this.queryEqual("ang", Angle.angle(points_aside_1[0], point_vertex_1, points_aside_1[1]),
+                                                     Angle.angle(points_aside_2[0], point_vertex_2, points_aside_2[1]))
+                ) {
+                    // 假设另外两个点是正好对应，或者相反对应
+                    for (int i : new int[]{0, 1}) {
+                        String temp = points_aside_1[1-i];
+                        points_aside_1[0] = points_aside_1[i];
+                        points_aside_1[1] = temp;
+                        // 如果满足 SAS 两侧边和一顶角对应相等
+                        if (this.queryEqual("seg", Segment.segment(points_aside_1[0], point_vertex_1),
+                                                             Segment.segment(points_aside_2[0], point_vertex_2)) &&
+                            this.queryEqual("seg", Segment.segment(points_aside_1[1], point_vertex_1),
+                                                             Segment.segment(points_aside_2[1], point_vertex_2))
+                        ) {
+                            return new String[][]{{points_aside_1[0], point_vertex_1, points_aside_1[1]},
+                                                  {points_aside_2[0], point_vertex_2, points_aside_2[1]}};
+                        }
+                    }
+                } else if (this.queryEqual("seg", Segment.segment(points_aside_1[0], points_aside_1[1]),
+                                                            Segment.segment(points_aside_2[0], points_aside_2[1]))
+                ) {
+                    // 假设另外两个点是正好对应，或者相反对应
+                    for (int i : new int[]{0, 1}) {
+                        String temp = points_aside_1[1-i];
+                        points_aside_1[0] = points_aside_1[i];
+                        points_aside_1[1] = temp;
+                        // 如果满足 SSS 三边对应相等
+                        if (this.queryEqual("seg", Segment.segment(points_aside_1[0], point_vertex_1),
+                                                             Segment.segment(points_aside_2[0], point_vertex_2)) &&
+                            this.queryEqual("seg", Segment.segment(points_aside_1[1], point_vertex_1),
+                                                             Segment.segment(points_aside_2[1], point_vertex_2))
+                        ) {
+                            return new String[][]{{points_aside_1[0], point_vertex_1, points_aside_1[1]},
+                                                  {points_aside_2[0], point_vertex_2, points_aside_2[1]}};
+                        }
+                        // 如果满足 SAA 一边两角对应相等
+                        if (this.queryEqual("ang",
+                                    Angle.angle(point_vertex_1, points_aside_1[0], points_aside_1[1]),
+                                    Angle.angle(point_vertex_2, points_aside_2[0], points_aside_2[1])) &&
+                            this.queryEqual("ang",
+                                    Angle.angle(point_vertex_1, points_aside_1[1], points_aside_1[0]),
+                                    Angle.angle(point_vertex_2, points_aside_2[1], points_aside_2[0]))
+                        ) {
+                            return new String[][]{{points_aside_1[0], point_vertex_1, points_aside_1[1]},
+                                                  {points_aside_2[0], point_vertex_2, points_aside_2[1]}};
+                        }
+                    }
+                }
+            }
+        }
+        return null;
     }
 
 }
