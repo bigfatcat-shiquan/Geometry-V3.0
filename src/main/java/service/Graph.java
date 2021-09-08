@@ -472,30 +472,135 @@ public class Graph {
      * 该方法即为利用经典的欧式几何定理来发掘新的等量关系，致力于以高性能、不重不漏的方式遍历每组点集合，排查任何可能适用上述定理规则的情况
      * */
     public void deduceByTheorem() throws Exception {
-        // 以三角形点组为遍历单元，进行遍历
         String[] triangle_1_array;
-        HashSet<HashSet<String>> rest_triangles_set;
+        HashSet<HashSet<String>> rest_triangles_set = new HashSet<>(this.triangles_set);
+        HashSet<String> out_points_set;
+        HashSet<String> triangle_1_copy;
+        String[] points_aside;
+        // 以三角形点组为遍历单元，进行遍历
         for (HashSet<String> triangle_1 : this.triangles_set) {
             // 对每个三角形应用规则1
             triangle_1_array = triangle_1.toArray(new String[3]);
             this.addEqual("ang",
-                    SumUnits.sumUnits(Angle.angle(triangle_1_array[1], triangle_1_array[0], triangle_1_array[2]),
-                            SumUnits.sumUnits(Angle.angle(triangle_1_array[0], triangle_1_array[1], triangle_1_array[2]),
-                                              Angle.angle(triangle_1_array[0], triangle_1_array[2], triangle_1_array[1]))
+                    SumUnits.sumUnits(
+                            Angle.angle(triangle_1_array[1], triangle_1_array[0], triangle_1_array[2]),
+                            SumUnits.sumUnits(
+                                    Angle.angle(triangle_1_array[0], triangle_1_array[1], triangle_1_array[2]),
+                                    Angle.angle(triangle_1_array[0], triangle_1_array[2], triangle_1_array[1]))
                     ), Degree.degree(180));
             // 检查每个三角形，是否满足规则2，为等腰三角形
             String[] isosceles_result = this.isIsosceles(triangle_1);
-            
+            if (isosceles_result != null) {
+                this.addEqual("seg",
+                        Segment.segment(isosceles_result[0], isosceles_result[1]),
+                        Segment.segment(isosceles_result[0], isosceles_result[2]));
+                this.addEqual("ang",
+                        Angle.angle(isosceles_result[0], isosceles_result[1], isosceles_result[2]),
+                        Angle.angle(isosceles_result[0], isosceles_result[2], isosceles_result[1]));
+            }
             // 再遍历另一个三角形，组成三角形对
-            rest_triangles_set = new HashSet<>(this.triangles_set);
             rest_triangles_set.remove(triangle_1);
             for (HashSet<String> triangle_2 : rest_triangles_set) {
                 // 判断这对三角形是否满足规则3，全等三角形定理
                 String[][] congruent_result = this.isCongruent(triangle_1, triangle_2);
-
+                if (congruent_result != null) {
+                    this.addEqual("seg",
+                            Segment.segment(congruent_result[0][0], congruent_result[0][1]),
+                            Segment.segment(congruent_result[1][0], congruent_result[1][1]));
+                    this.addEqual("seg",
+                            Segment.segment(congruent_result[0][0], congruent_result[0][2]),
+                            Segment.segment(congruent_result[1][0], congruent_result[1][2]));
+                    this.addEqual("seg",
+                            Segment.segment(congruent_result[0][1], congruent_result[0][2]),
+                            Segment.segment(congruent_result[1][1], congruent_result[1][2]));
+                    this.addEqual("ang",
+                            Angle.angle(congruent_result[0][1], congruent_result[0][0], congruent_result[0][2]),
+                            Angle.angle(congruent_result[1][1], congruent_result[1][0], congruent_result[1][2]));
+                    this.addEqual("ang",
+                            Angle.angle(congruent_result[0][0], congruent_result[0][1], congruent_result[0][2]),
+                            Angle.angle(congruent_result[1][0], congruent_result[1][1], congruent_result[1][2]));
+                    this.addEqual("ang",
+                            Angle.angle(congruent_result[0][0], congruent_result[0][2], congruent_result[0][1]),
+                            Angle.angle(congruent_result[1][0], congruent_result[1][2], congruent_result[1][1]));
+                }
                 // 判断这对三角形是否满足规则4，相似三角形定理
-
+                String[][] similar_result = this.isSimilar(triangle_1, triangle_2);
+                if (similar_result != null) {
+                    this.addEqual("seg",
+                            MultiplyUnits.multiplyUnits(
+                                    Segment.segment(similar_result[0][0], similar_result[0][1]),
+                                    Segment.segment(similar_result[1][1], similar_result[1][2])),
+                            MultiplyUnits.multiplyUnits(
+                                    Segment.segment(similar_result[0][1], similar_result[0][2]),
+                                    Segment.segment(similar_result[1][0], similar_result[1][1])));
+                    this.addEqual("seg",
+                            MultiplyUnits.multiplyUnits(
+                                    Segment.segment(similar_result[0][0], similar_result[0][1]),
+                                    Segment.segment(similar_result[1][0], similar_result[1][2])),
+                            MultiplyUnits.multiplyUnits(
+                                    Segment.segment(similar_result[0][0], similar_result[0][2]),
+                                    Segment.segment(similar_result[1][0], similar_result[1][1])));
+                    this.addEqual("seg",
+                            MultiplyUnits.multiplyUnits(
+                                    Segment.segment(similar_result[0][0], similar_result[0][2]),
+                                    Segment.segment(similar_result[1][1], similar_result[1][2])),
+                            MultiplyUnits.multiplyUnits(
+                                    Segment.segment(similar_result[0][1], similar_result[0][2]),
+                                    Segment.segment(similar_result[1][0], similar_result[1][2])));
+                    this.addEqual("ang",
+                            Angle.angle(similar_result[0][1], similar_result[0][0], similar_result[0][2]),
+                            Angle.angle(similar_result[1][1], similar_result[1][0], similar_result[1][2]));
+                    this.addEqual("ang",
+                            Angle.angle(similar_result[0][0], similar_result[0][1], similar_result[0][2]),
+                            Angle.angle(similar_result[1][0], similar_result[1][1], similar_result[1][2]));
+                    this.addEqual("ang",
+                            Angle.angle(similar_result[0][0], similar_result[0][2], similar_result[0][1]),
+                            Angle.angle(similar_result[1][0], similar_result[1][2], similar_result[1][1]));
+                }
             }
+            // 再遍历这个三角形之外的点，检查是否可以满足规则5，组成四点共圆
+            out_points_set = new HashSet<>(this.points_set);
+            out_points_set.removeAll(triangle_1);
+            for (String out_point : out_points_set) {
+                for (String point_vertex : triangle_1) {
+                    triangle_1_copy = new HashSet<>(triangle_1);
+                    triangle_1_copy.remove(point_vertex);
+                    points_aside = triangle_1_copy.toArray(new String[2]);
+                    // 假设一个点为三角形顶点，检查是否有一个外点在三角形顶角扇区内并与之组成四点共圆，即满足一对对角互补或一对圆周角相等
+                    if (this.queryEqual("ang",
+                            Angle.angle(points_aside[0], point_vertex, points_aside[1]),
+                            SumUnits.sumUnits(
+                                    Angle.angle(out_point, point_vertex, points_aside[0]),
+                                    Angle.angle(out_point, point_vertex, points_aside[1])))
+                    ) {
+                        if (this.queryEqual("ang", Degree.degree(180),
+                                SumUnits.sumUnits(
+                                        Angle.angle(points_aside[0], point_vertex, points_aside[1]),
+                                        Angle.angle(points_aside[0], out_point, points_aside[1]))) ||
+                                this.queryEqual("ang",
+                                        Angle.angle(out_point, point_vertex, points_aside[0]),
+                                        Angle.angle(out_point, points_aside[1], points_aside[0])) ||
+                                this.queryEqual("ang",
+                                        Angle.angle(out_point, point_vertex, points_aside[1]),
+                                        Angle.angle(out_point, points_aside[0], points_aside[1]))
+                        ) {
+                            this.addEqual("ang",
+                                    Angle.angle(out_point, point_vertex, points_aside[0]),
+                                    Angle.angle(out_point, points_aside[1], points_aside[0]));
+                            this.addEqual("ang",
+                                    Angle.angle(out_point, point_vertex, points_aside[1]),
+                                    Angle.angle(out_point, points_aside[0], points_aside[1]));
+                            this.addEqual("ang",
+                                    Angle.angle(point_vertex, out_point, points_aside[0]),
+                                    Angle.angle(point_vertex, points_aside[1], points_aside[0]));
+                            this.addEqual("ang",
+                                    Angle.angle(point_vertex, out_point, points_aside[1]),
+                                    Angle.angle(point_vertex, points_aside[0], points_aside[1]));
+                        }
+                    }
+                }
+            }
+
         }
     }
 
@@ -666,6 +771,83 @@ public class Graph {
                             return new String[][]{{points_aside_1[0], point_vertex_1, points_aside_1[1]},
                                                   {points_aside_2[0], point_vertex_2, points_aside_2[1]}};
                         }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    /**工具：判断指定的一对三角形（三点集合）在该图对象中是否相似，若是，则返回一个2×3数组，即两个三角形的各自三个对应点，若否，返回null*/
+    public String[][] isSimilar(HashSet<String> triangle_1, HashSet<String> triangle_2) throws Exception {
+        HashSet<String> triangle_1_copy;
+        HashSet<String> triangle_2_copy;
+        String[] points_aside_1;
+        String[] points_aside_2;
+        // 两个三角形各自遍历三个点，并各自假设一个点为顶点
+        for (String point_vertex_1 : triangle_1) {
+            triangle_1_copy = new HashSet<>(triangle_1);
+            triangle_1_copy.remove(point_vertex_1);
+            points_aside_1 = triangle_1_copy.toArray(new String[2]);
+            for (String point_vertex_2 : triangle_2) {
+                triangle_2_copy = new HashSet<>(triangle_2);
+                triangle_2_copy.remove(point_vertex_2);
+                points_aside_2 = triangle_2_copy.toArray(new String[2]);
+                // 假设另外两个点是正好对应，或者相反对应
+                for (int i : new int[]{0, 1}) {
+                    String temp = points_aside_1[1-i];
+                    points_aside_1[0] = points_aside_1[i];
+                    points_aside_1[1] = temp;
+                    // 如果满足 A 顶角对应相等
+                    if (this.queryEqual("ang",
+                            Angle.angle(points_aside_1[0], point_vertex_1, points_aside_1[1]),
+                            Angle.angle(points_aside_2[0], point_vertex_2, points_aside_2[1]))
+                    ) {
+                        // 如果满足 AA 顶角对应相等 且 一侧角对应相等
+                        if (this.queryEqual("ang",
+                                Angle.angle(point_vertex_1, points_aside_1[0], points_aside_1[1]),
+                                Angle.angle(point_vertex_2, points_aside_2[0], points_aside_2[1]))
+                        ) {
+                            return new String[][]{{points_aside_1[0], point_vertex_1, points_aside_1[1]},
+                                                  {points_aside_2[0], point_vertex_2, points_aside_2[1]}};
+                        }
+                        // 如果满足 AS 顶角对应相等 且 两侧边对应比例相等
+                        if (this.queryEqual("seg",
+                                MultiplyUnits.multiplyUnits(
+                                        Segment.segment(points_aside_1[0], point_vertex_1),
+                                        Segment.segment(points_aside_2[1], point_vertex_2)
+                                ),
+                                MultiplyUnits.multiplyUnits(
+                                        Segment.segment(points_aside_1[1], point_vertex_1),
+                                        Segment.segment(points_aside_2[0], point_vertex_2)
+                                ))
+                        ) {
+                            return new String[][]{{points_aside_1[0], point_vertex_1, points_aside_1[1]},
+                                                  {points_aside_2[0], point_vertex_2, points_aside_2[1]}};
+                        }
+                    }
+                    // 如果满足 SSS 三边对应比例相等
+                    else if (this.queryEqual("seg",
+                            MultiplyUnits.multiplyUnits(
+                                    Segment.segment(points_aside_1[0], point_vertex_1),
+                                    Segment.segment(points_aside_2[1], point_vertex_2)
+                            ),
+                            MultiplyUnits.multiplyUnits(
+                                    Segment.segment(points_aside_1[1], point_vertex_1),
+                                    Segment.segment(points_aside_2[0], point_vertex_2)
+                            )) &&
+                            this.queryEqual("seg",
+                                    MultiplyUnits.multiplyUnits(
+                                            Segment.segment(points_aside_1[0], point_vertex_1),
+                                            Segment.segment(points_aside_2[0], points_aside_2[1])
+                                    ),
+                                    MultiplyUnits.multiplyUnits(
+                                            Segment.segment(points_aside_2[0], point_vertex_2),
+                                            Segment.segment(points_aside_1[0], points_aside_1[1])
+                                    ))
+                    ) {
+                        return new String[][]{{points_aside_1[0], point_vertex_1, points_aside_1[1]},
+                                              {points_aside_2[0], point_vertex_2, points_aside_2[1]}};
                     }
                 }
             }

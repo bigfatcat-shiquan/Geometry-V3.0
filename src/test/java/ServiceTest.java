@@ -95,6 +95,8 @@ public class ServiceTest {
         t2.deduceByEquivalenceTransform("seg", 4);
         t2.displayGraphInfo();
         System.out.print("\n");
+        // 测试经典定理推导功能
+        // 测试自定义定理推导功能（开发者自行测试）
     }
 
 }
