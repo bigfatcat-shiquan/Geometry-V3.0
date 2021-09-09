@@ -1,5 +1,5 @@
-import structure.elements.*;
-import structure.relations.Equal;
+import core.structure.elements.*;
+import core.structure.relations.Equal;
 
 /**
  * 数据结构功能定义层测试篇
@@ -42,24 +42,24 @@ public class StructureTest {
         System.out.print(z5 + "\n");
         System.out.print("\n");
 //        3AC+AB
-//        {structure.elements.Segment@677327b6=3, structure.elements.Segment@1540e19d=1}
-//        [structure.elements.Segment@677327b6, structure.elements.Segment@1540e19d]
+//        {core.structure.elements.Segment@677327b6=3, core.structure.elements.Segment@1540e19d=1}
+//        [core.structure.elements.Segment@677327b6, core.structure.elements.Segment@1540e19d]
 //        2AB+6AC
-//        {structure.elements.Segment@677327b6=6, structure.elements.Segment@1540e19d=2}
-//        [structure.elements.Segment@677327b6, structure.elements.Segment@1540e19d]
+//        {core.structure.elements.Segment@677327b6=6, core.structure.elements.Segment@1540e19d=2}
+//        [core.structure.elements.Segment@677327b6, core.structure.elements.Segment@1540e19d]
 //        true
-//        structure.elements.Segment@1540e19d
-//        structure.elements.Segment@677327b6
-//        structure.elements.Segment@677327b6
+//        core.structure.elements.Segment@1540e19d
+//        core.structure.elements.Segment@677327b6
+//        core.structure.elements.Segment@677327b6
 //        (2AB+6AC)^2*AC
-//        {structure.elements.Segment@677327b6=1, structure.elements.SumUnits@14ae5a5=2}
-//        [structure.elements.Segment@677327b6, structure.elements.SumUnits@14ae5a5]
+//        {core.structure.elements.Segment@677327b6=1, core.structure.elements.SumUnits@14ae5a5=2}
+//        [core.structure.elements.Segment@677327b6, core.structure.elements.SumUnits@14ae5a5]
 //        (2AB+6AC)^2*AC
-//        {structure.elements.Segment@677327b6=1, structure.elements.SumUnits@14ae5a5=2}
-//        [structure.elements.Segment@677327b6, structure.elements.SumUnits@14ae5a5]
+//        {core.structure.elements.Segment@677327b6=1, core.structure.elements.SumUnits@14ae5a5=2}
+//        [core.structure.elements.Segment@677327b6, core.structure.elements.SumUnits@14ae5a5]
 //        true
-//        structure.elements.MultiplyUnits@7f31245a
-//        structure.elements.MultiplyUnits@7f31245a
+//        core.structure.elements.MultiplyUnits@7f31245a
+//        core.structure.elements.MultiplyUnits@7f31245a
 
         /*测试用例2，验证角、角度、加和元素的使用正确*/
         Angle a1 = Angle.angle("C", "B", "A");
@@ -97,25 +97,25 @@ public class StructureTest {
         System.out.print(s4.equals(s5) + "\n");
         System.out.print("\n");
 //        3∠ABD+∠ABC
-//        {structure.elements.Angle@6d6f6e28=1, structure.elements.Angle@135fbaa4=3}
-//        [structure.elements.Angle@6d6f6e28, structure.elements.Angle@135fbaa4]
+//        {core.structure.elements.Angle@6d6f6e28=1, core.structure.elements.Angle@135fbaa4=3}
+//        [core.structure.elements.Angle@6d6f6e28, core.structure.elements.Angle@135fbaa4]
 //        2∠ABC+6∠ABD
-//        {structure.elements.Angle@6d6f6e28=2, structure.elements.Angle@135fbaa4=6}
-//        [structure.elements.Angle@6d6f6e28, structure.elements.Angle@135fbaa4]
+//        {core.structure.elements.Angle@6d6f6e28=2, core.structure.elements.Angle@135fbaa4=6}
+//        [core.structure.elements.Angle@6d6f6e28, core.structure.elements.Angle@135fbaa4]
 //        true
-//        structure.elements.Angle@6d6f6e28
-//        structure.elements.Angle@135fbaa4
-//        structure.elements.Angle@135fbaa4
-//        structure.elements.Degree@45ee12a7
-//        structure.elements.Degree@45ee12a7
+//        core.structure.elements.Angle@6d6f6e28
+//        core.structure.elements.Angle@135fbaa4
+//        core.structure.elements.Angle@135fbaa4
+//        core.structure.elements.Degree@45ee12a7
+//        core.structure.elements.Degree@45ee12a7
 //        true
 //        true
 //        180°+2∠ABC+6∠ABD
-//        {structure.elements.Degree@45ee12a7=1, structure.elements.Angle@6d6f6e28=2, structure.elements.Angle@135fbaa4=6}
-//        [structure.elements.Degree@45ee12a7, structure.elements.Angle@6d6f6e28, structure.elements.Angle@135fbaa4]
+//        {core.structure.elements.Degree@45ee12a7=1, core.structure.elements.Angle@6d6f6e28=2, core.structure.elements.Angle@135fbaa4=6}
+//        [core.structure.elements.Degree@45ee12a7, core.structure.elements.Angle@6d6f6e28, core.structure.elements.Angle@135fbaa4]
 //        180°+2∠ABC+6∠ABD
-//        {structure.elements.Degree@45ee12a7=1, structure.elements.Angle@6d6f6e28=2, structure.elements.Angle@135fbaa4=6}
-//        [structure.elements.Degree@45ee12a7, structure.elements.Angle@6d6f6e28, structure.elements.Angle@135fbaa4]
+//        {core.structure.elements.Degree@45ee12a7=1, core.structure.elements.Angle@6d6f6e28=2, core.structure.elements.Angle@135fbaa4=6}
+//        [core.structure.elements.Degree@45ee12a7, core.structure.elements.Angle@6d6f6e28, core.structure.elements.Angle@135fbaa4]
 //        true
 
         /*测试用例3，验证元素类附属方法的正确*/
@@ -213,14 +213,14 @@ public class StructureTest {
 //        ∠ABC=∠ABD
 //        180°=∠ABC
 //        180°=∠ABC
-//        [structure.elements.Angle@6d6f6e28, structure.elements.Angle@135fbaa4]
-//        [structure.elements.Angle@6d6f6e28, structure.elements.Degree@45ee12a7]
-//        [structure.elements.Angle@6d6f6e28, structure.elements.Degree@45ee12a7]
-//        [structure.elements.Angle@135fbaa4]
-//        [structure.elements.Angle@135fbaa4]
-//        [structure.elements.Angle@6d6f6e28]
+//        [core.structure.elements.Angle@6d6f6e28, core.structure.elements.Angle@135fbaa4]
+//        [core.structure.elements.Angle@6d6f6e28, core.structure.elements.Degree@45ee12a7]
+//        [core.structure.elements.Angle@6d6f6e28, core.structure.elements.Degree@45ee12a7]
+//        [core.structure.elements.Angle@135fbaa4]
+//        [core.structure.elements.Angle@135fbaa4]
+//        [core.structure.elements.Angle@6d6f6e28]
 //        true
-//        [structure.elements.Angle@6d6f6e28, structure.elements.Degree@45ee12a7]
+//        [core.structure.elements.Angle@6d6f6e28, core.structure.elements.Degree@45ee12a7]
 //        []
 //        2*true
 
