@@ -1,7 +1,8 @@
-package service;
+package service.core;
 
 import structure.elements.*;
 import structure.relations.Equal;
+import utils.Common;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -9,7 +10,7 @@ import java.util.Map.Entry;
 import static java.lang.Math.*;
 
 /**
- * 类：Graph 业务主功能层：图对象
+ * 类：Graph 业务功能核心层：图对象
  * 一个欧式几何问题，可以看作是一个图对象，这个图对象由structure结构层中的elements元素和relations等量关系所组成
  * 解决一个几何问题的过程，可以看作是利用这个图对象实例中的初始等量关系推导出更多等量关系的过程
  * */
@@ -264,15 +265,11 @@ public class Graph {
             }
         }
         // 遍历任意不共线的三点组，运用规则3
-        HashSet<String> the_combination;
         String[] points_aside;
         for (HashSet<String> combination_1 : this.triangles_set) {
-            out_points = new HashSet<>(this.points_set);
-            out_points.removeAll(combination_1);
+            out_points = Common.getSetExcept(this.points_set, combination_1);
             for (String point_vertex : combination_1) {
-                the_combination = new HashSet<>(combination_1);
-                the_combination.remove(point_vertex);
-                points_aside = the_combination.toArray(new String[2]);
+                points_aside = Common.getSetExcept(combination_1, point_vertex).toArray(new String[2]);
                 for (String out_point : out_points) {
                     double degree_value_1 = this.getDegreeValue(out_point, point_vertex, points_aside[0]);
                     double degree_value_2 = this.getDegreeValue(out_point, point_vertex, points_aside[1]);
@@ -475,7 +472,6 @@ public class Graph {
         String[] triangle_1_array;
         HashSet<HashSet<String>> rest_triangles_set = new HashSet<>(this.triangles_set);
         HashSet<String> out_points_set;
-        HashSet<String> triangle_1_copy;
         String[] points_aside;
         // 以三角形点组为遍历单元，进行遍历
         for (HashSet<String> triangle_1 : this.triangles_set) {
@@ -559,13 +555,10 @@ public class Graph {
                 }
             }
             // 再遍历这个三角形之外的点，检查是否可以满足规则5，组成四点共圆
-            out_points_set = new HashSet<>(this.points_set);
-            out_points_set.removeAll(triangle_1);
+            out_points_set = Common.getSetExcept(this.points_set, triangle_1);
             for (String out_point : out_points_set) {
                 for (String point_vertex : triangle_1) {
-                    triangle_1_copy = new HashSet<>(triangle_1);
-                    triangle_1_copy.remove(point_vertex);
-                    points_aside = triangle_1_copy.toArray(new String[2]);
+                    points_aside = Common.getSetExcept(triangle_1, point_vertex).toArray(new String[2]);
                     // 假设一个点为三角形顶点，检查是否有一个外点在三角形顶角扇区内并与之组成四点共圆，即满足一对对角互补或一对圆周角相等
                     if (this.queryEqual("ang",
                             Angle.angle(points_aside[0], point_vertex, points_aside[1]),
@@ -670,14 +663,11 @@ public class Graph {
 
     /**工具：判断指定的三点集合在该图对象中是否共线，若共线，则依次返回三个点组成的数组，若不共线，则返回三个null组成的数组*/
     public String[] isCollinear(HashSet<String> one_combination) {
-        HashSet<String> the_combination;
         String[] points_aside;
         double dis1, dis2;
         // 遍历三个点，假设一个点作为中轴点，中轴点的意思为假设A、B、C依次在一条直线上，那么B即为中轴点
         for (String point_vertex : one_combination) {
-            the_combination = new HashSet<>(one_combination);
-            the_combination.remove(point_vertex);
-            points_aside = the_combination.toArray(new String[2]);
+            points_aside = Common.getSetExcept(one_combination, point_vertex).toArray(new String[2]);
             // 计算和判断两端的点之间距离是否等于两端的点到中轴点的距离之和，如果是，则说明共线，按顺序返回此三点数组
             dis1 = getDistance(points_aside[0], points_aside[1]);
             dis2 = getDistance(point_vertex, points_aside[0]) + getDistance(point_vertex, points_aside[1]);
@@ -690,13 +680,10 @@ public class Graph {
 
     /**工具：判断指定的三角形（三点集合）在该图对象中是否为等腰三角形，若是，则依次返回一个三点数组，第一个点为顶点，若否，返回null*/
     public String[] isIsosceles(HashSet<String> one_triangle) throws Exception {
-        HashSet<String> the_triangle;
         String[] points_aside;
         // 遍历三个点，假设一个点为顶点
         for (String point_vertex : one_triangle) {
-            the_triangle = new HashSet<>(one_triangle);
-            the_triangle.remove(point_vertex);
-            points_aside = the_triangle.toArray(new String[2]);
+            points_aside = Common.getSetExcept(one_triangle, point_vertex).toArray(new String[2]);
             // 判断顶点到两个侧点的距离相等是否已知，或两个侧角相等是否已知
             if (this.queryEqual("seg", Segment.segment(points_aside[0], point_vertex),
                                                  Segment.segment(points_aside[1], point_vertex)) ||
@@ -711,19 +698,13 @@ public class Graph {
 
     /**工具：判断指定的一对三角形（三点集合）在该图对象中是否全等，若是，则返回一个2×3数组，即两个三角形的各自三个对应点，若否，返回null*/
     public String[][] isCongruent(HashSet<String> triangle_1, HashSet<String> triangle_2) throws Exception {
-        HashSet<String> triangle_1_copy;
-        HashSet<String> triangle_2_copy;
         String[] points_aside_1;
         String[] points_aside_2;
         // 两个三角形各自遍历三个点，并各自假设一个点为顶点
         for (String point_vertex_1 : triangle_1) {
-            triangle_1_copy = new HashSet<>(triangle_1);
-            triangle_1_copy.remove(point_vertex_1);
-            points_aside_1 = triangle_1_copy.toArray(new String[2]);
+            points_aside_1 = Common.getSetExcept(triangle_1, point_vertex_1).toArray(new String[2]);
             for (String point_vertex_2 : triangle_2) {
-                triangle_2_copy = new HashSet<>(triangle_2);
-                triangle_2_copy.remove(point_vertex_2);
-                points_aside_2 = triangle_2_copy.toArray(new String[2]);
+                points_aside_2 = Common.getSetExcept(triangle_2, point_vertex_2).toArray(new String[2]);
                 // 如果满足 A 或 S 顶角或顶角所对边相等
                 if (this.queryEqual("ang", Angle.angle(points_aside_1[0], point_vertex_1, points_aside_1[1]),
                                                      Angle.angle(points_aside_2[0], point_vertex_2, points_aside_2[1]))
@@ -780,19 +761,13 @@ public class Graph {
 
     /**工具：判断指定的一对三角形（三点集合）在该图对象中是否相似，若是，则返回一个2×3数组，即两个三角形的各自三个对应点，若否，返回null*/
     public String[][] isSimilar(HashSet<String> triangle_1, HashSet<String> triangle_2) throws Exception {
-        HashSet<String> triangle_1_copy;
-        HashSet<String> triangle_2_copy;
         String[] points_aside_1;
         String[] points_aside_2;
         // 两个三角形各自遍历三个点，并各自假设一个点为顶点
         for (String point_vertex_1 : triangle_1) {
-            triangle_1_copy = new HashSet<>(triangle_1);
-            triangle_1_copy.remove(point_vertex_1);
-            points_aside_1 = triangle_1_copy.toArray(new String[2]);
+            points_aside_1 = Common.getSetExcept(triangle_1, point_vertex_1).toArray(new String[2]);
             for (String point_vertex_2 : triangle_2) {
-                triangle_2_copy = new HashSet<>(triangle_2);
-                triangle_2_copy.remove(point_vertex_2);
-                points_aside_2 = triangle_2_copy.toArray(new String[2]);
+                points_aside_2 = Common.getSetExcept(triangle_2, point_vertex_2).toArray(new String[2]);
                 // 假设另外两个点是正好对应，或者相反对应
                 for (int i : new int[]{0, 1}) {
                     String temp = points_aside_1[1-i];

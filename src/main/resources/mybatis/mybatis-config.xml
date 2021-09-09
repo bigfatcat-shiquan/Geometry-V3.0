@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!-- 加载数据库属性文件：jdbc.properties -->
+    <properties resource="jdbc.properties"/>
+
+    <!--
+     typeAliases:别名设置
+     package:mybatis自动扫描polo类，自动创建别名(类型名)
+     -->
+    <typeAliases>
+        <typeAlias type="service.ProblemService" alias="ProblemService"/>
+        <package name="service" />
+    </typeAliases>
+
+    <!-- 配置连接环境及其名称 -->
+    <environments default="development">
+        <environment id="development">
+
+            <!-- 使用jdbc事务管理 -->
+            <transactionManager type="JDBC"/>
+
+            <!-- 数据连接池 :mybatis管理-->
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.user}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!-- 加载映射文件
+         resource:每次只能加载一个文件
+         class:只能mapper代理对象执行(mapper接口名和mapper.xml文件名一致，并且在同一个目录)
+         package:批量加载：name为mapper文件所在的包名
+     -->
+    <mappers>
+        <mapper resource="ProblemMapper.xml"/>
+    </mappers>
+
+</configuration>
