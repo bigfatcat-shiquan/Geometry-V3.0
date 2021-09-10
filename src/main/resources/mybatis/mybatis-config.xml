@@ -4,16 +4,21 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 
-    <!-- 加载数据库属性文件：jdbc.properties -->
+    <!-- 加载属性：数据库配置文件 -->
     <properties resource="jdbc.properties"/>
+
+    <!-- 配置系统参数 -->
+    <settings>
+        <setting name="cacheEnabled" value="true"/>
+    </settings>
 
     <!--
      typeAliases:别名设置
      package:mybatis自动扫描polo类，自动创建别名(类型名)
      -->
     <typeAliases>
-        <typeAlias type="service.ProblemService" alias="ProblemService"/>
-        <package name="service" />
+        <typeAlias type="entity.Problem" alias="problem"/>
+        <package name="entity" />
     </typeAliases>
 
     <!-- 配置连接环境及其名称 -->
@@ -39,7 +44,7 @@
          package:批量加载：name为mapper文件所在的包名
      -->
     <mappers>
-        <mapper resource="ProblemMapper.xml"/>
+        <mapper resource="/mapper/ProblemMapper.xml"/>
     </mappers>
 
 </configuration>
