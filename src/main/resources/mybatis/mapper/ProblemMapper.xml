@@ -7,7 +7,16 @@
     <cache eviction="LRU" flushInterval="3600000" size="512" readOnly="true" />
 
     <resultMap id="problemMap" type="problem">
-
+        <id property="problem_id" column="problem_id"/>
+        <result property="problem_name" column="problem_name"/>
+        <result property="problem_author_id" column="problem_author_id"/>
     </resultMap>
+
+    <select id="selectOne" resultMap="problemMap" parameterType="int">
+        SELECT problem_id, problem_name, problem_author FROM problem
+        <where>
+            problem_id = #{problem_id}
+        </where>
+    </select>
 
 </mapper>

@@ -1,4 +1,4 @@
 package dao;
 
-public class UserDao {
+public interface UserDao {
 }
