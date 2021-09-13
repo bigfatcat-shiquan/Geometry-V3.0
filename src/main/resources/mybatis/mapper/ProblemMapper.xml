@@ -9,11 +9,22 @@
     <resultMap id="problemMap" type="problem">
         <id property="problem_id" column="problem_id"/>
         <result property="problem_name" column="problem_name"/>
+        <result property="problem_picture" column="problem_picture"/>
         <result property="problem_author_id" column="problem_author_id"/>
+        <result property="initial_points_set" column="initial_points_set"
+                typeHandler="utils.handler.SetToVarcharTypeHandler"/>
+        <result property="initial_equals_str_set" column="initial_equals_str_set"
+                typeHandler="utils.handler.SetToVarcharTypeHandler"/>
+        <result property="need_prove_equal_str" column="need_prove_equal_str"/>
     </resultMap>
 
+    <insert id="insertOne" parameterType="problem">
+        INSERT INTO problem (problem_id, problem_name, problem_picture, problem_author_id)
+        VALUES (null, #{problem.problem_name}, #{problem.problem_picture}, #{problem.problem_author_id})
+    </insert>
+
     <select id="selectOne" resultMap="problemMap" parameterType="int">
-        SELECT problem_id, problem_name, problem_author FROM problem
+        SELECT problem_id, problem_name, problem_picture, problem_author FROM problem
         <where>
             problem_id = #{problem_id}
         </where>
