@@ -2,6 +2,7 @@ package entity;
 
 import core.Graph;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -14,6 +15,8 @@ public class Problem {
     private String problem_picture;
 
     private String problem_author_id;
+
+    private Date create_date;
 
     private Graph graph;
 
@@ -61,6 +64,10 @@ public class Problem {
         this.problem_author_id = problem_author_id;
     }
 
+    public void setCreate_date(Date create_date) {
+        this.create_date = create_date;
+    }
+
     public void setGraph(Graph graph) {
         this.graph = graph;
     }
@@ -99,6 +106,10 @@ public class Problem {
 
     public String getProblem_author_id() {
         return this.problem_author_id;
+    }
+
+    public Date getCreate_date() {
+        return this.create_date;
     }
 
     public Graph getGraph() {

@@ -3,6 +3,8 @@ package service.impl;
 import dao.ProblemDao;
 import entity.Problem;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import service.ProblemService;
 
 import javax.annotation.Resource;
@@ -24,6 +26,7 @@ public class ProblemServiceImpl implements ProblemService {
     }
 
     /**保存一个新的题目*/
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     @Override
     public Boolean saveNewProblem(String problem_name,
                                   String problem_picture,
