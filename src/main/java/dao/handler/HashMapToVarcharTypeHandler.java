@@ -1,9 +1,10 @@
-package utils.handler;
+package dao.handler;
 
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedJdbcTypes;
 import org.apache.ibatis.type.MappedTypes;
 import org.apache.ibatis.type.TypeHandler;
+import org.springframework.util.StringUtils;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -32,16 +33,46 @@ public class HashMapToVarcharTypeHandler implements TypeHandler<HashMap<String, 
 
     @Override
     public HashMap<String, Double> getResult(ResultSet resultSet, int i) throws SQLException {
+        // 从结果集获取结果时进行的类型转换操作
+        String resultString = resultSet.getString(i);
+        HashMap<String, Double> result_hashmap = new HashMap<>();
+        if (!StringUtils.isEmpty(resultString)) {
+            for (String entry_str : resultString.split(",")) {
+                String[] entry = entry_str.split(":");
+                result_hashmap.put(entry[0], Double.valueOf(entry[1]));
+            }
+            return result_hashmap;
+        }
         return null;
     }
 
     @Override
     public HashMap<String, Double> getResult(ResultSet resultSet, String s) throws SQLException {
+        // 从结果集获取结果时进行的类型转换操作
+        String resultString = resultSet.getString(s);
+        HashMap<String, Double> result_hashmap = new HashMap<>();
+        if (!StringUtils.isEmpty(resultString)) {
+            for (String entry_str : resultString.split(",")) {
+                String[] entry = entry_str.split(":");
+                result_hashmap.put(entry[0], Double.valueOf(entry[1]));
+            }
+            return result_hashmap;
+        }
         return null;
     }
 
     @Override
     public HashMap<String, Double> getResult(CallableStatement callableStatement, int i) throws SQLException {
+        // 从结果集获取结果时进行的类型转换操作
+        String resultString = callableStatement.getString(i);
+        HashMap<String, Double> result_hashmap = new HashMap<>();
+        if (!StringUtils.isEmpty(resultString)) {
+            for (String entry_str : resultString.split(",")) {
+                String[] entry = entry_str.split(":");
+                result_hashmap.put(entry[0], Double.valueOf(entry[1]));
+            }
+            return result_hashmap;
+        }
         return null;
     }
 

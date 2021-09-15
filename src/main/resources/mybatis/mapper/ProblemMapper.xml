@@ -12,19 +12,30 @@
         <result property="problem_picture" column="problem_picture"/>
         <result property="problem_author_id" column="problem_author_id"/>
         <result property="initial_points_set" column="initial_points_set"
-                typeHandler="utils.handler.SetToVarcharTypeHandler"/>
+                typeHandler="dao.handler.SetToVarcharTypeHandler"/>
+        <result property="points_location_x" column="points_location_x"
+                typeHandler="dao.handler.HashMapToVarcharTypeHandler"/>
+        <result property="points_location_y" column="points_location_y"
+                typeHandler="dao.handler.HashMapToVarcharTypeHandler"/>
         <result property="initial_equals_str_set" column="initial_equals_str_set"
-                typeHandler="utils.handler.SetToVarcharTypeHandler"/>
+                typeHandler="dao.handler.SetToVarcharTypeHandler"/>
         <result property="need_prove_equal_str" column="need_prove_equal_str"/>
     </resultMap>
 
     <insert id="insertOne" parameterType="problem">
-        INSERT INTO problem (problem_id, problem_name, problem_picture, problem_author_id)
-        VALUES (null, #{problem.problem_name}, #{problem.problem_picture}, #{problem.problem_author_id})
+        INSERT INTO problem (problem_id, problem_name, problem_picture, problem_author_id, initial_points_set,
+        points_location_x, points_location_y, initial_equals_str_set, need_prove_equal_str)
+        VALUES (null, #{problem.problem_name}, #{problem.problem_picture}, #{problem.problem_author_id},
+        #{problem.initial_points_set, typeHandler=dao.handler.SetToVarcharTypeHandler},
+        #{problem.points_location_x, typeHandler=dao.handler.HashMapToVarcharTypeHandler},
+        #{problem.points_location_y, typeHandler=dao.handler.HashMapToVarcharTypeHandler},
+        #{problem.initial_equals_str_set, typeHandler=dao.handler.SetToVarcharTypeHandler},
+        #{problem.need_prove_equal_str})
     </insert>
 
     <select id="selectOne" resultMap="problemMap" parameterType="int">
-        SELECT problem_id, problem_name, problem_picture, problem_author FROM problem
+        SELECT problem_id, problem_name, problem_picture, problem_author_id, initial_points_set,
+        points_location_x, points_location_y, initial_equals_str_set, need_prove_equal_str FROM problem
         <where>
             problem_id = #{problem_id}
         </where>

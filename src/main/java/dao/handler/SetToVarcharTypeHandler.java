@@ -1,4 +1,4 @@
-package utils.handler;
+package dao.handler;
 
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedJdbcTypes;
