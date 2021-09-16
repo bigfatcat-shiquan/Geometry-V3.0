@@ -30,7 +30,7 @@ public class ProblemServiceImpl implements ProblemService {
     @Override
     public Boolean saveNewProblem(String problem_name,
                                   String problem_picture,
-                                  String problem_author_id,
+                                  Integer problem_author_id,
                                   HashSet<String> initial_points_set,
                                   HashMap<String, Double> points_location_x,
                                   HashMap<String, Double> points_location_y,

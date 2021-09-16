@@ -14,7 +14,7 @@ public class Problem {
 
     private String problem_picture;
 
-    private String problem_author_id;
+    private Integer problem_author_id;
 
     private Date create_date;
 
@@ -32,7 +32,7 @@ public class Problem {
 
     public Problem(String problem_name,
                    String problem_picture,
-                   String problem_author_id,
+                   Integer problem_author_id,
                    HashSet<String> initial_points_set,
                    HashMap<String, Double> points_location_x,
                    HashMap<String, Double> points_location_y,
@@ -60,7 +60,7 @@ public class Problem {
         this.problem_picture = problem_picture;
     }
 
-    public void setProblem_author_id(String problem_author_id) {
+    public void setProblem_author_id(Integer problem_author_id) {
         this.problem_author_id = problem_author_id;
     }
 
@@ -104,7 +104,7 @@ public class Problem {
         return this.problem_picture;
     }
 
-    public String getProblem_author_id() {
+    public Integer getProblem_author_id() {
         return this.problem_author_id;
     }
 
