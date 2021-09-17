@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "mybatis-3-mapper.dtd">
+<mapper namespace="dao.UserDao">
+
+    <cache eviction="LRU" flushInterval="3600000" size="512" readOnly="true"/>
+
+    <resultMap id="userMap" type="user">
+        <id property="user_id" column="user_id"/>
+        <result property="user_name" column="user_name"/>
+        <result property="user_password" column="user_password"/>
+        <result property="user_nickname" column="user_nickname"/>
+        <result property="user_picture" column="user_picture"/>
+        <result property="register_date" column="register_date"/>
+    </resultMap>
+
+    <insert id="insertOne" parameterType="user">
+        INSERT INTO user (user_id, user_name, user_password, user_nickname, user_picture, register_date)
+        VALUES (null, #{user.user_name}, #{user.user_password}, #{user.user_nickname},
+        #{user.user_picture}, #{user.register_date})
+    </insert>
+
+    <delete id="deleteOne" parameterType="int">
+        DELETE FROM user
+        <where>
+            user_id = #{user_id}
+        </where>
+    </delete>
+
+</mapper>

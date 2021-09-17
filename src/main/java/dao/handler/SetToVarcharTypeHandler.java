@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+/**HashSet类存储至数据库VARCHAR类型的转换器*/
 @MappedJdbcTypes(JdbcType.VARCHAR)
 @MappedTypes(Set.class)
 public class SetToVarcharTypeHandler implements TypeHandler<Set<String>> {

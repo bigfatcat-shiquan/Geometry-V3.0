@@ -6,6 +6,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 
+/**
+ * 实体类：Problem
+ * 题目，作为面向用户的主要服务单元
+ * */
 public class Problem {
 
     private Integer problem_id;

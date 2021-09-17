@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+/**HashMap类存储至数据库VARCHAR类型的转换器*/
 @MappedJdbcTypes(JdbcType.VARCHAR)
 @MappedTypes(HashMap.class)
 public class HashMapToVarcharTypeHandler implements TypeHandler<HashMap<String, Double>> {

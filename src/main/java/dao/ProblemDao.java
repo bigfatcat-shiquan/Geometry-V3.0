@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.Date;
 import java.util.List;
 
+/**实体类Problem的ORM接口*/
 @Mapper
 public interface ProblemDao {
 
