@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "mybatis-3-mapper.dtd">
-<mapper namespace="dao.ProblemDao">
+<mapper namespace="com.bigfatcat.geometry3.dao.ProblemDao">
 
     <cache eviction="LRU" flushInterval="3600000" size="512" readOnly="true"/>
 
@@ -13,13 +13,13 @@
         <result property="problem_author_id" column="problem_author_id"/>
         <result property="create_date" column="create_date"/>
         <result property="initial_points_set" column="initial_points_set"
-                typeHandler="dao.handler.SetToVarcharTypeHandler"/>
+                typeHandler="com.bigfatcat.geometry3.dao.handler.SetToVarcharTypeHandler"/>
         <result property="points_location_x" column="points_location_x"
-                typeHandler="dao.handler.HashMapToVarcharTypeHandler"/>
+                typeHandler="com.bigfatcat.geometry3.dao.handler.HashMapToVarcharTypeHandler"/>
         <result property="points_location_y" column="points_location_y"
-                typeHandler="dao.handler.HashMapToVarcharTypeHandler"/>
+                typeHandler="com.bigfatcat.geometry3.dao.handler.HashMapToVarcharTypeHandler"/>
         <result property="initial_equals_str_set" column="initial_equals_str_set"
-                typeHandler="dao.handler.SetToVarcharTypeHandler"/>
+                typeHandler="com.bigfatcat.geometry3.dao.handler.SetToVarcharTypeHandler"/>
         <result property="need_prove_equal_str" column="need_prove_equal_str"/>
     </resultMap>
 
@@ -28,10 +28,10 @@
         initial_points_set, points_location_x, points_location_y, initial_equals_str_set, need_prove_equal_str)
         VALUES (null, #{problem.problem_name}, #{problem.problem_picture}, #{problem.problem_author_id},
         #{problem.create_date},
-        #{problem.initial_points_set, typeHandler=dao.handler.SetToVarcharTypeHandler},
-        #{problem.points_location_x, typeHandler=dao.handler.HashMapToVarcharTypeHandler},
-        #{problem.points_location_y, typeHandler=dao.handler.HashMapToVarcharTypeHandler},
-        #{problem.initial_equals_str_set, typeHandler=dao.handler.SetToVarcharTypeHandler},
+        #{problem.initial_points_set, typeHandler=com.bigfatcat.geometry3.dao.handler.SetToVarcharTypeHandler},
+        #{problem.points_location_x, typeHandler=com.bigfatcat.geometry3.dao.handler.HashMapToVarcharTypeHandler},
+        #{problem.points_location_y, typeHandler=com.bigfatcat.geometry3.dao.handler.HashMapToVarcharTypeHandler},
+        #{problem.initial_equals_str_set, typeHandler=com.bigfatcat.geometry3.dao.handler.SetToVarcharTypeHandler},
         #{problem.need_prove_equal_str})
     </insert>
 
@@ -48,16 +48,20 @@
             <if test="problem.problem_name != null">problem_name = #{problem.problem_name}, </if>
             <if test="problem.problem_picture != null">problem_picture = #{problem.problem_picture}, </if>
             <if test="problem.initial_points_set != null">
-                initial_points_set = #{problem.initial_points_set, typeHandler=dao.handler.SetToVarcharTypeHandler},
+                initial_points_set = #{problem.initial_points_set,
+                typeHandler=com.bigfatcat.geometry3.dao.handler.SetToVarcharTypeHandler},
             </if>
             <if test="problem.points_location_x != null">
-                points_location_x = #{problem.points_location_x, typeHandler=dao.handler.HashMapToVarcharTypeHandler},
+                points_location_x = #{problem.points_location_x,
+                typeHandler=com.bigfatcat.geometry3.dao.handler.HashMapToVarcharTypeHandler},
             </if>
             <if test="problem.points_location_y != null">
-                points_location_y = #{problem.points_location_y, typeHandler=dao.handler.HashMapToVarcharTypeHandler},
+                points_location_y = #{problem.points_location_y,
+                typeHandler=com.bigfatcat.geometry3.dao.handler.HashMapToVarcharTypeHandler},
             </if>
             <if test="problem.initial_equals_str_set != null">
-                initial_equals_str_set = #{problem.initial_equals_str_set, typeHandler=dao.handler.SetToVarcharTypeHandler},
+                initial_equals_str_set = #{problem.initial_equals_str_set, 
+                typeHandler=com.bigfatcat.geometry3.dao.handler.SetToVarcharTypeHandler},
             </if>
             <if test="problem.need_prove_equal_str != null">need_prove_equal_str = #{problem.need_prove_equal_str}</if>
         </set>

@@ -19,11 +19,8 @@ import java.util.HashSet;
 @Service("problemService")
 public class ProblemServiceImpl implements ProblemService {
 
-    private ProblemDao problemDao;
     @Resource(name = "problemDao")
-    public void setProblemDao(ProblemDao problemDao) {
-        this.problemDao = problemDao;
-    }
+    private ProblemDao problemDao;
 
     /**保存一个新的题目*/
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)

@@ -2,12 +2,12 @@ package com.bigfatcat.geometry3.controller;
 
 import com.bigfatcat.geometry3.dao.ProblemDao;
 import com.bigfatcat.geometry3.entity.Problem;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,7 +19,7 @@ import java.util.HashSet;
 @Controller
 public class ProblemController {
 
-    @Autowired
+    @Resource(name = "problemDao")
     private ProblemDao problemDao;
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "mybatis-3-mapper.dtd">
-<mapper namespace="dao.UserDao">
+<mapper namespace="com.bigfatcat.geometry3.dao.UserDao">
 
     <cache eviction="LRU" flushInterval="3600000" size="512" readOnly="true"/>
 
