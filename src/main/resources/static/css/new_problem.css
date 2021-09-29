@@ -1,0 +1,125 @@
+/*创建新题目正文*/
+#new_problem{
+	width: 1251px;
+	height: 3000px;
+	margin: auto;
+	margin-top: 80px;
+	padding-top: 60px;
+}
+
+/*第一环节，画图*/
+#draw_problem{
+	width: 1000px;
+	height: 700px;
+	margin-left: 100px;
+}
+#draw_guide > img{
+	width: 70px;
+	height: 40px;
+	float: left;
+}
+#draw_guide > span{
+	height: 40px;
+	float: left;
+	font-size: 30px;
+	vertical-align: bottom;
+}
+#draw_canvas{
+	width: 1000px;
+	height: 600px;
+	margin-top: 10px;
+	border: 3px solid #9d9895;
+	border-radius: 8px;
+}
+
+/*第二环节，输入已知等量关系*/
+#input_known_conditions{
+	width: 1200px;
+	height: 400px;
+	margin-left: 100px;
+	margin-top: 60px;
+}
+#input_known_conditions_guide{
+	width: 500px;
+	height: 40px;
+}
+#input_known_conditions_guide > img{
+	width: 70px;
+	height: 40px;
+	float: left;
+}
+#input_known_conditions_guide > span{
+	height: 40px;
+	float: left;
+	font-size: 30px;
+}
+#input_new_known_conditions{
+	width: 700px;
+	height: 200px;
+	float: left;
+	margin-top: 40px;
+	padding-left: 20px;
+}
+#input_new_known_conditions div:nth-child(1){
+	width: 600px;
+}
+#input_new_known_conditions div:nth-child(2){
+	width: 600px;
+	height: 50px;
+	margin-top: 20px;
+}
+#input_new_known_conditions_box > select {
+	width: 50px;
+	height: 40px;
+	float: left;
+	margin-left: 20px;
+	margin-right: 20px;
+	border: 2px solid #9d9895;
+	font-size: 30px;
+	text-align: center;
+}
+#input_new_known_conditions_box input{
+	width: 250px;
+	height: 40px;
+	float: left;
+	border: 2px solid #9d9895;
+	border-radius: 8px;
+	font-size: 20px;
+	text-align: center;
+}
+#button_submit_input_condition{
+	width: 100px;
+	height: 50px;
+	float: left;
+	margin-left: 200px;
+	border: 2px solid #9d9895;
+	border-radius: 8px;
+}
+#button_submit_input_condition > span{
+	width: 80px;
+	height: 40px;
+	margin: auto;
+}
+#button_submit_input_condition > span > span{
+	width: 70px;
+	height: 30px;
+	margin-top: 10px;
+	margin-left: 5px;
+	font-size: 20px;
+	text-align: center;
+}
+#total_known_conditions{
+	width: 500px;
+	height: 400px;
+	float: left;
+}
+#total_known_conditions_list li{
+	margin-top: 5px;
+}
+.button_condition_delete{
+	float: right;
+	width: 70px;
+	height: 26px;
+	border: 2px solid #9d9895;
+	border-radius: 8px;
+}

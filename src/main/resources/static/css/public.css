@@ -1,0 +1,108 @@
+/**********公共-默认设置************/
+html{font-family:"微软雅黑";font-size:20px;background-color:#eeeee;}
+
+/**********公共-背景************/
+.geometry3_background_img{
+	width: 100%;
+	height: 3200px;
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: -1;
+	opacity: 0.1;
+}
+
+/**********公共-页眉部分************/
+.geometry3_header{
+	width: 100%;
+	height: 77px;
+	position: fixed;
+	top: 0;
+	z-index: 10;
+	overflow: hidden;
+	border-bottom: 2px solid #9d9895;
+	background-color: #E0ECFF;
+}
+.header_content{
+	width: 1251px;
+	height: 77px;
+	margin: auto;
+}
+.header_content > img{
+	width: 55px;
+	height: 50px;
+	float: left;
+	margin-top: 10px;
+	margin-left: 0px;
+	opacity: 1.0;
+}
+.header_content a:nth-child(2){
+	float: left;
+	margin-top: 25px;
+	margin-left: 150px;
+	color: #000;
+	text-decoration:none;
+}
+.header_content a:nth-child(3){
+	float: left;
+	margin-top: 25px;
+	margin-left: 70px;
+	color: #000;
+	text-decoration:none;
+}
+.header_content a:nth-child(4){
+	float: left;
+	margin-top: 25px;
+	margin-left: 70px;
+	color: #000;
+	text-decoration:none;
+}
+.header_content a:nth-child(5){
+	float: left;
+	margin-top: 25px;
+	margin-left: 70px;
+	color: #000;
+	text-decoration:none;
+}
+.header_content a:nth-child(6){
+	float: right;
+	margin-top: 25px;
+	margin-right: 10px;
+	color: #000;
+	text-decoration:none;
+}
+#header_text_underline{
+	position: absolute;
+	left: 0px;
+	top: 58px;
+	border-bottom: solid 2px black;
+	width: 0px; 
+}
+
+/**********公共-按钮类************/
+.input_tool_buttons{
+	height: 50px;
+	margin-top: 30px;
+	padding-left: 30px;
+}
+.button_input{
+	width: 50px;
+	height: 50px;
+	float: left;
+	margin-left: 30px;
+	border: 2px solid #9d9895;
+	border-radius: 8px;
+}
+.button_input > span{
+	width: 40px;
+	height: 40px;
+	margin: auto;
+}
+.button_input > span > span{
+	width: 30px;
+	height: 30px;
+	margin-top: 10px;
+	margin-left: 5px;
+	font-size: 30px;
+	text-align: center;
+}

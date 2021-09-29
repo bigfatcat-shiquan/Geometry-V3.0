@@ -1,0 +1,11 @@
+.geometry3_introduce{
+	width: 1251px;
+	height: 800px;
+	margin: auto;
+	margin-top: 80px;
+}
+.geometry3_introduce > span{
+	float: left;
+	margin-top: 20px;
+	margin-left: 10px;
+}

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<title>Geometry3-创建新题目</title>
+		<!--jQuery EasyUI-->
+		<link rel="stylesheet" type="text/css" href="../static/js/jquery-easyui-1.8.6/themes/default/easyui.css" />
+		<link rel="stylesheet" type="text/css"  href="../static/js/jquery-easyui-1.8.6/themes/icon.css" />
+		<script type="text/javascript" src="../static/js/jquery-easyui-1.8.6/jquery.min.js"></script>
+		<script type="text/javascript" src="../static/js/jquery-easyui-1.8.6/jquery-color-2.1.2.js"></script>
+		<script type="text/javascript" src="../static/js/jquery-easyui-1.8.6/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="../static/js/jquery-easyui-1.8.6/locale/easyui-lang-zh_CN.js"></script>
+		<!-- 项目内部依赖 -->
+		<link rel="stylesheet" type="text/css" href="../static/css/public.css"/>
+		<link rel="stylesheet" type="text/css" href="../static/css/new_problem.css"/>
+		<script src="../static/js/public.js"></script>
+		<script src="../static/js/new_problem.js"></script>
+	</head>
+	<body>
+		<div id="box">
+			<!--公共-背景-->
+			<img class="geometry3_background_img" src="../static/img/geometry3_banner_long.jpg" alt="背景图"/>
+			<!--公共-页眉部分-->
+			<header class="geometry3_header">
+				<div class="header_content">
+					<img src="../static/img/geometry3_logo.png" alt="logo图"/>
+					<a href="home.html">GeometryV3</a>
+					<a href="#">公共题库</a>
+					<a href="#">我的题库</a>
+					<a href="new_problem.html">新的题目</a>
+					<a href="#">登录</a>
+					<span id="header_text_underline"></span>
+				</div>
+			</header>
+			<!--正文部分-->
+			<div id="new_problem">
+				<!--第一环节，画图-->
+				<div id="draw_problem">
+					<div id="draw_guide">
+						<img class="guide_icon" src="../static/img/icons/no_1.png" alt="第一步"/>
+						<span>在这里画出你的图形</span>
+					</div>
+					<canvas id="draw_canvas"></canvas>
+				</div>
+				<!--第二环节，输入已知等量关系-->
+				<div id="input_known_conditions">
+					<div id="input_known_conditions_guide">
+						<img class="guide_icon" src="../static/img/icons/no_2.png" alt="第二步"/>
+						<span>在这里输入题目初始已知条件</span>
+					</div>
+					<div id="input_new_known_conditions">
+						<div>输入题目初始条件(每次一条)</div>
+						<div id="input_new_known_conditions_box">
+							<input id="new_conditions_input_left" type="text"/>
+							<select id="new_condition_type_selector">
+							  <option value="=">=</option>
+							  <option value=">">></option>
+							  <option value=">"><</option>
+							</select>
+							<input id="new_conditions_input_right" type="text"/>
+						</div>
+						<div class="input_tool_buttons">
+							<a id="button_input_angle" class="easyui-linkbutton button_input">∠</a>
+							<a id="button_input_power" class="easyui-linkbutton button_input">^</a>
+							<a id="button_submit_input_condition" class="easyui-linkbutton">提交</a>
+						</div>
+					</div>
+					<div id="total_known_conditions">
+						<div>
+							<span>已输入的已知条件：</span>
+							<span id="total_known_conditions_count">0个</span>
+						</div>
+						<ul id="total_known_conditions_list"></ul>
+					</div>
+				</div>
+				<!--第三环节，输入待求证等量关系-->
+				<!--保存并解答该题目-->
+			</div>
+		</div>
+	</body>
+</html>
