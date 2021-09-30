@@ -1,7 +1,7 @@
-/**********公共-默认设置************/
+/* 公共-默认设置 */
 html{font-family:"微软雅黑";font-size:20px;background-color:#eeeee;}
 
-/**********公共-背景************/
+/* 公共-背景 */
 .geometry3_background_img{
 	width: 100%;
 	height: 3200px;
@@ -12,7 +12,7 @@ html{font-family:"微软雅黑";font-size:20px;background-color:#eeeee;}
 	opacity: 0.1;
 }
 
-/**********公共-页眉部分************/
+/* 公共-页眉部分 */
 .geometry3_header{
 	width: 100%;
 	height: 77px;
@@ -79,7 +79,7 @@ html{font-family:"微软雅黑";font-size:20px;background-color:#eeeee;}
 	width: 0px; 
 }
 
-/**********公共-按钮类************/
+/* 公共-按钮类 */
 .input_tool_buttons{
 	height: 50px;
 	margin-top: 30px;
@@ -106,3 +106,4 @@ html{font-family:"微软雅黑";font-size:20px;background-color:#eeeee;}
 	font-size: 30px;
 	text-align: center;
 }
+

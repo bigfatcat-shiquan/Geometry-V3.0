@@ -1,4 +1,4 @@
-/*创建新题目正文*/
+/* 创建新题目正文 */
 #new_problem{
 	width: 1251px;
 	height: 3000px;
@@ -7,7 +7,7 @@
 	padding-top: 60px;
 }
 
-/*第一环节，画图*/
+/* 第一环节，画图 */
 #draw_problem{
 	width: 1000px;
 	height: 700px;
@@ -32,7 +32,7 @@
 	border-radius: 8px;
 }
 
-/*第二环节，输入已知等量关系*/
+/* 第二环节，输入已知等量关系 */
 #input_known_conditions{
 	width: 1200px;
 	height: 400px;
@@ -110,16 +110,24 @@
 }
 #total_known_conditions{
 	width: 500px;
-	height: 400px;
+	height: 350px;
 	float: left;
+}
+#total_known_conditions_list{
+	width: 500px;
+	height: 300px;
+	overflow: auto;
 }
 #total_known_conditions_list li{
 	margin-top: 5px;
 }
 .button_condition_delete{
-	float: right;
 	width: 70px;
 	height: 26px;
+	float: right;
+	margin-right: 30px;
 	border: 2px solid #9d9895;
 	border-radius: 8px;
 }
+
+/* 第三环节，输入待求证等量关系 */

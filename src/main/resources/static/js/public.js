@@ -1,8 +1,9 @@
 // 初始化部分元素
+var current_input_box = null;
 
 
 // 公共触发器
-$(document).ready(function(){
+$(document).ready(function() {
 	
 	// 鼠标悬停header模块时，下划线效果
 	let header_href_texts = $(".header_content a");
@@ -23,23 +24,29 @@ $(document).ready(function(){
 	
 	// 鼠标悬停序号图标时，闪烁效果
 	let guide_icons = $(".guide_icon");
-	guide_icons.mouseover(function(){
-		if (guide_icons.is(":animated")){
+	guide_icons.mouseover(function() {
+		if (guide_icons.is(":animated")) {
 			guide_icons.stop();
 		}
 		$(this).animate({opacity: 0.5}, "fast")
 	});
-	guide_icons.mouseout(function(){
-		if (guide_icons.is(":animated")){
+	guide_icons.mouseout(function() {
+		if (guide_icons.is(":animated")) {
 			guide_icons.stop();
 		}
 		$(this).animate({opacity: 1.0}, "fast")
 	});
 	
 	// 输入工具按钮效果
-	let button_input = $(".button_input")
-	button_input.on("click", function(){
-		alert("2");
+	$(":text").on("click", function() {
+		current_input_box = $(this);
 	});
+	$(".button_input").on("click", function() {
+		if (current_input_box != null) {
+			current_input_box.val(current_input_box.val() + $(this).text());
+		}
+	});
+	
+	// 
 	
 });
