@@ -25,14 +25,14 @@ $(document).ready(function() {
 	// 鼠标悬停序号图标时，闪烁效果
 	let guide_icons = $(".guide_icon");
 	guide_icons.mouseover(function() {
-		if (guide_icons.is(":animated")) {
-			guide_icons.stop();
+		if ($(this).is(":animated")) {
+			$(this).stop();
 		}
 		$(this).animate({opacity: 0.5}, "fast")
 	});
 	guide_icons.mouseout(function() {
-		if (guide_icons.is(":animated")) {
-			guide_icons.stop();
+		if ($(this).is(":animated")) {
+			$(this).stop();
 		}
 		$(this).animate({opacity: 1.0}, "fast")
 	});

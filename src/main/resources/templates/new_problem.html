@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8"/>
 		<title>Geometry3-创建新题目</title>
-		<!--jQuery EasyUI-->
+		<!-- jQuery EasyUI -->
 		<link rel="stylesheet" type="text/css" href="../static/js/jquery-easyui-1.8.6/themes/default/easyui.css" />
 		<link rel="stylesheet" type="text/css"  href="../static/js/jquery-easyui-1.8.6/themes/icon.css" />
 		<script type="text/javascript" src="../static/js/jquery-easyui-1.8.6/jquery.min.js"></script>
@@ -18,9 +18,9 @@
 	</head>
 	<body>
 		<div id="box">
-			<!--公共-背景-->
+			<!-- 公共-背景 -->
 			<img class="geometry3_background_img" src="../static/img/geometry3_banner_long.jpg" alt="背景图"/>
-			<!--公共-页眉部分-->
+			<!-- 公共-页眉部分 -->
 			<header class="geometry3_header">
 				<div class="header_content">
 					<img src="../static/img/geometry3_logo.png" alt="logo图"/>
@@ -32,25 +32,25 @@
 					<span id="header_text_underline"></span>
 				</div>
 			</header>
-			<!--正文部分-->
+			<!-- 正文部分 -->
 			<div id="new_problem">
-				<!--第一环节，画图-->
+				<!-- 第一环节，画图 -->
 				<div id="draw_problem">
-					<div id="draw_guide">
+					<div id="draw_guide" class="step_guide">
 						<img class="guide_icon" src="../static/img/icons/no_1.png" alt="第一步"/>
 						<span>在这里画出你的图形</span>
 					</div>
 					<canvas id="draw_canvas"></canvas>
 				</div>
-				<!--第二环节，输入已知等量关系-->
+				<!-- 第二环节，输入已知等量关系 -->
 				<div id="input_known_conditions">
-					<div id="input_known_conditions_guide">
+					<div id="input_known_conditions_guide" class="step_guide">
 						<img class="guide_icon" src="../static/img/icons/no_2.png" alt="第二步"/>
 						<span>在这里输入题目初始已知条件</span>
 					</div>
 					<div id="input_new_known_conditions">
 						<div>输入题目初始条件(每次一条)</div>
-						<div id="input_new_known_conditions_box">
+						<div id="input_new_known_conditions_box" class="input_condition_box">
 							<input id="new_conditions_input_left" type="text"/>
 							<select id="new_condition_type_selector">
 							  <option value="=">=</option>
@@ -59,9 +59,9 @@
 							<input id="new_conditions_input_right" type="text"/>
 						</div>
 						<div class="input_tool_buttons">
-							<a id="button_input_angle" class="easyui-linkbutton button_input">∠</a>
-							<a id="button_input_power" class="easyui-linkbutton button_input">^</a>
-							<a id="button_submit_input_condition" class="easyui-linkbutton">提交</a>
+							<a class="easyui-linkbutton button_input">∠</a>
+							<a class="easyui-linkbutton button_input">^</a>
+							<a id="button_submit_input_condition" class="easyui-linkbutton button_submit_1">提交</a>
 						</div>
 					</div>
 					<div id="total_known_conditions">
@@ -72,9 +72,46 @@
 						<ul id="total_known_conditions_list"></ul>
 					</div>
 				</div>
-				<!--第三环节，输入待求证等量关系-->
-				
-				<!--保存并解答该题目-->
+				<!-- 第三环节，输入待求证等量关系 -->
+				<div id="input_need_prove">
+					<div id="input_need_prove_guide" class="step_guide">
+						<img class="guide_icon" src="../static/img/icons/no_3.png" alt="第三步"/>
+						<span>在这里输入题目待求证的等量关系</span>
+					</div>
+					<div id="input_new_need_prove">
+						<div>输入题目待求证等量关系</div>
+						<div id="input_new_need_prove_box" class="input_condition_box">
+							<input id="new_need_prove_input_left" type="text"/>
+							<select id="new_need_prove_type_selector">
+							  <option value="=">=</option>
+							  <option value=">">></option>
+							</select>
+							<input id="new_need_prove_input_right" type="text"/>
+						</div>
+						<div class="input_tool_buttons">
+							<a class="easyui-linkbutton button_input">∠</a>
+							<a class="easyui-linkbutton button_input">^</a>
+							<a id="button_submit_need_prove" class="easyui-linkbutton button_submit_1">提交</a>
+						</div>
+					</div>
+					<div id="final_need_prove">
+						<div>待求证等量关系式为：</div>
+						<div id="final_need_prove_str"></div>
+						<a id="button_delete_need_prove" class="easyui-linkbutton button_submit_1">清除</a>
+					</div>
+				</div>
+				<!-- 第四环节，保存并解答该题目 -->
+				<div id="start_the_new_problem">
+					<div id="start_the_new_problem_guide" class="step_guide">
+						<img class="guide_icon" src="../static/img/icons/no_4.png" alt="第四步"/>
+						<span>题目录入完成，保存并解答该题目</span>
+					</div>
+					<div id="start_the_new_problem_content">
+						<a id="button_start_the_new_problem" href="javascript:void(0)">
+							<img src="../static/img/buttons/start_new_problem.png" alt="开始此题目"/>
+						</a>
+					</div>
+				</div>
 			</div>
 		</div>
 	</body>

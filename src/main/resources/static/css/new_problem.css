@@ -5,24 +5,37 @@
 	margin: auto;
 	margin-top: 80px;
 	padding-top: 60px;
+	padding-left: 100px;
+}
+
+/* 公共，本页面指引框、输入框、按钮 */
+.step_guide{
+	width: 1000px;
+	height: 40px;
+}
+.step_guide > img{
+	width: 70px;
+	height: 40px;
+	float: left;
+}
+.step_guide > span{
+	height: 40px;
+	float: left;
+	font-size: 30px;
+}
+.input_tool_buttons{
+	margin-top: 30px;
+	padding-left: 30px;
+}
+.button_input{
+	float: left;
+	margin-left: 30px;
 }
 
 /* 第一环节，画图 */
 #draw_problem{
 	width: 1000px;
 	height: 700px;
-	margin-left: 100px;
-}
-#draw_guide > img{
-	width: 70px;
-	height: 40px;
-	float: left;
-}
-#draw_guide > span{
-	height: 40px;
-	float: left;
-	font-size: 30px;
-	vertical-align: bottom;
 }
 #draw_canvas{
 	width: 1000px;
@@ -36,22 +49,7 @@
 #input_known_conditions{
 	width: 1200px;
 	height: 400px;
-	margin-left: 100px;
 	margin-top: 60px;
-}
-#input_known_conditions_guide{
-	width: 500px;
-	height: 40px;
-}
-#input_known_conditions_guide > img{
-	width: 70px;
-	height: 40px;
-	float: left;
-}
-#input_known_conditions_guide > span{
-	height: 40px;
-	float: left;
-	font-size: 30px;
 }
 #input_new_known_conditions{
 	width: 700px;
@@ -63,50 +61,12 @@
 #input_new_known_conditions div:nth-child(1){
 	width: 600px;
 }
-#input_new_known_conditions div:nth-child(2){
-	width: 600px;
-	height: 50px;
+#input_new_known_conditions_box{
 	margin-top: 20px;
 }
-#input_new_known_conditions_box > select {
-	width: 50px;
-	height: 40px;
-	float: left;
-	margin-left: 20px;
-	margin-right: 20px;
-	border: 2px solid #9d9895;
-	font-size: 30px;
-	text-align: center;
-}
-#input_new_known_conditions_box input{
-	width: 250px;
-	height: 40px;
-	float: left;
-	border: 2px solid #9d9895;
-	border-radius: 8px;
-	font-size: 20px;
-	text-align: center;
-}
 #button_submit_input_condition{
-	width: 100px;
-	height: 50px;
 	float: left;
 	margin-left: 200px;
-	border: 2px solid #9d9895;
-	border-radius: 8px;
-}
-#button_submit_input_condition > span{
-	width: 80px;
-	height: 40px;
-	margin: auto;
-}
-#button_submit_input_condition > span > span{
-	width: 70px;
-	height: 30px;
-	margin-top: 10px;
-	margin-left: 5px;
-	font-size: 20px;
-	text-align: center;
 }
 #total_known_conditions{
 	width: 500px;
@@ -131,3 +91,63 @@
 }
 
 /* 第三环节，输入待求证等量关系 */
+#input_need_prove{
+	width: 1200px;
+	height: 300px;
+	margin-top: 60px;
+}
+#input_new_need_prove{
+	width: 700px;
+	height: 200px;
+	float: left;
+	margin-top: 40px;
+	padding-left: 20px;
+}
+#input_new_need_prove div:nth-child(1){
+	width: 600px;
+}
+#input_new_need_prove_box{
+	margin-top: 20px;
+}
+#button_submit_need_prove{
+	float: left;
+	margin-left: 200px;
+}
+#final_need_prove{
+	width: 500px;
+	height: 200px;
+	float: left;
+	margin-top: 40px;
+}
+#final_need_prove_str{
+	width: 500px;
+	height: 50px;
+	margin-top: 20px;
+	overflow: auto;
+}
+#button_delete_need_prove{
+	margin-top: 30px;
+	margin-left: 50px;
+}
+
+/* 第四环节，保存并解答该题目 */
+#start_the_new_problem{
+	width: 1000px;
+	height: 200px;
+	margin-top: 60px;
+}
+#start_the_new_problem_content{
+	width: 1000px;
+	height: 150px;
+	padding-top: 80px;
+}
+#start_the_new_problem_content > a {
+	width: 200px;
+	height: 60px;
+	float: left;
+	margin-left: 400px;
+}
+#start_the_new_problem_content > a > img{
+	width: 200px;
+	height: 60px;
+}
