@@ -1,4 +1,7 @@
 // 初始化全局变量
+var problem_name = null;
+var problem_picture = null;
+var problem_author_id = null;
 var points_set = new Set();
 var points_location_x = new Map();
 var points_location_y = new Map();
@@ -7,6 +10,58 @@ var need_prove_equal_str = null;
 
 // 触发器
 $(document).ready(function() {
+	
+	// 画板效果，装载paper库，点的添加，线段连接，移动，高亮，删除，保存	
+	paper.install(window);
+	window.onload = function() { 
+		paper.setup(document.getElementById("draw_canvas"));
+		
+		// 初始化中间变量
+		var canvas_left = $("#draw_canvas").offset().left;
+		var canvas_top = $("#draw_canvas").offset().top;
+		var current_draw = null;
+		var all_points = {};
+		
+		// 点击绘制面板按钮
+		$("#button_draw_point").on("click", function(){
+			current_draw = "point";
+			$(this).css({"background-color": "#aaaa7f"});
+		});
+		$("#button_draw_line").on("click", function(){
+			current_draw = "line";
+			$(this).css({"background-color": "#aaaa7f"});
+		});
+		
+		// 点击按钮创建点，定义点相关的事件
+		$("#draw_canvas").on("click", function(e){
+			if (current_draw == "point") { 
+				var new_position = new Point(e.pageX - canvas_left, e.pageY - canvas_top);
+				var new_point_shape = new Shape.Circle({
+				    center: new_position,
+				    radius: 5,
+				    fillColor: "#55557f",
+					strokeWidth: 1, 
+					strokeColor: "#000000"
+				});	
+				new_point_shape.onMouseEnter = function(event) {
+					this.strokeColor = "#ff5500";
+					this.strokeWidth = 3;
+				}
+				new_point_shape.onMouseLeave = function(event) {
+					this.strokeColor = "#000000";
+					this.strokeWidth = 1;
+				}
+				new_point_shape.onMouseDrag = function(event) {
+					this.position['x'] += event.delta['x'];
+					this.position['y'] += event.delta['y'];
+				}
+				
+			}
+			
+		});
+		
+		// 效果包括：1.创建点及对应名称 2.创建点之间连线 3.点在线上高亮提示 4.拖拽改变点位置以及连线位置 5.保存
+	}
 	
 	// 输入新已知条件后提交按钮效果
 	$("#button_submit_input_condition").on("click", function() {
@@ -72,10 +127,26 @@ $(document).ready(function() {
 		$(this).animate({opacity: 1.0}, "fast")
 	});
 	$("#button_start_the_new_problem").on("click", function() {
-		let a = Object.create(null);
-		a["A"] = 1.0;
-		a["B"] = 2.0;
-		alert(JSON.stringify(a));
+		let a = new Map();
+		a.set("A", 2.0);
+		a.set("B", "5.0");
+		alert(mapToJson(a));
+		alert(setToJson(initial_equals_str_set));
+		// $.post("/geometry3/startNewProblem",
+		//     {
+		//       "problem_name": problem_name,
+		//       "problem_picture": problem_picture, 
+		// 	  "problem_author_id": problem_author_id, 
+		// 	  "points_set": setToJson(points_set), 
+		// 	  "points_location_x": mapToJson(points_location_x), 
+		// 	  "points_location_y": mapToJson(points_location_y), 
+		// 	  "initial_equals_str_set": setToJson(initial_equals_str_set), 
+		// 	  "need_prove_equal_str": need_prove_equal_str
+		//     },
+		//     function(data,status){
+		//       alert("数据：" + data + "\n状态：" + status);
+		// 	}
+		// );
 	});
 	
 });

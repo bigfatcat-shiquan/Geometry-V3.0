@@ -10,6 +10,8 @@
 		<script type="text/javascript" src="../static/js/jquery-easyui-1.8.6/jquery-color-2.1.2.js"></script>
 		<script type="text/javascript" src="../static/js/jquery-easyui-1.8.6/jquery.easyui.min.js"></script>
 		<script type="text/javascript" src="../static/js/jquery-easyui-1.8.6/locale/easyui-lang-zh_CN.js"></script>
+		<!-- PaperJS -->
+		<script type="text/javascript" src="https://unpkg.com/paper@0.12.15/dist/paper-full.js"></script>
 		<!-- 项目内部依赖 -->
 		<link rel="stylesheet" type="text/css" href="../static/css/public.css"/>
 		<link rel="stylesheet" type="text/css" href="../static/css/new_problem.css"/>
@@ -39,6 +41,10 @@
 					<div id="draw_guide" class="step_guide">
 						<img class="guide_icon" src="../static/img/icons/no_1.png" alt="第一步"/>
 						<span>在这里画出你的图形</span>
+					</div>
+					<div id="draw_tool_buttons">
+						<a id="button_draw_point" class="easyui-linkbutton button_draw_1">·</a>
+						<a id="button_draw_line" class="easyui-linkbutton button_draw_1">-</a>
 					</div>
 					<canvas id="draw_canvas"></canvas>
 				</div>

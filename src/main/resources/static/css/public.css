@@ -146,3 +146,22 @@ html{font-family:"微软雅黑";font-size:20px;background-color:#eeeee;}
 	font-size: 20px;
 	text-align: center;
 }
+.button_draw_1{
+	width: 50px;
+	height: 50px;
+	border: 2px solid #9d9895;
+	border-radius: 8px;
+}
+.button_draw_1 > span{
+	width: 40px;
+	height: 40px;
+	margin: auto;
+}
+.button_draw_1 > span > span{
+	width: 30px;
+	height: 30px;
+	margin-top: 10px;
+	margin-left: 5px;
+	font-size: 30px;
+	text-align: center;
+}

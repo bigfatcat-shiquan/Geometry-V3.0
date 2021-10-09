@@ -50,3 +50,16 @@ $(document).ready(function() {
 	// 
 	
 });
+
+// 公共工具方法
+function setToJson(this_set) {
+	return JSON.stringify(Array.from(this_set));
+}
+
+function mapToJson(this_map) {
+	temp_object = {};
+	this_map.forEach(function(item, key, mapObj) {
+		temp_object[key] = item;
+	})
+	return JSON.stringify(temp_object);
+}
