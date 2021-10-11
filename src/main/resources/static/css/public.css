@@ -165,3 +165,7 @@ html{font-family:"微软雅黑";font-size:20px;background-color:#eeeee;}
 	font-size: 30px;
 	text-align: center;
 }
+.button_draw_1 img{
+	width: 25px;
+	height: 25px;
+}

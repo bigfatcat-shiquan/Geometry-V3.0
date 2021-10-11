@@ -43,10 +43,24 @@
 						<span>在这里画出你的图形</span>
 					</div>
 					<div id="draw_tool_buttons">
-						<a id="button_draw_point" class="easyui-linkbutton button_draw_1">·</a>
-						<a id="button_draw_line" class="easyui-linkbutton button_draw_1">-</a>
+						<a id="button_draw_select" class="easyui-linkbutton button_draw_1">
+							<img src="../static/img/buttons/draw_button_select.png"/>
+						</a>
+						<a id="button_draw_point" class="easyui-linkbutton button_draw_1">
+							<img src="../static/img/buttons/draw_button_point.png"/>
+						</a>
+						<a id="button_draw_line" class="easyui-linkbutton button_draw_1">
+							<img src="../static/img/buttons/draw_button_line.png"/>
+						</a>
 					</div>
 					<canvas id="draw_canvas"></canvas>
+					<div id="dialog_rename_point_name" class="easyui-dialog" title="点重命名" closed="true"
+						buttons="#dialog_rename_point_name_buttons">
+						<input type="text"/>
+					</div>
+					<div id="dialog_rename_point_name_buttons">
+					    <a class="easyui-linkbutton" onclick="renamePoint()">确定</a>
+					</div>
 				</div>
 				<!-- 第二环节，输入已知等量关系 -->
 				<div id="input_known_conditions">

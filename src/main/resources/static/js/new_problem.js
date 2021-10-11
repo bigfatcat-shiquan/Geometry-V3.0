@@ -11,7 +11,7 @@ var need_prove_equal_str = null;
 // 触发器
 $(document).ready(function() {
 	
-	// 画板效果，装载paper库，点的添加，线段连接，移动，高亮，删除，保存	
+	// 画板效果，装载paper库，点的添加，重命名，线段连接，拖拽移动，高亮，删除，保存	
 	paper.install(window);
 	window.onload = function() { 
 		paper.setup(document.getElementById("draw_canvas"));
@@ -20,29 +20,64 @@ $(document).ready(function() {
 		var canvas_left = $("#draw_canvas").offset().left;
 		var canvas_top = $("#draw_canvas").offset().top;
 		var current_draw = null;
-		var all_points = {};
+		var all_points = new Map();
+		var current_point_name_ascii = 65;
+		var current_point_text = null;
+		var line_endpoint_selected = null;
 		
-		// 点击绘制面板按钮
+		// 点击绘制面板的按钮
+		$("#button_draw_select").on("click", function(){
+			current_draw = null;
+			$(this).linkbutton("select");
+			$("#draw_tool_buttons").children().not("#" + $(this).attr('id')).linkbutton("unselect");
+		});
 		$("#button_draw_point").on("click", function(){
 			current_draw = "point";
-			$(this).css({"background-color": "#aaaa7f"});
+			$(this).linkbutton("select");
+			$("#draw_tool_buttons").children().not("#" + $(this).attr('id')).linkbutton("unselect");
 		});
 		$("#button_draw_line").on("click", function(){
 			current_draw = "line";
-			$(this).css({"background-color": "#aaaa7f"});
+			$(this).linkbutton("select");
+			$("#draw_tool_buttons").children().not("#" + $(this).attr('id')).linkbutton("unselect");
 		});
 		
-		// 点击按钮创建点，定义点相关的事件
+		// 点击按钮后在画板上创建点或线段，定义点或线段相关的事件
 		$("#draw_canvas").on("click", function(e){
 			if (current_draw == "point") { 
-				var new_position = new Point(e.pageX - canvas_left, e.pageY - canvas_top);
+				// 创建点对象及点名称对象
+				if (current_point_name_ascii >= 91) {
+					$.messager.alert('无效', '图中点的数量已经太多了');
+					return;
+				}
+				while (all_points.has(String.fromCharCode(current_point_name_ascii))) {
+					current_point_name_ascii++;
+				}
+				var click_coordinate = new Point(e.pageX - canvas_left, e.pageY - canvas_top);
 				var new_point_shape = new Shape.Circle({
-				    center: new_position,
+				    center: click_coordinate,
 				    radius: 5,
 				    fillColor: "#55557f",
 					strokeWidth: 1, 
 					strokeColor: "#000000"
 				});	
+				var new_point_text = new PointText({
+					point: [click_coordinate['x'] - 20, click_coordinate['y'] + 20], 
+					justification: "center", 
+					fillColor: "black",
+					fontFamily: "Times New Roman",
+					fontWeight: "bold",
+					fontSize: 20, 
+					content: String.fromCharCode(current_point_name_ascii++)
+				});
+				new_point_shape.point_text = new_point_text;
+				new_point_text.point_shape = new_point_shape;
+				new_point_group = new Group([new_point_shape, new_point_text]);
+				new_point_shape.group = new_point_group;
+				new_point_shape.as_first_of_lines = new Set();
+				new_point_shape.as_last_of_lines = new Set();
+				all_points.set(new_point_text.content, new_point_shape);
+				// 定义相关事件效果
 				new_point_shape.onMouseEnter = function(event) {
 					this.strokeColor = "#ff5500";
 					this.strokeWidth = 3;
@@ -52,13 +87,71 @@ $(document).ready(function() {
 					this.strokeWidth = 1;
 				}
 				new_point_shape.onMouseDrag = function(event) {
-					this.position['x'] += event.delta['x'];
-					this.position['y'] += event.delta['y'];
+					if (current_draw == null) {
+						this.group.position['x'] += event.delta['x'];
+						this.group.position['y'] += event.delta['y'];
+						this.as_first_of_lines.forEach(function(value){
+							value.firstSegment.point.x += event.delta['x'];
+							value.firstSegment.point.y += event.delta['y'];
+						});
+						this.as_last_of_lines.forEach(function(value){
+							value.lastSegment.point.x += event.delta['x'];
+							value.lastSegment.point.y += event.delta['y'];
+						});
+					}
 				}
-				
+				new_point_text.onClick = function(event) {
+					if (current_draw == null) {
+						current_point_text = this;
+						$("#dialog_rename_point_name").dialog("open");
+						$("#dialog_rename_point_name").children("input").val(this.content);
+					}
+				}
+				new_point_shape.onClick = function(event) {
+					if (current_draw == "line") {
+						if (line_endpoint_selected == null) {
+							line_endpoint_selected = this;
+						} else if (line_endpoint_selected == this) {
+							$.messager.alert('无效', '线段的两个端点不能是同一个');
+						} else {
+							var new_line = new Path.Line({
+							    from: line_endpoint_selected.position,
+							    to: this.position,
+								strokeWidth: 3, 
+								strokeColor: "#55557f"
+							});
+							line_endpoint_selected.as_first_of_lines.add(new_line);
+							this.as_last_of_lines.add(new_line);
+							// new_line.insertBelow(line_endpoint_selected);
+							// new_line.insertBelow(this);
+							line_endpoint_selected = null;
+						}
+					}
+				}
 			}
-			
 		});
+		
+		// 其他对话框效果
+		renamePoint = function() {
+			var new_name = $("#dialog_rename_point_name").children("input").val();
+			if (new_name == "") {
+				$.messager.alert('无效', '点名称不能为空');
+				$("#dialog_rename_point_name").dialog("close");
+				return;
+			}
+			if (all_points.has(new_name)) {
+				$.messager.alert('无效', '点名称与已有的重复');
+				$("#dialog_rename_point_name").dialog("close");
+				return;
+			}
+			if (current_point_text != null) {
+				var old_name = current_point_text.content;
+				current_point_text.content = new_name;
+				all_points.delete(old_name);
+				all_points.set(new_name, current_point_text.point_shape);
+				$("#dialog_rename_point_name").dialog("close");
+			}
+		}
 		
 		// 效果包括：1.创建点及对应名称 2.创建点之间连线 3.点在线上高亮提示 4.拖拽改变点位置以及连线位置 5.保存
 	}
