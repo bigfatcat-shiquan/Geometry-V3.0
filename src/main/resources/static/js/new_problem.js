@@ -11,7 +11,7 @@ var need_prove_equal_str = null;
 // 触发器
 $(document).ready(function() {
 	
-	// 画板效果，装载paper库，点的添加，重命名，线段连接，拖拽移动，高亮，删除，保存	
+	// 画板效果，装载paper库，点的添加，重命名，线段连接，拖拽移动，高亮，删除，保存
 	paper.install(window);
 	window.onload = function() { 
 		paper.setup(document.getElementById("draw_canvas"));
@@ -25,9 +25,27 @@ $(document).ready(function() {
 		var current_point_text = null;
 		var line_endpoint_selected = null;
 		
+		// 初始化起始图形对象及分组
+		var temp_point = new Shape.Circle({
+			center: [1, 1],
+			radius: 5,
+			fillColor: "#55557f",
+			strokeWidth: 1, 
+			strokeColor: "#000000",
+			visible: false
+		});
+		var temp_line = new Path.Line({
+			from: [1, 1],
+			to: [2, 2],
+			strokeWidth: 3, 
+			strokeColor: "#55557f", 
+			visible: false
+		});
+		var line_group = new Group([]);
+		
 		// 点击绘制面板的按钮
 		$("#button_draw_select").on("click", function(){
-			current_draw = null;
+			current_draw = "select";
 			$(this).linkbutton("select");
 			$("#draw_tool_buttons").children().not("#" + $(this).attr('id')).linkbutton("unselect");
 		});
@@ -40,6 +58,17 @@ $(document).ready(function() {
 			current_draw = "line";
 			$(this).linkbutton("select");
 			$("#draw_tool_buttons").children().not("#" + $(this).attr('id')).linkbutton("unselect");
+		});
+		$("#button_draw_delete").on("click", function(){
+			current_draw = "delete";
+			$(this).linkbutton("select");
+			$("#draw_tool_buttons").children().not("#" + $(this).attr('id')).linkbutton("unselect");
+		});
+		$("#button_draw_save").on("click", function(){
+			current_draw = null;
+			$("#draw_tool_buttons").children().linkbutton("unselect");
+			saveDraw();
+			$.messager.alert('提示', '绘制结果已成功保存');
 		});
 		
 		// 点击按钮后在画板上创建点或线段，定义点或线段相关的事件
@@ -87,7 +116,7 @@ $(document).ready(function() {
 					this.strokeWidth = 1;
 				}
 				new_point_shape.onMouseDrag = function(event) {
-					if (current_draw == null) {
+					if (current_draw == "select") {
 						this.group.position['x'] += event.delta['x'];
 						this.group.position['y'] += event.delta['y'];
 						this.as_first_of_lines.forEach(function(value){
@@ -101,7 +130,7 @@ $(document).ready(function() {
 					}
 				}
 				new_point_text.onClick = function(event) {
-					if (current_draw == null) {
+					if (current_draw == "select") {
 						current_point_text = this;
 						$("#dialog_rename_point_name").dialog("open");
 						$("#dialog_rename_point_name").children("input").val(this.content);
@@ -114,6 +143,7 @@ $(document).ready(function() {
 						} else if (line_endpoint_selected == this) {
 							$.messager.alert('无效', '线段的两个端点不能是同一个');
 						} else {
+							// 创建线段对象
 							var new_line = new Path.Line({
 							    from: line_endpoint_selected.position,
 							    to: this.position,
@@ -122,13 +152,67 @@ $(document).ready(function() {
 							});
 							line_endpoint_selected.as_first_of_lines.add(new_line);
 							this.as_last_of_lines.add(new_line);
-							// new_line.insertBelow(line_endpoint_selected);
-							// new_line.insertBelow(this);
+							line_group.addChild(new_line);						
 							line_endpoint_selected = null;
+							temp_line.visible = false;
+							// 定义相关事件效果
+							new_line.onMouseEnter = function(event) {
+								this.strokeColor = "#ff5500";
+								this.strokeWidth = 4;
+							}
+							new_line.onMouseLeave = function(event) {
+								this.strokeColor = "#55557f";
+								this.strokeWidth = 3;
+							}
+							new_line.onClick = function(event){
+								if (current_draw == "delete") {
+									this.remove();
+								}
+							}
 						}
+					}
+					if (current_draw == "delete") {
+						this.group.remove();
+						all_points.delete(this.point_text.content);
+						this.as_first_of_lines.forEach(function(value){
+							value.remove();
+						});
+						this.as_last_of_lines.forEach(function(value){
+							value.remove();
+						});
 					}
 				}
 			}
+		});
+		
+		// 面板相关光标提示效果
+		$("#draw_canvas").mouseenter(function() {
+			if (current_draw == "point") {
+				temp_point.visible = true;
+			}
+			if (current_draw == "delete") {
+				$("#draw_canvas").css("cursor", "url('../static/img/buttons/draw_button_delete_2.ico'), auto");
+			}
+		});
+		$("#draw_canvas").mousemove(function(e) {
+			if (current_draw == "point") {
+				var over_coordinate = new Point(e.pageX - canvas_left, e.pageY - canvas_top);
+				temp_point.position = over_coordinate;
+			}
+			if (current_draw == "line" && line_endpoint_selected != null) {
+				var over_coordinate = new Point(e.pageX - canvas_left, e.pageY - canvas_top);
+				temp_line.firstSegment.point.x = line_endpoint_selected.position['x'];
+				temp_line.firstSegment.point.y = line_endpoint_selected.position['y'];
+				temp_line.lastSegment.point.x = over_coordinate['x'];
+				temp_line.lastSegment.point.y = over_coordinate['y'];
+				temp_line.visible = true;
+			}
+		});
+		$("#draw_canvas").mouseleave(function() {
+			temp_point.visible = false;
+			temp_line.visible = false;
+			line_endpoint_selected = null;
+			$("#draw_canvas").css("cursor", "default");
 		});
 		
 		// 其他对话框效果
@@ -153,7 +237,22 @@ $(document).ready(function() {
 			}
 		}
 		
-		// 效果包括：1.创建点及对应名称 2.创建点之间连线 3.点在线上高亮提示 4.拖拽改变点位置以及连线位置 5.保存
+		// 保存绘制结果操作
+		saveDraw = function() {
+			// 题目图片
+			var image = new Image();
+			image.src = document.getElementById("draw_canvas").toDataURL("image/png");
+			problem_picture = image.src;
+			// 点坐标信息
+			points_set = new Set();
+			points_location_x = new Map();
+			points_location_y = new Map();
+			all_points.forEach(function(point_shape, point_name) {
+				points_set.add(point_name);
+				points_location_x.set(point_name, point_shape.position['x']);
+				points_location_y.set(point_name, point_shape.position['y']);
+			});
+		}
 	}
 	
 	// 输入新已知条件后提交按钮效果
@@ -220,11 +319,12 @@ $(document).ready(function() {
 		$(this).animate({opacity: 1.0}, "fast")
 	});
 	$("#button_start_the_new_problem").on("click", function() {
-		let a = new Map();
-		a.set("A", 2.0);
-		a.set("B", "5.0");
-		alert(mapToJson(a));
+		alert(problem_picture);
+		alert(setToJson(points_set));
+		alert(mapToJson(points_location_x));
+		alert(mapToJson(points_location_y));
 		alert(setToJson(initial_equals_str_set));
+		alert(need_prove_equal_str);
 		// $.post("/geometry3/startNewProblem",
 		//     {
 		//       "problem_name": problem_name,
