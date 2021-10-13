@@ -1,4 +1,11 @@
 /* 公共-默认设置 */
+html, body, div, span, iframe, h1, h2, h3, h4, h5, h6, p, pre, a, 
+address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, 
+samp, small, strike, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, 
+fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, nav, input {
+    margin: 0;
+    padding: 0
+}
 html{font-family:"微软雅黑";font-size:20px;background-color:#eeeee;}
 
 /* 公共-背景 */
@@ -25,16 +32,14 @@ html{font-family:"微软雅黑";font-size:20px;background-color:#eeeee;}
 }
 .header_content{
 	width: 1251px;
-	height: 77px;
+	height: 75px;
 	margin: auto;
 }
-.header_content > img{
+.header_content img:nth-child(1){
 	width: 55px;
 	height: 50px;
 	float: left;
 	margin-top: 10px;
-	margin-left: 0px;
-	opacity: 1.0;
 }
 .header_content a:nth-child(2){
 	float: left;
@@ -77,6 +82,77 @@ html{font-family:"微软雅黑";font-size:20px;background-color:#eeeee;}
 	top: 58px;
 	border-bottom: solid 2px black;
 	width: 0px; 
+}
+
+/* 公共-页脚部分 */
+.geometry3_footer{
+	width: 100%;
+	height: 223px;
+	z-index: 10;
+	overflow: hidden;
+	border-top: 2px solid #9d9895;
+	background-color: #E0ECFF;
+}
+.footer_content{
+	width: 1251px;
+	height: 221px;
+	margin: auto;
+}
+.footer_logo{
+	width: 200px;
+	height: 200px;
+	margin-left: 100px;
+	margin-top: 10px;
+	float: left;
+}
+.footer_logo > img{
+	width: 200px;
+	height: 200px;
+}
+.footer_advertisement{
+	width: 300px;
+	height: 200px;
+	margin-top: 10px;
+	margin-left: 100px;
+	padding-top: 30px;
+	float: left;
+}
+.footer_advertisement div{
+	margin-top: 20px;
+	font-size: 15px;
+	font-weight: bold;
+}
+.footer_advertisement a{
+	color: #000;
+	text-decoration:none;
+}
+.footer_recommend_products{
+	width: 400px;
+	height: 200px;
+	margin-top: 10px;
+	margin-left: 100px;
+	padding-top: 30px;
+	float: left;
+}
+.footer_recommend_products div:nth-child(1){
+	font-size: 15px;
+	font-style: italic;
+	font-weight: bold;
+}
+.recommend_products_picture{
+	width: 400px;
+	height: 100px;
+	margin-top: 20px;
+}
+.recommend_products_picture div{
+	width: 100px;
+	height: 100px;
+	float: left;
+	margin-right: 30px;
+}
+.recommend_products_picture img{
+	width: 100px;
+	height: 100px;
 }
 
 /* 公共-输入框类 */

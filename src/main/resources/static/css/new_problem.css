@@ -1,7 +1,7 @@
 /* 创建新题目正文 */
 #new_problem{
 	width: 1251px;
-	height: 2200px;
+	height: 2100px;
 	margin: auto;
 	margin-top: 80px;
 	padding-top: 60px;
@@ -22,6 +22,7 @@
 	height: 40px;
 	float: left;
 	font-size: 30px;
+	font-weight: bold;
 }
 .input_tool_buttons{
 	margin-top: 30px;
