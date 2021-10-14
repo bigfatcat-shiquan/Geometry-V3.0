@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-cmn-Hans" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="utf-8">
-		<title></title>
+		<title>Geometry3-题目详情</title>
 	</head>
 	<body>
+		<div class="all_container">
+			<div id="test1" th:text="${problem_info.initial_points_set}">points_location_x</div>
+			<div id="test2" th:text="${problem_info.points_location_x}">points_location_x</div>
+		</div>
 	</body>
 </html>

@@ -13,7 +13,7 @@ $(document).ready(function() {
 			line.stop();
 		}   
 		line.css("left", $(this).offset().left + $(this).width() / 2).css("width", 0);
-        line.animate({left: $(this).offset().left, width: $(this).width()}, "fast"); 
+        line.animate({left: $(this).offset().left, width: $(this).width()}, "fast");
     });   
 	header_href_texts.mouseout(function() {
 		if (line.is(":animated")) {
@@ -57,8 +57,8 @@ function setToJson(this_set) {
 }
 
 function mapToJson(this_map) {
-	temp_object = {};
-	this_map.forEach(function(item, key, mapObj) {
+	let temp_object = {};
+	this_map.forEach(function(item, key) {
 		temp_object[key] = item;
 	})
 	return JSON.stringify(temp_object);

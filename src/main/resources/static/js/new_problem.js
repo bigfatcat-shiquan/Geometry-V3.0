@@ -8,6 +8,11 @@ var points_location_y = new Map();
 var initial_equals_str_set = new Set();
 var need_prove_equal_str = null;
 
+// 初始化函数名称
+var renamePoint;
+var saveDraw;
+var deleteCondition;
+
 // 触发器
 $(document).ready(function() {
 	
@@ -73,7 +78,7 @@ $(document).ready(function() {
 		
 		// 点击按钮后在画板上创建点或线段，定义点或线段相关的事件
 		$("#draw_canvas").on("click", function(e){
-			if (current_draw == "point") { 
+			if (current_draw === "point") {
 				// 创建点对象及点名称对象
 				if (current_point_name_ascii >= 91) {
 					$.messager.alert('无效', '图中点的数量已经太多了');
@@ -101,22 +106,21 @@ $(document).ready(function() {
 				});
 				new_point_shape.point_text = new_point_text;
 				new_point_text.point_shape = new_point_shape;
-				new_point_group = new Group([new_point_shape, new_point_text]);
-				new_point_shape.group = new_point_group;
+				new_point_shape.group = new Group([new_point_shape, new_point_text]);
 				new_point_shape.as_first_of_lines = new Set();
 				new_point_shape.as_last_of_lines = new Set();
 				all_points.set(new_point_text.content, new_point_shape);
 				// 定义相关事件效果
-				new_point_shape.onMouseEnter = function(event) {
+				new_point_shape.onMouseEnter = function() {
 					this.strokeColor = "#ff5500";
 					this.strokeWidth = 3;
 				}
-				new_point_shape.onMouseLeave = function(event) {
+				new_point_shape.onMouseLeave = function() {
 					this.strokeColor = "#000000";
 					this.strokeWidth = 1;
 				}
 				new_point_shape.onMouseDrag = function(event) {
-					if (current_draw == "select") {
+					if (current_draw === "select") {
 						this.group.position['x'] += event.delta['x'];
 						this.group.position['y'] += event.delta['y'];
 						this.as_first_of_lines.forEach(function(value){
@@ -129,18 +133,18 @@ $(document).ready(function() {
 						});
 					}
 				}
-				new_point_text.onClick = function(event) {
-					if (current_draw == "select") {
+				new_point_text.onClick = function() {
+					if (current_draw === "select") {
 						current_point_text = this;
 						$("#dialog_rename_point_name").dialog("open");
 						$("#dialog_rename_point_name").children("input").val(this.content);
 					}
 				}
-				new_point_shape.onClick = function(event) {
-					if (current_draw == "line") {
+				new_point_shape.onClick = function() {
+					if (current_draw === "line") {
 						if (line_endpoint_selected == null) {
 							line_endpoint_selected = this;
-						} else if (line_endpoint_selected == this) {
+						} else if (line_endpoint_selected === this) {
 							$.messager.alert('无效', '线段的两个端点不能是同一个');
 						} else {
 							// 创建线段对象
@@ -156,22 +160,22 @@ $(document).ready(function() {
 							line_endpoint_selected = null;
 							temp_line.visible = false;
 							// 定义相关事件效果
-							new_line.onMouseEnter = function(event) {
+							new_line.onMouseEnter = function() {
 								this.strokeColor = "#ff5500";
 								this.strokeWidth = 4;
 							}
-							new_line.onMouseLeave = function(event) {
+							new_line.onMouseLeave = function() {
 								this.strokeColor = "#55557f";
 								this.strokeWidth = 3;
 							}
-							new_line.onClick = function(event){
-								if (current_draw == "delete") {
+							new_line.onClick = function(){
+								if (current_draw === "delete") {
 									this.remove();
 								}
 							}
 						}
 					}
-					if (current_draw == "delete") {
+					if (current_draw === "delete") {
 						this.group.remove();
 						all_points.delete(this.point_text.content);
 						this.as_first_of_lines.forEach(function(value){
@@ -187,19 +191,18 @@ $(document).ready(function() {
 		
 		// 面板相关光标提示效果
 		$("#draw_canvas").mouseenter(function() {
-			if (current_draw == "point") {
+			if (current_draw === "point") {
 				temp_point.visible = true;
 			}
-			if (current_draw == "delete") {
+			if (current_draw === "delete") {
 				$("#draw_canvas").css("cursor", "url('../static/img/buttons/draw_button_delete_2.ico'), auto");
 			}
 		});
 		$("#draw_canvas").mousemove(function(e) {
-			if (current_draw == "point") {
-				var over_coordinate = new Point(e.pageX - canvas_left, e.pageY - canvas_top);
-				temp_point.position = over_coordinate;
+			if (current_draw === "point") {
+				temp_point.position = new Point(e.pageX - canvas_left, e.pageY - canvas_top);
 			}
-			if (current_draw == "line" && line_endpoint_selected != null) {
+			if (current_draw === "line" && line_endpoint_selected != null) {
 				var over_coordinate = new Point(e.pageX - canvas_left, e.pageY - canvas_top);
 				temp_line.firstSegment.point.x = line_endpoint_selected.position['x'];
 				temp_line.firstSegment.point.y = line_endpoint_selected.position['y'];
@@ -218,7 +221,7 @@ $(document).ready(function() {
 		// 其他对话框效果
 		renamePoint = function() {
 			var new_name = $("#dialog_rename_point_name").children("input").val();
-			if (new_name == "") {
+			if (new_name === "") {
 				$.messager.alert('无效', '点名称不能为空');
 				$("#dialog_rename_point_name").dialog("close");
 				return;
@@ -259,7 +262,7 @@ $(document).ready(function() {
 	$("#button_submit_input_condition").on("click", function() {
 		var condition_str_left = $("#new_conditions_input_left").val();
 		var condition_str_right = $("#new_conditions_input_right").val();
-		if (condition_str_left != '' && condition_str_right != '') {
+		if (condition_str_left !== '' && condition_str_right !== '') {
 			var condition_type = $("#new_condition_type_selector").val();
 			var the_new_condition = condition_str_left + condition_type + condition_str_right;
 			if (initial_equals_str_set.has(the_new_condition)) {
@@ -267,7 +270,7 @@ $(document).ready(function() {
 			} else {
 				initial_equals_str_set.add(the_new_condition);
 				$("#total_known_conditions_list").append("<li><span>" + the_new_condition + "</span>" +
-					"<a class='easyui-linkbutton button_condition_delete' onclick='delete_condition(this)'>删除</a></li>");
+					"<a class='easyui-linkbutton button_condition_delete' onclick='deleteCondition(this)'>删除</a></li>");
 				$.parser.parse($("#total_known_conditions_list"));
 				$("#total_known_conditions_count").text(initial_equals_str_set.size + "个");
 			}
@@ -275,7 +278,7 @@ $(document).ready(function() {
 	});
 	
 	// 已知条件删除按钮效果
-	delete_condition = function(the_button) {
+	deleteCondition = function(the_button) {
 		initial_equals_str_set.delete($(the_button).parent().children("span").text());
 		$(the_button).parent().remove();
 		$("#total_known_conditions_count").text(initial_equals_str_set.size + "个");
@@ -285,7 +288,7 @@ $(document).ready(function() {
 	$("#button_submit_need_prove").on("click", function() {
 		var condition_str_left = $("#new_need_prove_input_left").val();
 		var condition_str_right = $("#new_need_prove_input_right").val();
-		if (condition_str_left != '' && condition_str_right != '') {
+		if (condition_str_left !== '' && condition_str_right !== '') {
 			var condition_type = $("#new_need_prove_type_selector").val();
 			var the_need_prove = condition_str_left + condition_type + condition_str_right;
 			if (need_prove_equal_str != null) {
@@ -319,27 +322,29 @@ $(document).ready(function() {
 		$(this).animate({opacity: 1.0}, "fast")
 	});
 	$("#button_start_the_new_problem").on("click", function() {
-		alert(problem_picture);
-		alert(setToJson(points_set));
-		alert(mapToJson(points_location_x));
-		alert(mapToJson(points_location_y));
-		alert(setToJson(initial_equals_str_set));
-		alert(need_prove_equal_str);
-		// $.post("/geometry3/startNewProblem",
-		//     {
-		//       "problem_name": problem_name,
-		//       "problem_picture": problem_picture, 
-		// 	  "problem_author_id": problem_author_id, 
-		// 	  "points_set": setToJson(points_set), 
-		// 	  "points_location_x": mapToJson(points_location_x), 
-		// 	  "points_location_y": mapToJson(points_location_y), 
-		// 	  "initial_equals_str_set": setToJson(initial_equals_str_set), 
-		// 	  "need_prove_equal_str": need_prove_equal_str
-		//     },
-		//     function(data,status){
-		//       alert("数据：" + data + "\n状态：" + status);
-		// 	}
-		// );
+		var data_object = {
+			"problem_name": problem_name,
+			"problem_picture": problem_picture,
+			"problem_author_id": problem_author_id,
+			"points_set": setToJson(points_set),
+			"points_location_x": mapToJson(points_location_x),
+			"points_location_y": mapToJson(points_location_y),
+			"initial_equals_str_set": setToJson(initial_equals_str_set),
+			"need_prove_equal_str": need_prove_equal_str
+		};
+		$.ajax({
+			url: "/geometry3/startNewProblem",
+			type: "POST",
+			data: JSON.stringify(data_object),
+			contentType: "application/json",
+			success: function() {},
+			beforeSend: function(data) {
+				alert(data);
+			},
+			error: function () {
+				$.messager.alert('错误', '提交题目信息出现错误');
+			}
+		});
 	});
-	
+
 });

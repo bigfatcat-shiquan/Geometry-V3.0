@@ -6,7 +6,10 @@ fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, 
     margin: 0;
     padding: 0
 }
-html{font-family:"微软雅黑";font-size:20px;background-color:#eeeee;}
+html{
+	font-family: "微软雅黑", serif;
+	font-size:20px;
+}
 
 /* 公共-背景 */
 .geometry3_background_img{
@@ -78,10 +81,10 @@ html{font-family:"微软雅黑";font-size:20px;background-color:#eeeee;}
 }
 #header_text_underline{
 	position: absolute;
-	left: 0px;
+	left: 0;
 	top: 58px;
 	border-bottom: solid 2px black;
-	width: 0px; 
+	width: 0;
 }
 
 /* 公共-页脚部分 */
