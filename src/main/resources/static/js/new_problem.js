@@ -333,13 +333,15 @@ $(document).ready(function() {
 			"need_prove_equal_str": need_prove_equal_str
 		};
 		$.ajax({
-			url: "/geometry3/startNewProblem",
+			url: "/startNewProblem",
 			type: "POST",
 			data: JSON.stringify(data_object),
 			contentType: "application/json",
-			success: function() {},
-			beforeSend: function(data) {
+			success: function(data) {
 				alert(data);
+			},
+			beforeSend: function() {
+				alert(JSON.stringify(data_object));
 			},
 			error: function () {
 				$.messager.alert('错误', '提交题目信息出现错误');
