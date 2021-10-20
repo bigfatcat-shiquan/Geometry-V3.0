@@ -1,7 +1,7 @@
 package com.bigfatcat.geometry3.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.bigfatcat.geometry3.dao.ProblemDao;
 import com.bigfatcat.geometry3.entity.Problem;
 import org.springframework.stereotype.Controller;
@@ -33,20 +33,20 @@ public class ProblemController {
     @RequestMapping(value = "/startNewProblem", method = RequestMethod.POST)
     @ResponseBody
     public String startNewProblem(@RequestBody Map<String, String> map) {
-//        Problem the_problem = new Problem(
-//                "第一题",
-//                map.get("problem_picture"),
-//                1212456,
-//                JSON.toJavaObject(JSONObject.parseObject(map.get("points_set")), HashSet.class),
-//                map.get("points_location_x"),
-//                map.get("points_location_y"),
-//                map.get("initial_equals_str_set"),
-//                map.get("need_prove_equal_str"));
-//        the_problem.setCreate_date(new Date(System.currentTimeMillis()));
-//        problemDao.insertOne(the_problem);
+        Problem the_problem = new Problem(
+                map.get("problem_name"),
+                map.get("problem_picture"),
+                233333,
+                JSONObject.parseObject(map.get("points_set"), new TypeReference<HashSet<String>>(){}),
+                JSONObject.parseObject(map.get("points_location_x"), new TypeReference<HashMap<String, Double>>(){}),
+                JSONObject.parseObject(map.get("points_location_y"), new TypeReference<HashMap<String, Double>>(){}),
+                JSONObject.parseObject(map.get("initial_equals_str_set"), new TypeReference<HashSet<String>>(){}),
+                map.get("need_prove_equal_str"));
+        the_problem.setCreate_date(new Date(System.currentTimeMillis()));
+        problemDao.insertOne(the_problem);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("success", true);
-        jsonObject.put("problem_id", 0);
+        jsonObject.put("problem_id", the_problem.getProblem_id());
         return jsonObject.toJSONString();
     }
 

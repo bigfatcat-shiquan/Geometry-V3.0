@@ -12,6 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+import static java.lang.Math.max;
+
 /**HashMap类存储至数据库VARCHAR类型的转换器*/
 @MappedJdbcTypes(JdbcType.VARCHAR)
 @MappedTypes(HashMap.class)
@@ -29,7 +31,7 @@ public class HashMapToVarcharTypeHandler implements TypeHandler<HashMap<String, 
             stringBuilder.append(",");
         });
         String remade_string = stringBuilder.toString();
-        preparedStatement.setString(i, remade_string.substring(0, remade_string.length()-1));
+        preparedStatement.setString(i, remade_string.substring(0, max(0, remade_string.length()-1)));
     }
 
     @Override
@@ -42,9 +44,8 @@ public class HashMapToVarcharTypeHandler implements TypeHandler<HashMap<String, 
                 String[] entry = entry_str.split(":");
                 result_hashmap.put(entry[0], Double.valueOf(entry[1]));
             }
-            return result_hashmap;
         }
-        return null;
+        return result_hashmap;
     }
 
     @Override
@@ -57,9 +58,8 @@ public class HashMapToVarcharTypeHandler implements TypeHandler<HashMap<String, 
                 String[] entry = entry_str.split(":");
                 result_hashmap.put(entry[0], Double.valueOf(entry[1]));
             }
-            return result_hashmap;
         }
-        return null;
+        return result_hashmap;
     }
 
     @Override
@@ -72,9 +72,8 @@ public class HashMapToVarcharTypeHandler implements TypeHandler<HashMap<String, 
                 String[] entry = entry_str.split(":");
                 result_hashmap.put(entry[0], Double.valueOf(entry[1]));
             }
-            return result_hashmap;
         }
-        return null;
+        return result_hashmap;
     }
 
 }

@@ -23,7 +23,7 @@
         <result property="need_prove_equal_str" column="need_prove_equal_str"/>
     </resultMap>
 
-    <insert id="insertOne" parameterType="problem">
+    <insert id="insertOne" parameterType="problem" useGeneratedKeys="true" keyProperty="problem_id">
         INSERT INTO problem (problem_id, problem_name, problem_picture, problem_author_id, create_date,
         initial_points_set, points_location_x, points_location_y, initial_equals_str_set, need_prove_equal_str)
         VALUES (null, #{problem.problem_name}, #{problem.problem_picture}, #{problem.problem_author_id},

@@ -10,6 +10,7 @@ var need_prove_equal_str = null;
 
 // 初始化函数名称
 var renamePoint;
+var setProblemName;
 var saveDraw;
 var deleteCondition;
 
@@ -73,7 +74,6 @@ $(document).ready(function() {
 			current_draw = null;
 			$("#draw_tool_buttons").children().linkbutton("unselect");
 			saveDraw();
-			$.messager.alert('提示', '绘制结果已成功保存');
 		});
 		
 		// 点击按钮后在画板上创建点或线段，定义点或线段相关的事件
@@ -239,6 +239,14 @@ $(document).ready(function() {
 				$("#dialog_rename_point_name").dialog("close");
 			}
 		}
+		setProblemName = function () {
+			problem_name = $("#dialog_input_problem_name").children("input").val();
+			if (problem_name === "") {
+				problem_name = "未命名题目";
+			}
+			$("#dialog_input_problem_name").dialog("close");
+			$.messager.alert('提示', '绘制结果已成功保存');
+		}
 		
 		// 保存绘制结果操作
 		saveDraw = function() {
@@ -252,9 +260,11 @@ $(document).ready(function() {
 			points_location_y = new Map();
 			all_points.forEach(function(point_shape, point_name) {
 				points_set.add(point_name);
-				points_location_x.set(point_name, point_shape.position['x']);
-				points_location_y.set(point_name, point_shape.position['y']);
+				points_location_x.set(point_name, point_shape.position['x'].toFixed(2));
+				points_location_y.set(point_name, point_shape.position['y'].toFixed(2));
 			});
+			// 题目名称
+			$("#dialog_input_problem_name").dialog("open");
 		}
 	}
 	
@@ -322,6 +332,11 @@ $(document).ready(function() {
 		$(this).animate({opacity: 1.0}, "fast")
 	});
 	$("#button_start_the_new_problem").on("click", function() {
+		// 整理题目信息并校验
+		if (problem_name === null || need_prove_equal_str === null || points_set.size === 0) {
+			$.messager.alert('无效', '题目信息缺失：没有绘制题目图并保存，或没有输入待求证结论信息');
+			return;
+		}
 		var data_object = {
 			"problem_name": problem_name,
 			"problem_picture": problem_picture,
@@ -332,6 +347,7 @@ $(document).ready(function() {
 			"initial_equals_str_set": setToJson(initial_equals_str_set),
 			"need_prove_equal_str": need_prove_equal_str
 		};
+		// 异步请求保存该题目，并转到该题目详情页
 		$.ajax({
 			url: "/startNewProblem",
 			type: "POST",
@@ -340,9 +356,7 @@ $(document).ready(function() {
 			success: function(data) {
 				alert(data);
 			},
-			beforeSend: function() {
-				alert(JSON.stringify(data_object));
-			},
+			beforeSend: function() {},
 			error: function () {
 				$.messager.alert('错误', '提交题目信息出现错误');
 			}

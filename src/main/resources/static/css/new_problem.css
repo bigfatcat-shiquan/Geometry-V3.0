@@ -64,6 +64,22 @@
 #dialog_rename_point_name > input{
 	width: 100px;
 	height: 25px;
+	border: 2px solid #9d9895;
+	border-radius: 4px;
+	font-size: 14px;
+}
+#dialog_input_problem_name{
+	width: 350px;
+	height: 70px;
+	padding: 10px 20px;
+}
+#dialog_input_problem_name > input{
+	width: 300px;
+	height: 30px;
+	border: 2px solid #9d9895;
+	border-radius: 4px;
+	font-size: 15px;
+	text-align: center;
 }
 
 /* 第二环节，输入已知等量关系 */

@@ -14,6 +14,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import static java.lang.Math.max;
+
 /**HashSet类存储至数据库VARCHAR类型的转换器*/
 @MappedJdbcTypes(JdbcType.VARCHAR)
 @MappedTypes(Set.class)
@@ -29,7 +31,7 @@ public class SetToVarcharTypeHandler implements TypeHandler<Set<String>> {
             stringBuilder.append(",");
         }
         String remade_string = stringBuilder.toString();
-        preparedStatement.setString(i, remade_string.substring(0, remade_string.length()-1));
+        preparedStatement.setString(i, remade_string.substring(0, max(0, remade_string.length()-1)));
     }
 
     @Override
@@ -39,7 +41,7 @@ public class SetToVarcharTypeHandler implements TypeHandler<Set<String>> {
         if (!StringUtils.isEmpty(resultString)) {
             return new HashSet<>(Arrays.asList(resultString.split(",")));
         }
-        return null;
+        return new HashSet<>();
     }
 
     @Override
@@ -49,7 +51,7 @@ public class SetToVarcharTypeHandler implements TypeHandler<Set<String>> {
         if (!StringUtils.isEmpty(resultString)) {
             return new HashSet<>(Arrays.asList(resultString.split(",")));
         }
-        return null;
+        return new HashSet<>();
     }
 
     @Override
@@ -59,7 +61,7 @@ public class SetToVarcharTypeHandler implements TypeHandler<Set<String>> {
         if (!StringUtils.isEmpty(resultString)) {
             return new HashSet<>(Arrays.asList(resultString.split(",")));
         }
-        return null;
+        return new HashSet<>();
     }
 
 }
