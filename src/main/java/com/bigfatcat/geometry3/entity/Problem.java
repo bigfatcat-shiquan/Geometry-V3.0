@@ -34,6 +34,8 @@ public class Problem {
 
     private String need_prove_equal_str;
 
+    public Problem() {}
+
     public Problem(String problem_name,
                    String problem_picture,
                    Integer problem_author_id,

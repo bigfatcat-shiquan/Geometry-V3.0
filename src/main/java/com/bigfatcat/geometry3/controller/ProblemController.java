@@ -1,17 +1,13 @@
 package com.bigfatcat.geometry3.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
-import com.bigfatcat.geometry3.dao.ProblemDao;
-import com.bigfatcat.geometry3.entity.Problem;
+import com.bigfatcat.geometry3.service.ProblemService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -23,8 +19,8 @@ import java.util.Map;
 @Controller
 public class ProblemController {
 
-    @Resource(name = "problemDao")
-    private ProblemDao problemDao;
+    @Resource(name = "problemService")
+    private ProblemService problemService;
 
     /**
      * POST请求
@@ -33,21 +29,44 @@ public class ProblemController {
     @RequestMapping(value = "/startNewProblem", method = RequestMethod.POST)
     @ResponseBody
     public String startNewProblem(@RequestBody Map<String, String> map) {
-        Problem the_problem = new Problem(
-                map.get("problem_name"),
-                map.get("problem_picture"),
-                233333,
-                JSONObject.parseObject(map.get("points_set"), new TypeReference<HashSet<String>>(){}),
-                JSONObject.parseObject(map.get("points_location_x"), new TypeReference<HashMap<String, Double>>(){}),
-                JSONObject.parseObject(map.get("points_location_y"), new TypeReference<HashMap<String, Double>>(){}),
-                JSONObject.parseObject(map.get("initial_equals_str_set"), new TypeReference<HashSet<String>>(){}),
-                map.get("need_prove_equal_str"));
-        the_problem.setCreate_date(new Date(System.currentTimeMillis()));
-        problemDao.insertOne(the_problem);
+        // 解析请求载荷，得到题目信息
+        String problem_name = map.get("problem_name");
+        String problem_picture = map.get("problem_picture");
+        Integer problem_author_id = 233333;
+        HashSet<String> initial_points_set = JSONObject.parseObject(
+                map.get("points_set"), new TypeReference<HashSet<String>>(){});
+        HashMap<String, Double> points_location_x = JSONObject.parseObject(
+                map.get("points_location_x"), new TypeReference<HashMap<String, Double>>(){});
+        HashMap<String, Double> points_location_y = JSONObject.parseObject(
+                map.get("points_location_y"), new TypeReference<HashMap<String, Double>>(){});
+        HashSet<String> initial_equals_str_set = JSONObject.parseObject(
+                map.get("initial_equals_str_set"), new TypeReference<HashSet<String>>(){});
+        String need_prove_equal_str = map.get("need_prove_equal_str");
+        // 调用保存新题目服务
+        Integer the_new_problem_id = problemService.saveNewProblem(
+                problem_name,
+                problem_picture,
+                problem_author_id,
+                initial_points_set,
+                points_location_x,
+                points_location_y,
+                initial_equals_str_set,
+                need_prove_equal_str);
+        // 返回回执信息
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("success", true);
-        jsonObject.put("problem_id", the_problem.getProblem_id());
+        jsonObject.put("problem_id", the_new_problem_id);
         return jsonObject.toJSONString();
+    }
+
+    /**
+     * GET请求
+     * 请求对应ID的题目详细信息
+     * */
+    @RequestMapping(value = "/getProblem", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public String getProblem(@RequestParam Integer id) {
+        return JSON.toJSONString(problemService.getOneProblem(id));
     }
 
 }
