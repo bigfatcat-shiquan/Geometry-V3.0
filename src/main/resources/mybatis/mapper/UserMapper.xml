@@ -15,7 +15,7 @@
         <result property="register_date" column="register_date"/>
     </resultMap>
 
-    <insert id="insertOne" parameterType="user">
+    <insert id="insertOne" parameterType="user" useGeneratedKeys="true" keyProperty="user_id">
         INSERT INTO user (user_id, user_name, user_password, user_nickname, user_picture, register_date)
         VALUES (null, #{user.user_name}, #{user.user_password}, #{user.user_nickname},
         #{user.user_picture}, #{user.register_date})

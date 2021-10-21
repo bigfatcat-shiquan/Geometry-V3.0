@@ -6,8 +6,14 @@
 	</head>
 	<body>
 		<div class="all_container">
+			<!-- 公共-页面前置部分 -->
+			<div th:replace="./base :: geometry3_public_nav"></div>
+
 			<div id="test1" th:text="${problem_info.initial_points_set}">points_location_x</div>
 			<div id="test2" th:text="${problem_info.points_location_x}">points_location_x</div>
+
+			<!-- 公共-页脚部分 -->
+			<div th:replace="./base :: geometry3_public_footer"></div>
 		</div>
 	</body>
 </html>

@@ -23,6 +23,8 @@ public class User {
 
     private List<Problem> problem_list;
 
+    public User() {}
+
     public User(String user_name,
                 String user_password,
                 String user_nickname,

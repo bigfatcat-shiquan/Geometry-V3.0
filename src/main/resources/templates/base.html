@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" xmlns:th="http://www.thymeleaf.org">
+    <!-- 公共-加载公共资源 -->
+    <head th:fragment="geometry3_public_resource">
+        <!-- jQuery EasyUI -->
+        <link rel="stylesheet" type="text/css" href="../static/js/jquery-easyui-1.8.6/themes/default/easyui.css" />
+        <link rel="stylesheet" type="text/css"  href="../static/js/jquery-easyui-1.8.6/themes/icon.css" />
+        <script type="text/javascript" src="../static/js/jquery-easyui-1.8.6/jquery.min.js"></script>
+        <script type="text/javascript" src="../static/js/jquery-easyui-1.8.6/jquery-color-2.1.2.js"></script>
+        <script type="text/javascript" src="../static/js/jquery-easyui-1.8.6/jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="../static/js/jquery-easyui-1.8.6/locale/easyui-lang-zh_CN.js"></script>
+        <!-- PaperJS -->
+        <script type="text/javascript" src="https://unpkg.com/paper@0.12.15/dist/paper-full.js"></script>
+        <!-- 项目内部公共依赖 -->
+        <link rel="stylesheet" type="text/css" href="../static/css/public.css"/>
+        <script src="../static/js/public.js"></script>
+        <!-- 本页面依赖 -->
+    </head>
+    <body>
+        <!-- 公共-页面前置部分 -->
+        <div th:fragment="geometry3_public_nav" class="geometry3_public_nav">
+            <!-- 公共-背景 -->
+            <img class="geometry3_background_img" src="../static/img/geometry3_banner_long.jpg" alt="背景图"/>
+            <!-- 公共-页眉部分 -->
+            <header class="geometry3_header">
+                <div class="header_content">
+                    <img src="../static/img/geometry3_logo.png" alt="logo图"/>
+                    <a href="./home.html">GeometryV3</a>
+                    <a href="#">公共题库</a>
+                    <a href="#">我的题库</a>
+                    <a href="./new_problem.html">新的题目</a>
+                    <a href="#">登录</a>
+                    <span id="header_text_underline"></span>
+                </div>
+            </header>
+        </div>
+        <!-- 公共-页脚部分 -->
+        <div th:fragment="geometry3_public_footer" class="geometry3_public_footer">
+            <footer class="geometry3_footer">
+                <div class="footer_content">
+                    <div class="footer_logo">
+                        <img src="../static/img/geometry3_footer_logo.png" alt="页脚logo"/>
+                    </div>
+                    <div class="footer_advertisement">
+                        <div>致力于软件项目的独立开发</div>
+                        <div>专注于表达数学相关领域的奇思妙想</div>
+                        <div><a href="https://github.com/bigfatcat-shiquan">访问Github</a></div>
+                    </div>
+                    <div class="footer_recommend_products">
+                        <div>更多特色原创项目</div>
+                        <div class="recommend_products_picture">
+                            <div><img src="../static/img/large_image/geometry3_footer_recommend_1.png" alt="更多项目1"/></div>
+                            <div><img src="../static/img/large_image/geometry3_footer_recommend_2.png" alt="更多项目2"/></div>
+                            <div><img src="../static/img/large_image/geometry3_footer_recommend_3.png" alt="更多项目3"/></div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>>
+    </body>
+</html>

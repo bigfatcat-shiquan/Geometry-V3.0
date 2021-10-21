@@ -1,39 +1,16 @@
 <!DOCTYPE html>
-<html lang="zh-cmn-Hans">
+<html lang="zh-cmn-Hans" xmlns:th="http://www.thymeleaf.org">
+	<div th:replace="./base :: geometry3_public_resource"></div>
 	<head>
+		<link rel="stylesheet" type="text/css" href="../static/css/new_problem.css"/>
+		<script src="../static/js/new_problem.js"></script>
 		<meta charset="utf-8"/>
 		<title>Geometry3-创建新题目</title>
-		<!-- jQuery EasyUI -->
-		<link rel="stylesheet" type="text/css" href="../static/js/jquery-easyui-1.8.6/themes/default/easyui.css" />
-		<link rel="stylesheet" type="text/css"  href="../static/js/jquery-easyui-1.8.6/themes/icon.css" />
-		<script type="text/javascript" src="../static/js/jquery-easyui-1.8.6/jquery.min.js"></script>
-		<script type="text/javascript" src="../static/js/jquery-easyui-1.8.6/jquery-color-2.1.2.js"></script>
-		<script type="text/javascript" src="../static/js/jquery-easyui-1.8.6/jquery.easyui.min.js"></script>
-		<script type="text/javascript" src="../static/js/jquery-easyui-1.8.6/locale/easyui-lang-zh_CN.js"></script>
-		<!-- PaperJS -->
-		<script type="text/javascript" src="https://unpkg.com/paper@0.12.15/dist/paper-full.js"></script>
-		<!-- 项目内部依赖 -->
-		<link rel="stylesheet" type="text/css" href="../static/css/public.css"/>
-		<link rel="stylesheet" type="text/css" href="../static/css/new_problem.css"/>
-		<script src="../static/js/public.js"></script>
-		<script src="../static/js/new_problem.js"></script>
 	</head>
 	<body>
 		<div class="all_container">
-			<!-- 公共-背景 -->
-			<img class="geometry3_background_img" src="../static/img/geometry3_banner_long.jpg" alt="背景图"/>
-			<!-- 公共-页眉部分 -->
-			<header class="geometry3_header">
-				<div class="header_content">
-					<img src="../static/img/geometry3_logo.png" alt="logo图"/>
-					<a href="./home.html">GeometryV3</a>
-					<a href="#">公共题库</a>
-					<a href="#">我的题库</a>
-					<a href="./new_problem.html">新的题目</a>
-					<a href="#">登录</a>
-					<span id="header_text_underline"></span>
-				</div>
-			</header>
+			<!-- 公共-页面前置部分 -->
+			<div th:replace="./base :: geometry3_public_nav"></div>
 			<!-- 正文部分 -->
 			<div id="new_problem">
 				<!-- 第一环节，画图 -->
@@ -147,26 +124,7 @@
 				</div>
 			</div>
 			<!-- 公共-页脚部分 -->
-			<footer class="geometry3_footer">
-				<div class="footer_content">
-					<div class="footer_logo">
-						<img src="../static/img/geometry3_footer_logo.png" alt="页脚logo"/>
-					</div>
-					<div class="footer_advertisement">
-						<div>致力于软件项目的独立开发</div>
-						<div>专注于表达数学相关领域的奇思妙想</div>
-						<div><a href="https://github.com/bigfatcat-shiquan">访问Github</a></div>
-					</div>
-					<div class="footer_recommend_products">
-						<div>更多特色原创项目</div>
-						<div class="recommend_products_picture">
-							<div><img src="../static/img/large_image/geometry3_footer_recommend_1.png" alt="更多项目1"/></div>
-							<div><img src="../static/img/large_image/geometry3_footer_recommend_2.png" alt="更多项目2"/></div>
-							<div><img src="../static/img/large_image/geometry3_footer_recommend_3.png" alt="更多项目3"/></div>
-						</div>
-					</div>
-				</div>
-			</footer>
+			<div th:replace="./base :: geometry3_public_footer"></div>
 		</div>
 	</body>
 </html>
