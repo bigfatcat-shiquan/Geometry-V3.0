@@ -1,3 +1,8 @@
+/* 公共-背景裁剪 */
+.geometry3_background_img{
+	height: 2400px;
+}
+
 /* 创建新题目正文 */
 #new_problem{
 	width: 1251px;

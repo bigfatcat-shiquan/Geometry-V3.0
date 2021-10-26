@@ -1,17 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-cmn-Hans" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh-cmn-Hans" xmlns:th="http://www.thymeleaf.org">
+	<div th:replace="./base :: geometry3_public_resource"></div>
 	<head>
-		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="../static/css/problem_detail.css"/>
+		<script src="../static/js/problem_detail.js"></script>
+		<meta charset="utf-8"/>
 		<title>Geometry3-题目详情</title>
 	</head>
 	<body>
 		<div class="all_container">
 			<!-- 公共-页面前置部分 -->
 			<div th:replace="./base :: geometry3_public_nav"></div>
+			<!-- 正文部分 -->
+			<div id="problem_detail">
+				<!-- 题目详情展示 -->
+				<div id="problem_show">
 
-			<div id="test1" th:text="${problem_info.initial_points_set}">points_location_x</div>
-			<div id="test2" th:text="${problem_info.points_location_x}">points_location_x</div>
+				</div>
+				<!-- 题目解答 -->
 
+				<!-- 解答日志展示 -->
+
+			</div>
 			<!-- 公共-页脚部分 -->
 			<div th:replace="./base :: geometry3_public_footer"></div>
 		</div>

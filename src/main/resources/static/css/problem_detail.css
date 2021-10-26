@@ -1,0 +1,19 @@
+/* 公共-背景裁剪 */
+.geometry3_background_img{
+    height: 1500px;
+}
+
+/* 题目详情正文 */
+#problem_detail{
+    width: 1251px;
+    height: 1200px;
+    margin: 80px auto auto;
+    padding-top: 60px;
+    padding-left: 100px;
+}
+
+/* 公共，本页面指引框、输入框、按钮 */
+
+
+/* 题目详情展示 */
+

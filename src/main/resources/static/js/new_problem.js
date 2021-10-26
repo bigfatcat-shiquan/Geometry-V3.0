@@ -354,7 +354,7 @@ $(document).ready(function() {
 			data: JSON.stringify(data_object),
 			contentType: "application/json",
 			success: function(data) {
-				window.location.replace("/getProblem?id=" + JSON.parse(data)["problem_id"]);
+				window.location.replace("/getProblemPage" + "?id=" + JSON.parse(data)["problem_id"]);
 			},
 			beforeSend: function() {},
 			error: function () {

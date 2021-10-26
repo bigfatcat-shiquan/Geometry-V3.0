@@ -5,7 +5,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.bigfatcat.geometry3.service.ProblemService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -67,6 +69,17 @@ public class ProblemController {
     @ResponseBody
     public String getProblem(@RequestParam Integer id) {
         return JSON.toJSONString(problemService.getOneProblem(id));
+    }
+
+    /**
+     * GET请求
+     * 请求对应ID的题目详细信息，并打开相应题目详情页
+     * */
+    @RequestMapping(value = "/getProblemPage", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView getProblemPage(@RequestParam Integer id, Model model) {
+        model.addAttribute("the_problem", problemService.getOneProblem(id));
+        return new ModelAndView("problem_detail", "userModel", model);
     }
 
 }
