@@ -5,15 +5,81 @@
 
 /* 题目详情正文 */
 #problem_detail{
-    width: 1251px;
+    width: 1300px;
     height: 1200px;
     margin: 80px auto auto;
     padding-top: 60px;
-    padding-left: 100px;
 }
 
 /* 公共，本页面指引框、输入框、按钮 */
-
+.step_guide{
+    width: 600px;
+    height: 40px;
+}
+.step_guide > img{
+    width: 70px;
+    height: 40px;
+    float: left;
+}
+.step_guide > span{
+    height: 40px;
+    float: left;
+    font-size: 30px;
+    font-weight: bold;
+}
 
 /* 题目详情展示 */
+#problem_show{
+    width: 600px;
+    height: 800px;
+    float: left;
+}
+#problem_show_picture{
+    width: 600px;
+    height: 420px;
+    padding-top: 20px;
+    padding-left: 20px;
+}
+#problem_show_picture > div{
+    width: 510px;
+    height: 40px;
+    overflow: auto;
+    font-weight: bold;
+}
+#problem_show_picture > img{
+    width: 510px;
+    height: 340px;
+    border: 3px solid #9d9895;
+    border-radius: 8px;
+}
+#problem_show_known_conditions{
+    width: 600px;
+    height: 210px;
+    padding-left: 20px;
+}
+#known_conditions_list{
+    width: 500px;
+    height: 160px;
+    padding-left: 25px;
+    overflow: auto;
+    list-style-type: disc;
+}
+#problem_show_need_prove{
+    width: 600px;
+    height: 100px;
+    padding-left: 20px;
+}
 
+/* 解答日志展示 */
+#problem_solve_log{
+    width: 700px;
+    height: 800px;
+    float: left;
+}
+
+/* 题目解答 */
+#problem_solve{
+    width: 1300px;
+    height: 340px;
+    float: left;
+}

@@ -15,12 +15,40 @@
 			<div id="problem_detail">
 				<!-- 题目详情展示 -->
 				<div id="problem_show">
-
+					<div id="problem_show_guide" class="step_guide">
+						<img class="guide_icon" src="../static/img/icons/no_1.png" alt="一，题目详情展示"/>
+						<span>题目详情信息</span>
+					</div>
+					<div id="problem_show_picture">
+						<div th:text="'题目名称： ' + ${info.the_problem.problem_name}"></div>
+						<img th:src="${info.the_problem.problem_picture}" src="" alt="题目图片"/>
+					</div>
+					<div id="problem_show_known_conditions">
+						<div style="font-weight: bold">已知条件：</div>
+						<ul id="known_conditions_list">
+							<li th:each="equal_str :${info.the_problem.initial_equals_str_set}"
+								th:text="${equal_str}" style="margin-top: 5px"></li>
+						</ul>
+					</div>
+					<div id="problem_show_need_prove">
+						<div style="font-weight: bold">求证：</div>
+						<div th:text="${info.the_problem.need_prove_equal_str}"></div>
+					</div>
+				</div>
+				<!-- 解答日志展示 -->
+				<div id="problem_solve_log">
+					<div id="problem_solve_log_guide" class="step_guide">
+						<img class="guide_icon" src="../static/img/icons/no_3.png" alt="三，题目解答日志"/>
+						<span>题目解答日志</span>
+					</div>
 				</div>
 				<!-- 题目解答 -->
-
-				<!-- 解答日志展示 -->
-
+				<div id="problem_solve">
+					<div id="problem_solve_guide" class="step_guide">
+						<img class="guide_icon" src="../static/img/icons/no_2.png" alt="二，进行题目解答"/>
+						<span>点击自动推理解答题目</span>
+					</div>
+				</div>
 			</div>
 			<!-- 公共-页脚部分 -->
 			<div th:replace="./base :: geometry3_public_footer"></div>

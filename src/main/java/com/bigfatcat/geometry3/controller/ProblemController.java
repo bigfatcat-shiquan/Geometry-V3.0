@@ -79,7 +79,7 @@ public class ProblemController {
     @ResponseBody
     public ModelAndView getProblemPage(@RequestParam Integer id, Model model) {
         model.addAttribute("the_problem", problemService.getOneProblem(id));
-        return new ModelAndView("problem_detail", "userModel", model);
+        return new ModelAndView("problem_detail", "info", model);
     }
 
 }
