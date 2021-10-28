@@ -69,12 +69,41 @@
     height: 100px;
     padding-left: 20px;
 }
+#need_prove_content{
+    width: 500px;
+    overflow: auto;
+}
 
 /* 解答日志展示 */
 #problem_solve_log{
     width: 700px;
     height: 800px;
     float: left;
+}
+#problem_solve_log_content{
+    width: 660px;
+    height: 680px;
+    border: 5px solid transparent;
+    border-top-width: 15px;
+    border-radius: 8px;
+    background: rgb(251, 240, 223);
+    background-clip: content-box;
+    position: relative;
+    margin-top: 15px;
+    margin-left: 10px;
+}
+#problem_solve_log_content::after{
+    content:'';
+    position: absolute;
+    top: -15px;
+    bottom: -5px;
+    left: -5px;
+    right: -5px;
+    z-index: -1;
+    background-image: -webkit-linear-gradient(left, rgb(25, 188, 254), rgb(25, 98, 254));
+    background-image: -moz-linear-gradient(left, rgb(25, 188, 254), rgb(25, 98, 254));
+    background-image: linear-gradient(left, rgb(25, 188, 254), rgb(25, 98, 254));
+    border-radius: 8px;
 }
 
 /* 题目解答 */

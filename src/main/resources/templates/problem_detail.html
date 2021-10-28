@@ -32,7 +32,7 @@
 					</div>
 					<div id="problem_show_need_prove">
 						<div style="font-weight: bold">求证：</div>
-						<div th:text="${info.the_problem.need_prove_equal_str}"></div>
+						<div id="need_prove_content" th:text="${info.the_problem.need_prove_equal_str}"></div>
 					</div>
 				</div>
 				<!-- 解答日志展示 -->
@@ -41,6 +41,9 @@
 						<img class="guide_icon" src="../static/img/icons/no_3.png" alt="三，题目解答日志"/>
 						<span>题目解答日志</span>
 					</div>
+					<div id="problem_solve_log_content">
+
+					</div>
 				</div>
 				<!-- 题目解答 -->
 				<div id="problem_solve">
@@ -48,6 +51,7 @@
 						<img class="guide_icon" src="../static/img/icons/no_2.png" alt="二，进行题目解答"/>
 						<span>点击自动推理解答题目</span>
 					</div>
+
 				</div>
 			</div>
 			<!-- 公共-页脚部分 -->
