@@ -80,7 +80,7 @@
     height: 800px;
     float: left;
 }
-#problem_solve_log_content{
+#problem_solve_log_box{
     width: 660px;
     height: 680px;
     border: 5px solid transparent;
@@ -92,7 +92,7 @@
     margin-top: 15px;
     margin-left: 10px;
 }
-#problem_solve_log_content::after{
+#problem_solve_log_box::after{
     content:'';
     position: absolute;
     top: -15px;
@@ -104,6 +104,33 @@
     background-image: -moz-linear-gradient(left, rgb(25, 188, 254), rgb(25, 98, 254));
     background-image: linear-gradient(left, rgb(25, 188, 254), rgb(25, 98, 254));
     border-radius: 8px;
+}
+#problem_solve_log_setting{
+    width: 650px;
+    height: 30px;
+}
+#problem_solve_log_setting > div{
+    float: right;
+    margin-top: 3px;
+    margin-right: 20px;
+}
+#problem_solve_log_content{
+    width: 550px;
+    height: 600px;
+    margin: 0 auto auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+#problem_solve_log_table{
+    width: 550px;
+    border-spacing: 5px;
+    table-layout: fixed;
+    font-family: "Lucida Console", "Courier New", monospace;
+}
+#problem_solve_log_table td{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 /* 题目解答 */

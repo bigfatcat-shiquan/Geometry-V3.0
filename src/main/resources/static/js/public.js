@@ -47,7 +47,14 @@ $(document).ready(function() {
 		}
 	});
 	
-	// 
+	// 开关按钮效果
+	$(".switchbutton_setting_1").on("click", function () {
+		var the_handle = $(this).children("span");
+		alert(the_handle.offset().left);
+		the_handle.animate({left: the_handle.offset().left + 50}, "fast");
+		alert(the_handle.offset().left);
+		$(this).text("详版");
+	});
 	
 });
 

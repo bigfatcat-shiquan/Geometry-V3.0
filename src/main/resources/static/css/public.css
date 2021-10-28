@@ -252,3 +252,26 @@ html{
 	width: 25px;
 	height: 25px;
 }
+
+/* 公共-开关按钮类 */
+.switchbutton_setting_1{
+	width: 80px;
+	height: 26px;
+	border: 3px solid transparent;
+	border-radius: 20px;
+	background: rgb(54, 164, 255);
+	background-clip: border-box;
+	font-size: 15px;
+	font-weight: bold;
+	text-align: center;
+	cursor: pointer;
+}
+.switchbutton_setting_1 > span{
+	width: 20px;
+	height: 20px;
+	border-radius: 20px;
+	background: #ffffff;
+	display: block;
+	position: relative;
+	float: left;
+}
