@@ -139,3 +139,43 @@
     height: 340px;
     float: left;
 }
+#problem_solve_start_button{
+    width: 200px;
+    height: 200px;
+    cursor: pointer;
+    float: left;
+    margin-left: 150px;
+    margin-top: 50px;
+}
+#problem_solve_start_button > img{
+    width: 200px;
+    height: 200px;
+}
+#problem_solve_setting{
+    width: 400px;
+    height: 200px;
+    float: left;
+    margin-left: 100px;
+    margin-top: 50px;
+}
+#problem_solve_setting_title > span{
+    font-weight: bold;
+}
+.problem_solve_setting_option{
+    margin-top: 20px;
+}
+.problem_solve_setting_option > span{
+    color: rgb(117, 117, 130);
+    font-weight: bold;
+}
+.problem_solve_setting_option > input{
+    width: 80px;
+    height: 40px;
+    border: 5px solid rgb(121, 196, 25);
+    border-radius: 20px;
+    background: #ffffff;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin-left: 10px;
+}
