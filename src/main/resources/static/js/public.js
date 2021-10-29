@@ -1,7 +1,6 @@
 // 初始化部分元素
 var current_input_box = null;
 
-
 // 公共触发器
 $(document).ready(function() {
 	
@@ -48,14 +47,36 @@ $(document).ready(function() {
 	});
 	
 	// 开关按钮效果
-	$(".switchbutton_setting_1").on("click", function () {
-		var the_handle = $(this).children("span");
-		alert(the_handle.offset().left);
-		the_handle.animate({left: the_handle.offset().left + 50}, "fast");
-		alert(the_handle.offset().left);
-		$(this).text("详版");
+	$(".switchbutton_setting_1").each(function () {
+		// 开关元素注入
+		$(this).append("<span></span><p>说明</p>");
+		$.parser.parse($(this));
+		// 开关初始状态
+		if ($(this).data('switch').checked) {
+			$(this).children("p").text($(this).data('switch').onText);
+		} else {
+			$(this).css("background", "rgb(176,190,203)");
+			$(this).children("span").css("left", "+=50px");
+			$(this).children("p").text($(this).data('switch').offText);
+			$(this).children("p").css("left", "-=30px");
+		}
+		// 开关点击状态
+		$(this).on("click", function () {
+			$(this).data('switch').checked = !$(this).data('switch').checked;
+			if ($(this).data('switch').checked) {
+				$(this).css("background", "rgb(54, 164, 255)");
+				$(this).children("span").animate({left: "-=50px"}, "fast");
+				$(this).children("p").text($(this).data('switch').onText);
+				$(this).children("p").animate({left: "+=30px"}, "fast");
+			} else {
+				$(this).css("background", "rgb(176,190,203)");
+				$(this).children("span").animate({left: "+=50px"}, "fast");
+				$(this).children("p").text($(this).data('switch').offText);
+				$(this).children("p").animate({left: "-=30px"}, "fast");
+			}
+		});
 	});
-	
+
 });
 
 // 公共工具方法

@@ -261,9 +261,6 @@ html{
 	border-radius: 20px;
 	background: rgb(54, 164, 255);
 	background-clip: border-box;
-	font-size: 15px;
-	font-weight: bold;
-	text-align: center;
 	cursor: pointer;
 }
 .switchbutton_setting_1 > span{
@@ -274,4 +271,12 @@ html{
 	display: block;
 	position: relative;
 	float: left;
+}
+.switchbutton_setting_1 > p{
+	font-size: 15px;
+	font-weight: bold;
+	display: block;
+	position: relative;
+	float: left;
+	margin-left: 15px;
 }
