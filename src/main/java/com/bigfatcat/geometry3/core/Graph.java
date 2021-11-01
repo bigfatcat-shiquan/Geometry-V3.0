@@ -3,12 +3,18 @@ package com.bigfatcat.geometry3.core;
 import com.bigfatcat.geometry3.core.structure.elements.*;
 import com.bigfatcat.geometry3.core.structure.relations.Equal;
 import com.bigfatcat.geometry3.util.Common;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.Map.Entry;
 
-import static java.lang.Math.*;
+import static com.bigfatcat.geometry3.core.structure.elements.Angle.angle;
+import static com.bigfatcat.geometry3.core.structure.elements.Degree.degree;
+import static com.bigfatcat.geometry3.core.structure.elements.Segment.segment;
+import static com.bigfatcat.geometry3.core.structure.elements.SumUnits.sumUnits;
+import static com.bigfatcat.geometry3.core.structure.elements.MultiplyUnits.multiplyUnits;
 import static com.bigfatcat.geometry3.core.structure.relations.Equal.equal;
+import static java.lang.Math.*;
 
 /**
  * 类：Graph 业务功能核心层：图对象
@@ -270,24 +276,24 @@ public class Graph {
         HashSet<String> out_points;
         for (String[] collinear_array : this.collinear_set) {
             // 规则1
-            this.addEqual("seg", Segment.segment(collinear_array[0], collinear_array[2]),
-                    SumUnits.sumUnits(Segment.segment(collinear_array[0], collinear_array[1]),
-                            Segment.segment(collinear_array[1], collinear_array[2])));
+            this.addEqual("seg", segment(collinear_array[0], collinear_array[2]),
+                    sumUnits(segment(collinear_array[0], collinear_array[1]),
+                            segment(collinear_array[1], collinear_array[2])));
             // 规则2
             out_points = new HashSet<>(this.points_set);
             Arrays.asList(collinear_array).forEach(out_points::remove);
             for (String out_point : out_points) {
                 if (this.isCollinear(new HashSet<>(Arrays.asList(out_point,
                         collinear_array[0], collinear_array[1]))) == null) {
-                    this.addEqual("ang", Degree.degree(180),
-                            SumUnits.sumUnits(Angle.angle(out_point, collinear_array[1], collinear_array[0]),
-                                              Angle.angle(out_point, collinear_array[1], collinear_array[2])));
+                    this.addEqual("ang", degree(180),
+                            sumUnits(angle(out_point, collinear_array[1], collinear_array[0]),
+                                              angle(out_point, collinear_array[1], collinear_array[2])));
                     this.addEqual("ang",
-                            Angle.angle(out_point, collinear_array[0], collinear_array[1]),
-                            Angle.angle(out_point, collinear_array[0], collinear_array[2]));
+                            angle(out_point, collinear_array[0], collinear_array[1]),
+                            angle(out_point, collinear_array[0], collinear_array[2]));
                     this.addEqual("ang",
-                            Angle.angle(out_point, collinear_array[2], collinear_array[1]),
-                            Angle.angle(out_point, collinear_array[2], collinear_array[0]));
+                            angle(out_point, collinear_array[2], collinear_array[1]),
+                            angle(out_point, collinear_array[2], collinear_array[0]));
                 }
             }
         }
@@ -303,9 +309,9 @@ public class Graph {
                     double degree_sum = this.getDegreeValue(points_aside[0], point_vertex, points_aside[1]);
                     if (degree_value_1 > 5 && degree_value_2 > 5 &&
                             abs(degree_sum - degree_value_1 - degree_value_2) < 2){
-                        this.addEqual("ang", Angle.angle(points_aside[0], point_vertex, points_aside[1]),
-                                SumUnits.sumUnits(Angle.angle(out_point, point_vertex, points_aside[0]),
-                                                  Angle.angle(out_point, point_vertex, points_aside[1])));
+                        this.addEqual("ang", angle(points_aside[0], point_vertex, points_aside[1]),
+                                sumUnits(angle(out_point, point_vertex, points_aside[0]),
+                                                  angle(out_point, point_vertex, points_aside[1])));
                     }
                 }
             }
@@ -352,10 +358,10 @@ public class Graph {
                             for (Element equal_2_unit_1 : equal_2.getExceptSetOf(complex_unit_1_sub_1)) {
                                 ComplexElement new_complex_unit;
                                 if (complex_unit_1 instanceof SumUnits) {
-                                    new_complex_unit = SumUnits.sumUnits(equal_2_unit_1,
+                                    new_complex_unit = sumUnits(equal_2_unit_1,
                                             ((SumUnits) complex_unit_1).getExceptOf(complex_unit_1_sub_1));
                                 } else {
-                                    new_complex_unit = MultiplyUnits.multiplyUnits(equal_2_unit_1,
+                                    new_complex_unit = multiplyUnits(equal_2_unit_1,
                                             ((ComplexElement) complex_unit_1).getExceptOf(complex_unit_1_sub_1));
                                 }
                                 // 判断新复合元素的长度有无超过限制参数的要求
@@ -380,14 +386,14 @@ public class Graph {
                                     Element excepted_unit = ((ComplexElement) complex_unit_1_sub_1).getExceptOf(
                                                                                         complex_unit_1_sub_1_sub_1);
                                     if (complex_unit_1 instanceof SumUnits) {
-                                        new_complex_unit = SumUnits.sumUnits(
+                                        new_complex_unit = sumUnits(
                                                 ((SumUnits) complex_unit_1).getExceptOf(complex_unit_1_sub_1),
-                                                MultiplyUnits.multiplyUnits(equal_2_unit_1, excepted_unit)
+                                                multiplyUnits(equal_2_unit_1, excepted_unit)
                                         );
                                     } else {
-                                        new_complex_unit = MultiplyUnits.multiplyUnits(
+                                        new_complex_unit = multiplyUnits(
                                                 ((ComplexElement) complex_unit_1).getExceptOf(complex_unit_1_sub_1),
-                                                SumUnits.sumUnits(equal_2_unit_1, excepted_unit)
+                                                sumUnits(equal_2_unit_1, excepted_unit)
                                         );
                                     }
                                     if (new_complex_unit.getLength() > max_complex_len) continue;
@@ -430,10 +436,10 @@ public class Graph {
                             HashMap<Element, Integer> temp = ((SumUnits) complex_unit_1_sub_1).getUnit_counts();
                             HashMap<Element, Integer> result_unit_counts = new HashMap<>();
                             for (Entry<Element, Integer> temp_entry : temp.entrySet()) {
-                                result_unit_counts.put(MultiplyUnits.multiplyUnits(complex_unit_1_sub_2,
+                                result_unit_counts.put(multiplyUnits(complex_unit_1_sub_2,
                                                                     temp_entry.getKey()), temp_entry.getValue());
                             }
-                            SumUnits new_complex_unit = SumUnits.sumUnits(result_unit_counts);
+                            SumUnits new_complex_unit = sumUnits(result_unit_counts);
                             this.addEqual(equal_type, complex_unit_1, new_complex_unit);
                         }
                     }
@@ -448,13 +454,13 @@ public class Graph {
                                 HashMap<Element, Integer> temp = ((SumUnits) complex_unit_1_sub_sub_1).getUnit_counts();
                                 HashMap<Element, Integer> result_unit_counts = new HashMap<>();
                                 for (Entry<Element, Integer> temp_entry : temp.entrySet()) {
-                                    result_unit_counts.put(MultiplyUnits.multiplyUnits(complex_unit_1_sub_sub_2,
+                                    result_unit_counts.put(multiplyUnits(complex_unit_1_sub_sub_2,
                                             temp_entry.getKey()), temp_entry.getValue());
                                 }
-                                SumUnits new_complex_unit = SumUnits.sumUnits(result_unit_counts);
+                                SumUnits new_complex_unit = sumUnits(result_unit_counts);
                                 Element excepted_unit = ((SumUnits) complex_unit_1).getExceptOf(complex_unit_1_sub);
                                 this.addEqual(equal_type, complex_unit_1_sub, new_complex_unit);
-                                this.addEqual(equal_type, complex_unit_1, SumUnits.sumUnits(excepted_unit,
+                                this.addEqual(equal_type, complex_unit_1, sumUnits(excepted_unit,
                                                                                             new_complex_unit));
                             }
                         }
@@ -478,8 +484,8 @@ public class Graph {
                                     if (inner_unit == null) continue;
                                     Element excepted_unit = ((SumUnits) complex_unit_1_sub_2).getExceptOf(
                                             complex_unit_1_sub_2_sub);
-                                    Element new_complex_unit = SumUnits.sumUnits(excepted_unit,
-                                            MultiplyUnits.multiplyUnits(inner_unit, SumUnits.sumUnits(
+                                    Element new_complex_unit = sumUnits(excepted_unit,
+                                            multiplyUnits(inner_unit, sumUnits(
                                                     ((MultiplyUnits) complex_unit_1_sub_1).getExceptOf(inner_unit),
                                                     ((MultiplyUnits) complex_unit_1_sub_2_sub).getExceptOf(inner_unit)
                                             )));
@@ -490,8 +496,8 @@ public class Graph {
                             Element inner_unit = ((MultiplyUnits) complex_unit_1_sub_1).getInnerOf(
                                     (MultiplyUnits) complex_unit_1_sub_2);
                             if (complex_unit_1_sub_1.equals(complex_unit_1_sub_2) || inner_unit == null) continue;
-                            Element new_complex_unit = MultiplyUnits.multiplyUnits(inner_unit,
-                                    SumUnits.sumUnits(((MultiplyUnits) complex_unit_1_sub_1).getExceptOf(inner_unit),
+                            Element new_complex_unit = multiplyUnits(inner_unit,
+                                    sumUnits(((MultiplyUnits) complex_unit_1_sub_1).getExceptOf(inner_unit),
                                             ((MultiplyUnits) complex_unit_1_sub_2).getExceptOf(inner_unit)));
                             this.addEqual(equal_type, complex_unit_1, new_complex_unit);
                         }
@@ -521,21 +527,21 @@ public class Graph {
             // 对每个三角形应用规则1
             triangle_1_array = triangle_1.toArray(new String[3]);
             this.addEqual("ang",
-                    SumUnits.sumUnits(
-                            Angle.angle(triangle_1_array[1], triangle_1_array[0], triangle_1_array[2]),
-                            SumUnits.sumUnits(
-                                    Angle.angle(triangle_1_array[0], triangle_1_array[1], triangle_1_array[2]),
-                                    Angle.angle(triangle_1_array[0], triangle_1_array[2], triangle_1_array[1]))
-                    ), Degree.degree(180));
+                    sumUnits(
+                            angle(triangle_1_array[1], triangle_1_array[0], triangle_1_array[2]),
+                            sumUnits(
+                                    angle(triangle_1_array[0], triangle_1_array[1], triangle_1_array[2]),
+                                    angle(triangle_1_array[0], triangle_1_array[2], triangle_1_array[1]))
+                    ), degree(180));
             // 检查每个三角形，是否满足规则2，为等腰三角形
             String[] isosceles_result = this.isIsosceles(triangle_1);
             if (isosceles_result != null) {
                 this.addEqual("seg",
-                        Segment.segment(isosceles_result[0], isosceles_result[1]),
-                        Segment.segment(isosceles_result[0], isosceles_result[2]));
+                        segment(isosceles_result[0], isosceles_result[1]),
+                        segment(isosceles_result[0], isosceles_result[2]));
                 this.addEqual("ang",
-                        Angle.angle(isosceles_result[0], isosceles_result[1], isosceles_result[2]),
-                        Angle.angle(isosceles_result[0], isosceles_result[2], isosceles_result[1]));
+                        angle(isosceles_result[0], isosceles_result[1], isosceles_result[2]),
+                        angle(isosceles_result[0], isosceles_result[2], isosceles_result[1]));
             }
             // 再遍历另一个三角形，组成三角形对
             rest_triangles_set.remove(triangle_1);
@@ -544,57 +550,57 @@ public class Graph {
                 String[][] congruent_result = this.isCongruent(triangle_1, triangle_2);
                 if (congruent_result != null) {
                     this.addEqual("seg",
-                            Segment.segment(congruent_result[0][0], congruent_result[0][1]),
-                            Segment.segment(congruent_result[1][0], congruent_result[1][1]));
+                            segment(congruent_result[0][0], congruent_result[0][1]),
+                            segment(congruent_result[1][0], congruent_result[1][1]));
                     this.addEqual("seg",
-                            Segment.segment(congruent_result[0][0], congruent_result[0][2]),
-                            Segment.segment(congruent_result[1][0], congruent_result[1][2]));
+                            segment(congruent_result[0][0], congruent_result[0][2]),
+                            segment(congruent_result[1][0], congruent_result[1][2]));
                     this.addEqual("seg",
-                            Segment.segment(congruent_result[0][1], congruent_result[0][2]),
-                            Segment.segment(congruent_result[1][1], congruent_result[1][2]));
+                            segment(congruent_result[0][1], congruent_result[0][2]),
+                            segment(congruent_result[1][1], congruent_result[1][2]));
                     this.addEqual("ang",
-                            Angle.angle(congruent_result[0][1], congruent_result[0][0], congruent_result[0][2]),
-                            Angle.angle(congruent_result[1][1], congruent_result[1][0], congruent_result[1][2]));
+                            angle(congruent_result[0][1], congruent_result[0][0], congruent_result[0][2]),
+                            angle(congruent_result[1][1], congruent_result[1][0], congruent_result[1][2]));
                     this.addEqual("ang",
-                            Angle.angle(congruent_result[0][0], congruent_result[0][1], congruent_result[0][2]),
-                            Angle.angle(congruent_result[1][0], congruent_result[1][1], congruent_result[1][2]));
+                            angle(congruent_result[0][0], congruent_result[0][1], congruent_result[0][2]),
+                            angle(congruent_result[1][0], congruent_result[1][1], congruent_result[1][2]));
                     this.addEqual("ang",
-                            Angle.angle(congruent_result[0][0], congruent_result[0][2], congruent_result[0][1]),
-                            Angle.angle(congruent_result[1][0], congruent_result[1][2], congruent_result[1][1]));
+                            angle(congruent_result[0][0], congruent_result[0][2], congruent_result[0][1]),
+                            angle(congruent_result[1][0], congruent_result[1][2], congruent_result[1][1]));
                 }
                 // 判断这对三角形是否满足规则4，相似三角形定理
                 String[][] similar_result = this.isSimilar(triangle_1, triangle_2);
                 if (similar_result != null) {
                     this.addEqual("seg",
-                            MultiplyUnits.multiplyUnits(
-                                    Segment.segment(similar_result[0][0], similar_result[0][1]),
-                                    Segment.segment(similar_result[1][1], similar_result[1][2])),
-                            MultiplyUnits.multiplyUnits(
-                                    Segment.segment(similar_result[0][1], similar_result[0][2]),
-                                    Segment.segment(similar_result[1][0], similar_result[1][1])));
+                            multiplyUnits(
+                                    segment(similar_result[0][0], similar_result[0][1]),
+                                    segment(similar_result[1][1], similar_result[1][2])),
+                            multiplyUnits(
+                                    segment(similar_result[0][1], similar_result[0][2]),
+                                    segment(similar_result[1][0], similar_result[1][1])));
                     this.addEqual("seg",
-                            MultiplyUnits.multiplyUnits(
-                                    Segment.segment(similar_result[0][0], similar_result[0][1]),
-                                    Segment.segment(similar_result[1][0], similar_result[1][2])),
-                            MultiplyUnits.multiplyUnits(
-                                    Segment.segment(similar_result[0][0], similar_result[0][2]),
-                                    Segment.segment(similar_result[1][0], similar_result[1][1])));
+                            multiplyUnits(
+                                    segment(similar_result[0][0], similar_result[0][1]),
+                                    segment(similar_result[1][0], similar_result[1][2])),
+                            multiplyUnits(
+                                    segment(similar_result[0][0], similar_result[0][2]),
+                                    segment(similar_result[1][0], similar_result[1][1])));
                     this.addEqual("seg",
-                            MultiplyUnits.multiplyUnits(
-                                    Segment.segment(similar_result[0][0], similar_result[0][2]),
-                                    Segment.segment(similar_result[1][1], similar_result[1][2])),
-                            MultiplyUnits.multiplyUnits(
-                                    Segment.segment(similar_result[0][1], similar_result[0][2]),
-                                    Segment.segment(similar_result[1][0], similar_result[1][2])));
+                            multiplyUnits(
+                                    segment(similar_result[0][0], similar_result[0][2]),
+                                    segment(similar_result[1][1], similar_result[1][2])),
+                            multiplyUnits(
+                                    segment(similar_result[0][1], similar_result[0][2]),
+                                    segment(similar_result[1][0], similar_result[1][2])));
                     this.addEqual("ang",
-                            Angle.angle(similar_result[0][1], similar_result[0][0], similar_result[0][2]),
-                            Angle.angle(similar_result[1][1], similar_result[1][0], similar_result[1][2]));
+                            angle(similar_result[0][1], similar_result[0][0], similar_result[0][2]),
+                            angle(similar_result[1][1], similar_result[1][0], similar_result[1][2]));
                     this.addEqual("ang",
-                            Angle.angle(similar_result[0][0], similar_result[0][1], similar_result[0][2]),
-                            Angle.angle(similar_result[1][0], similar_result[1][1], similar_result[1][2]));
+                            angle(similar_result[0][0], similar_result[0][1], similar_result[0][2]),
+                            angle(similar_result[1][0], similar_result[1][1], similar_result[1][2]));
                     this.addEqual("ang",
-                            Angle.angle(similar_result[0][0], similar_result[0][2], similar_result[0][1]),
-                            Angle.angle(similar_result[1][0], similar_result[1][2], similar_result[1][1]));
+                            angle(similar_result[0][0], similar_result[0][2], similar_result[0][1]),
+                            angle(similar_result[1][0], similar_result[1][2], similar_result[1][1]));
                 }
             }
             // 再遍历这个三角形之外的点，检查是否可以满足规则5，组成四点共圆
@@ -604,34 +610,51 @@ public class Graph {
                     points_aside = Common.getSetExcept(triangle_1, point_vertex).toArray(new String[2]);
                     // 假设一个点为三角形顶点，检查是否有一个外点在三角形顶角扇区内并与之组成四点共圆，即满足一对对角互补或一对圆周角相等
                     if (this.queryEqual("ang",
-                            Angle.angle(points_aside[0], point_vertex, points_aside[1]),
-                            SumUnits.sumUnits(
-                                    Angle.angle(out_point, point_vertex, points_aside[0]),
-                                    Angle.angle(out_point, point_vertex, points_aside[1])))
+                            angle(points_aside[0], point_vertex, points_aside[1]),
+                            sumUnits(
+                                    angle(out_point, point_vertex, points_aside[0]),
+                                    angle(out_point, point_vertex, points_aside[1])))
                     ) {
-                        if (this.queryEqual("ang", Degree.degree(180),
-                                SumUnits.sumUnits(
-                                        Angle.angle(points_aside[0], point_vertex, points_aside[1]),
-                                        Angle.angle(points_aside[0], out_point, points_aside[1]))) ||
+                        if (this.queryEqual("ang", degree(180),
+                                sumUnits(
+                                        angle(points_aside[0], point_vertex, points_aside[1]),
+                                        angle(points_aside[0], out_point, points_aside[1]))) ||
                                 this.queryEqual("ang",
-                                        Angle.angle(out_point, point_vertex, points_aside[0]),
-                                        Angle.angle(out_point, points_aside[1], points_aside[0])) ||
+                                        angle(out_point, point_vertex, points_aside[0]),
+                                        angle(out_point, points_aside[1], points_aside[0])) ||
                                 this.queryEqual("ang",
-                                        Angle.angle(out_point, point_vertex, points_aside[1]),
-                                        Angle.angle(out_point, points_aside[0], points_aside[1]))
+                                        angle(out_point, point_vertex, points_aside[1]),
+                                        angle(out_point, points_aside[0], points_aside[1]))
                         ) {
+                            // 记录日志，满足四点共圆定理
+                            this.addNote("simple",
+                                    angle(points_aside[0], point_vertex, points_aside[1]).getGeometry_key()
+                                            + "+"
+                                            + angle(points_aside[0], out_point, points_aside[1]).getGeometry_key()
+                                            + "=180°"
+                                            + " 或 "
+                                            + angle(out_point, point_vertex, points_aside[0]).getGeometry_key()
+                                            + "="
+                                            + angle(out_point, points_aside[1], points_aside[0]).getGeometry_key()
+                                            + " 或 "
+                                            + angle(out_point, point_vertex, points_aside[1]).getGeometry_key()
+                                            + "="
+                                            + angle(out_point, points_aside[0], points_aside[1]).getGeometry_key(),
+                                    toSortString(new String[]{points_aside[0], point_vertex, points_aside[1], out_point})
+                                            + "四点共圆"
+                            );
                             this.addEqual("ang",
-                                    Angle.angle(out_point, point_vertex, points_aside[0]),
-                                    Angle.angle(out_point, points_aside[1], points_aside[0]));
+                                    angle(out_point, point_vertex, points_aside[0]),
+                                    angle(out_point, points_aside[1], points_aside[0]));
                             this.addEqual("ang",
-                                    Angle.angle(out_point, point_vertex, points_aside[1]),
-                                    Angle.angle(out_point, points_aside[0], points_aside[1]));
+                                    angle(out_point, point_vertex, points_aside[1]),
+                                    angle(out_point, points_aside[0], points_aside[1]));
                             this.addEqual("ang",
-                                    Angle.angle(point_vertex, out_point, points_aside[0]),
-                                    Angle.angle(point_vertex, points_aside[1], points_aside[0]));
+                                    angle(point_vertex, out_point, points_aside[0]),
+                                    angle(point_vertex, points_aside[1], points_aside[0]));
                             this.addEqual("ang",
-                                    Angle.angle(point_vertex, out_point, points_aside[1]),
-                                    Angle.angle(point_vertex, points_aside[0], points_aside[1]));
+                                    angle(point_vertex, out_point, points_aside[1]),
+                                    angle(point_vertex, points_aside[0], points_aside[1]));
                         }
                     }
                 }
@@ -728,10 +751,10 @@ public class Graph {
         for (String point_vertex : one_triangle) {
             points_aside = Common.getSetExcept(one_triangle, point_vertex).toArray(new String[2]);
             // 判断顶点到两个侧点的距离相等是否已知，或两个侧角相等是否已知
-            if (this.queryEqual("seg", Segment.segment(points_aside[0], point_vertex),
-                                                 Segment.segment(points_aside[1], point_vertex)) ||
-                this.queryEqual("ang", Angle.angle(point_vertex, points_aside[0], points_aside[1]),
-                                                 Angle.angle(point_vertex, points_aside[1], points_aside[0]))
+            if (this.queryEqual("seg", segment(points_aside[0], point_vertex),
+                                                 segment(points_aside[1], point_vertex)) ||
+                this.queryEqual("ang", angle(point_vertex, points_aside[0], points_aside[1]),
+                                                 angle(point_vertex, points_aside[1], points_aside[0]))
             ) {
                 return new String[]{point_vertex, points_aside[0], points_aside[1]};
             }
@@ -749,8 +772,8 @@ public class Graph {
             for (String point_vertex_2 : triangle_2) {
                 points_aside_2 = Common.getSetExcept(triangle_2, point_vertex_2).toArray(new String[2]);
                 // 如果满足 A 或 S 顶角或顶角所对边相等
-                if (this.queryEqual("ang", Angle.angle(points_aside_1[0], point_vertex_1, points_aside_1[1]),
-                                                     Angle.angle(points_aside_2[0], point_vertex_2, points_aside_2[1]))
+                if (this.queryEqual("ang", angle(points_aside_1[0], point_vertex_1, points_aside_1[1]),
+                                                     angle(points_aside_2[0], point_vertex_2, points_aside_2[1]))
                 ) {
                     // 假设另外两个点是正好对应，或者相反对应
                     for (int i : new int[]{0, 1}) {
@@ -758,17 +781,36 @@ public class Graph {
                         points_aside_1[0] = points_aside_1[i];
                         points_aside_1[1] = temp;
                         // 如果满足 SAS 两侧边和一顶角对应相等
-                        if (this.queryEqual("seg", Segment.segment(points_aside_1[0], point_vertex_1),
-                                                             Segment.segment(points_aside_2[0], point_vertex_2)) &&
-                            this.queryEqual("seg", Segment.segment(points_aside_1[1], point_vertex_1),
-                                                             Segment.segment(points_aside_2[1], point_vertex_2))
+                        if (this.queryEqual("seg", segment(points_aside_1[0], point_vertex_1),
+                                                             segment(points_aside_2[0], point_vertex_2)) &&
+                            this.queryEqual("seg", segment(points_aside_1[1], point_vertex_1),
+                                                             segment(points_aside_2[1], point_vertex_2))
                         ) {
+                            // 记录日志，满足全等三角形规则SAS
+                            this.addNote("simple",
+                                    angle(points_aside_1[0], point_vertex_1, points_aside_1[1]).getGeometry_key()
+                                            + "="
+                                            + angle(points_aside_2[0], point_vertex_2, points_aside_2[1]).getGeometry_key()
+                                            + ", "
+                                            + segment(points_aside_1[0], point_vertex_1).getGeometry_key()
+                                            + "="
+                                            + segment(points_aside_2[0], point_vertex_2).getGeometry_key()
+                                            + ", "
+                                            + segment(points_aside_1[1], point_vertex_1).getGeometry_key()
+                                            + "="
+                                            + segment(points_aside_2[1], point_vertex_2).getGeometry_key(),
+                                    "🔺" + toSortString(new String[]{points_aside_1[0], point_vertex_1, points_aside_1[1]})
+                                            + "≌"
+                                            + "🔺"
+                                            + toSortString(new String[]{points_aside_2[0], point_vertex_2, points_aside_2[1]})
+                            );
+                            // 返回对应全等的两个三点数组
                             return new String[][]{{points_aside_1[0], point_vertex_1, points_aside_1[1]},
                                                   {points_aside_2[0], point_vertex_2, points_aside_2[1]}};
                         }
                     }
-                } else if (this.queryEqual("seg", Segment.segment(points_aside_1[0], points_aside_1[1]),
-                                                            Segment.segment(points_aside_2[0], points_aside_2[1]))
+                } else if (this.queryEqual("seg", segment(points_aside_1[0], points_aside_1[1]),
+                                                            segment(points_aside_2[0], points_aside_2[1]))
                 ) {
                     // 假设另外两个点是正好对应，或者相反对应
                     for (int i : new int[]{0, 1}) {
@@ -776,22 +818,60 @@ public class Graph {
                         points_aside_1[0] = points_aside_1[i];
                         points_aside_1[1] = temp;
                         // 如果满足 SSS 三边对应相等
-                        if (this.queryEqual("seg", Segment.segment(points_aside_1[0], point_vertex_1),
-                                                             Segment.segment(points_aside_2[0], point_vertex_2)) &&
-                            this.queryEqual("seg", Segment.segment(points_aside_1[1], point_vertex_1),
-                                                             Segment.segment(points_aside_2[1], point_vertex_2))
+                        if (this.queryEqual("seg", segment(points_aside_1[0], point_vertex_1),
+                                                             segment(points_aside_2[0], point_vertex_2)) &&
+                            this.queryEqual("seg", segment(points_aside_1[1], point_vertex_1),
+                                                             segment(points_aside_2[1], point_vertex_2))
                         ) {
+                            // 记录日志，满足全等三角形规则SSS
+                            this.addNote("simple",
+                                    segment(points_aside_1[0], points_aside_1[1]).getGeometry_key()
+                                            + "="
+                                            + segment(points_aside_2[0], points_aside_2[1]).getGeometry_key()
+                                            + ", "
+                                            + segment(points_aside_1[0], point_vertex_1).getGeometry_key()
+                                            + "="
+                                            + segment(points_aside_2[0], point_vertex_2).getGeometry_key()
+                                            + ", "
+                                            + segment(points_aside_1[1], point_vertex_1).getGeometry_key()
+                                            + "="
+                                            + segment(points_aside_2[1], point_vertex_2).getGeometry_key(),
+                                    "🔺" + toSortString(new String[]{points_aside_1[0], point_vertex_1, points_aside_1[1]})
+                                            + "≌"
+                                            + "🔺"
+                                            + toSortString(new String[]{points_aside_2[0], point_vertex_2, points_aside_2[1]})
+                            );
+                            // 返回对应全等的两个三点数组
                             return new String[][]{{points_aside_1[0], point_vertex_1, points_aside_1[1]},
                                                   {points_aside_2[0], point_vertex_2, points_aside_2[1]}};
                         }
                         // 如果满足 SAA 一边两角对应相等
                         if (this.queryEqual("ang",
-                                    Angle.angle(point_vertex_1, points_aside_1[0], points_aside_1[1]),
-                                    Angle.angle(point_vertex_2, points_aside_2[0], points_aside_2[1])) &&
+                                    angle(point_vertex_1, points_aside_1[0], points_aside_1[1]),
+                                    angle(point_vertex_2, points_aside_2[0], points_aside_2[1])) &&
                             this.queryEqual("ang",
-                                    Angle.angle(point_vertex_1, points_aside_1[1], points_aside_1[0]),
-                                    Angle.angle(point_vertex_2, points_aside_2[1], points_aside_2[0]))
+                                    angle(point_vertex_1, points_aside_1[1], points_aside_1[0]),
+                                    angle(point_vertex_2, points_aside_2[1], points_aside_2[0]))
                         ) {
+                            // 记录日志，满足全等三角形规则SAA
+                            this.addNote("simple",
+                                    segment(points_aside_1[0], points_aside_1[1]).getGeometry_key()
+                                            + "="
+                                            + segment(points_aside_2[0], points_aside_2[1]).getGeometry_key()
+                                            + ", "
+                                            + angle(point_vertex_1, points_aside_1[0], points_aside_1[1]).getGeometry_key()
+                                            + "="
+                                            + angle(point_vertex_2, points_aside_2[0], points_aside_2[1]).getGeometry_key()
+                                            + ", "
+                                            + angle(point_vertex_1, points_aside_1[1], points_aside_1[0]).getGeometry_key()
+                                            + "="
+                                            + angle(point_vertex_2, points_aside_2[1], points_aside_2[0]).getGeometry_key(),
+                                    "🔺" + toSortString(new String[]{points_aside_1[0], point_vertex_1, points_aside_1[1]})
+                                            + "≌"
+                                            + "🔺"
+                                            + toSortString(new String[]{points_aside_2[0], point_vertex_2, points_aside_2[1]})
+                            );
+                            // 返回对应全等的两个三点数组
                             return new String[][]{{points_aside_1[0], point_vertex_1, points_aside_1[1]},
                                                   {points_aside_2[0], point_vertex_2, points_aside_2[1]}};
                         }
@@ -818,52 +898,109 @@ public class Graph {
                     points_aside_1[1] = temp;
                     // 如果满足 A 顶角对应相等
                     if (this.queryEqual("ang",
-                            Angle.angle(points_aside_1[0], point_vertex_1, points_aside_1[1]),
-                            Angle.angle(points_aside_2[0], point_vertex_2, points_aside_2[1]))
+                            angle(points_aside_1[0], point_vertex_1, points_aside_1[1]),
+                            angle(points_aside_2[0], point_vertex_2, points_aside_2[1]))
                     ) {
                         // 如果满足 AA 顶角对应相等 且 一侧角对应相等
                         if (this.queryEqual("ang",
-                                Angle.angle(point_vertex_1, points_aside_1[0], points_aside_1[1]),
-                                Angle.angle(point_vertex_2, points_aside_2[0], points_aside_2[1]))
+                                angle(point_vertex_1, points_aside_1[0], points_aside_1[1]),
+                                angle(point_vertex_2, points_aside_2[0], points_aside_2[1]))
                         ) {
+                            // 记录日志，满足相似三角形规则AA
+                            this.addNote("simple",
+                                    angle(points_aside_1[0], point_vertex_1, points_aside_1[1]).getGeometry_key()
+                                            + "="
+                                            + angle(points_aside_2[0], point_vertex_2, points_aside_2[1]).getGeometry_key()
+                                            + ", "
+                                            + angle(point_vertex_1, points_aside_1[0], points_aside_1[1]).getGeometry_key()
+                                            + "="
+                                            + angle(point_vertex_2, points_aside_2[0], points_aside_2[1]).getGeometry_key(),
+                                    "🔺" + toSortString(new String[]{points_aside_1[0], point_vertex_1, points_aside_1[1]})
+                                            + "∽"
+                                            + "🔺"
+                                            + toSortString(new String[]{points_aside_2[0], point_vertex_2, points_aside_2[1]})
+                            );
+                            // 返回对应相似的两个三点数组
                             return new String[][]{{points_aside_1[0], point_vertex_1, points_aside_1[1]},
                                                   {points_aside_2[0], point_vertex_2, points_aside_2[1]}};
                         }
                         // 如果满足 AS 顶角对应相等 且 两侧边对应比例相等
                         if (this.queryEqual("seg",
-                                MultiplyUnits.multiplyUnits(
-                                        Segment.segment(points_aside_1[0], point_vertex_1),
-                                        Segment.segment(points_aside_2[1], point_vertex_2)
+                                multiplyUnits(
+                                        segment(points_aside_1[0], point_vertex_1),
+                                        segment(points_aside_2[1], point_vertex_2)
                                 ),
-                                MultiplyUnits.multiplyUnits(
-                                        Segment.segment(points_aside_1[1], point_vertex_1),
-                                        Segment.segment(points_aside_2[0], point_vertex_2)
+                                multiplyUnits(
+                                        segment(points_aside_1[1], point_vertex_1),
+                                        segment(points_aside_2[0], point_vertex_2)
                                 ))
                         ) {
+                            // 记录日志，满足相似三角形规则AS
+                            this.addNote("simple",
+                                    angle(points_aside_1[0], point_vertex_1, points_aside_1[1]).getGeometry_key()
+                                            + "="
+                                            + angle(points_aside_2[0], point_vertex_2, points_aside_2[1]).getGeometry_key()
+                                            + ", "
+                                            + segment(points_aside_1[0], point_vertex_1).getGeometry_key()
+                                            + "*"
+                                            + segment(points_aside_2[1], point_vertex_2).getGeometry_key()
+                                            + "="
+                                            + segment(points_aside_1[1], point_vertex_1).getGeometry_key()
+                                            + "*"
+                                            + segment(points_aside_2[0], point_vertex_2).getGeometry_key(),
+                                    "🔺" + toSortString(new String[]{points_aside_1[0], point_vertex_1, points_aside_1[1]})
+                                            + "∽"
+                                            + "🔺"
+                                            + toSortString(new String[]{points_aside_2[0], point_vertex_2, points_aside_2[1]})
+                            );
+                            // 返回对应相似的两个三点数组
                             return new String[][]{{points_aside_1[0], point_vertex_1, points_aside_1[1]},
                                                   {points_aside_2[0], point_vertex_2, points_aside_2[1]}};
                         }
                     }
                     // 如果满足 SSS 三边对应比例相等
                     else if (this.queryEqual("seg",
-                            MultiplyUnits.multiplyUnits(
-                                    Segment.segment(points_aside_1[0], point_vertex_1),
-                                    Segment.segment(points_aside_2[1], point_vertex_2)
+                            multiplyUnits(
+                                    segment(points_aside_1[0], point_vertex_1),
+                                    segment(points_aside_2[1], point_vertex_2)
                             ),
-                            MultiplyUnits.multiplyUnits(
-                                    Segment.segment(points_aside_1[1], point_vertex_1),
-                                    Segment.segment(points_aside_2[0], point_vertex_2)
+                            multiplyUnits(
+                                    segment(points_aside_1[1], point_vertex_1),
+                                    segment(points_aside_2[0], point_vertex_2)
                             )) &&
                             this.queryEqual("seg",
-                                    MultiplyUnits.multiplyUnits(
-                                            Segment.segment(points_aside_1[0], point_vertex_1),
-                                            Segment.segment(points_aside_2[0], points_aside_2[1])
+                                    multiplyUnits(
+                                            segment(points_aside_1[0], point_vertex_1),
+                                            segment(points_aside_2[0], points_aside_2[1])
                                     ),
-                                    MultiplyUnits.multiplyUnits(
-                                            Segment.segment(points_aside_2[0], point_vertex_2),
-                                            Segment.segment(points_aside_1[0], points_aside_1[1])
+                                    multiplyUnits(
+                                            segment(points_aside_2[0], point_vertex_2),
+                                            segment(points_aside_1[0], points_aside_1[1])
                                     ))
                     ) {
+                        // 记录日志，满足相似三角形规则SSS
+                        this.addNote("simple",
+                                segment(points_aside_1[0], point_vertex_1).getGeometry_key()
+                                        + "*"
+                                        + segment(points_aside_2[1], point_vertex_2).getGeometry_key()
+                                        + "="
+                                        + segment(points_aside_1[1], point_vertex_1).getGeometry_key()
+                                        + "*"
+                                        + segment(points_aside_2[0], point_vertex_2).getGeometry_key()
+                                        + ", "
+                                        + segment(points_aside_1[0], point_vertex_1).getGeometry_key()
+                                        + "*"
+                                        + segment(points_aside_2[0], points_aside_2[1]).getGeometry_key()
+                                        + "="
+                                        + segment(points_aside_2[0], point_vertex_2).getGeometry_key()
+                                        + "*"
+                                        + segment(points_aside_1[0], points_aside_1[1]).getGeometry_key(),
+                                "🔺" + toSortString(new String[]{points_aside_1[0], point_vertex_1, points_aside_1[1]})
+                                        + "∽"
+                                        + "🔺"
+                                        + toSortString(new String[]{points_aside_2[0], point_vertex_2, points_aside_2[1]})
+                        );
+                        // 返回对应相似的两个三点数组
                         return new String[][]{{points_aside_1[0], point_vertex_1, points_aside_1[1]},
                                               {points_aside_2[0], point_vertex_2, points_aside_2[1]}};
                     }
@@ -871,6 +1008,101 @@ public class Graph {
             }
         }
         return null;
+    }
+
+    /**函数工具：获取一个点组排序后的拼接字符串*/
+    public static String toSortString(String[] point_array) {
+        Arrays.sort(point_array);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String point : point_array) {
+            stringBuilder.append(point);
+        }
+        return stringBuilder.toString();
+    }
+
+    /**函数工具：解析一个数学几何等式表达式字符串所对应的几何类型*/
+    public static String getMathStrType(String math_str) {
+        if (math_str.contains("∠") || math_str.contains("°")) {
+            return "ang";
+        } else {
+            return "seg";
+        }
+    }
+
+    /**函数工具：解析一个数学几何等式表达式字符串所对应的Element对象组*/
+    public static Element[] equationStrToElement(String equation_str) {
+        String[] unit_str_array = equation_str.split("=");
+        Element[] result_element_array = new Element[2];
+        result_element_array[0] = unitStrToElement(unit_str_array[0]);
+        result_element_array[1] = unitStrToElement(unit_str_array[1]);
+        return result_element_array;
+    }
+
+    /**函数工具：解析一个数学几何对象表达式字符串所对应的Element对象*/
+    public static Element unitStrToElement(String unit_str) {
+        // 如果表达式对应的为单元素，则直接转化为相应对象
+        if (!unit_str.contains("+") && !unit_str.contains("*")) {
+            if (unit_str.contains("°")) {
+                return degree(Integer.parseInt(unit_str.substring(0, unit_str.length()-1)));
+            }
+            else if (unit_str.contains("∠")) {
+                return angle(unit_str.substring(0, 1), unit_str.substring(1, 2), unit_str.substring(2, 3));
+            }
+            else {
+                return segment(unit_str.substring(0, 1), unit_str.substring(1, 2));
+            }
+        }
+        // 如果表达式对应的为复合元素，则逐层递归拆分，按照先加法部分再乘法部分，尤其注意数学表达式中的括号项的拼接
+        LinkedList<String> need_sum_list = new LinkedList<>();
+        StringBuilder sub_str_builder = new StringBuilder();
+        for (String sub_sum_part : unit_str.split("\\+")) {
+            sub_str_builder.append(sub_sum_part).append("+");
+            String sub_str = sub_str_builder.toString();
+            if (StringUtils.countMatches(sub_str, "(") - StringUtils.countMatches(sub_str, ")") == 0) {
+                need_sum_list.add(sub_str.substring(0, sub_str.length()-1));
+                sub_str_builder = new StringBuilder();
+            }
+        }
+        // 解析每个加法部分，将每个加法部分分解为多个乘法部分，递归转化每个乘法部分后相乘
+        LinkedList<Element> element_need_sum_list = new LinkedList<>();
+        for (String need_sum_part : need_sum_list) {
+            LinkedList<String> need_multiply_list = new LinkedList<>();
+            sub_str_builder = new StringBuilder();
+            for (String sub_multiply_part : need_sum_part.split("\\*")) {
+                sub_str_builder.append(sub_multiply_part).append("*");
+                String sub_str = sub_str_builder.toString();
+                if (StringUtils.countMatches(sub_str, "(") - StringUtils.countMatches(sub_str, ")") == 0) {
+                    if (sub_str.charAt(0) == '(' && sub_str.charAt(sub_str.length()-2) == ')') {
+                        need_multiply_list.add(sub_str.substring(1, sub_str.length()-2));
+                    } else {
+                        need_multiply_list.add(sub_str.substring(0, sub_str.length()-1));
+                    }
+                    sub_str_builder = new StringBuilder();
+                }
+            }
+            Element element_need_sum_part;
+            if (need_multiply_list.size() == 1) {
+                element_need_sum_part = unitStrToElement(need_multiply_list.get(0));
+            } else {
+                element_need_sum_part = multiplyUnits(unitStrToElement(need_multiply_list.get(0)),
+                                                        unitStrToElement(need_multiply_list.get(1)));
+                for (int i=2; i<need_multiply_list.size(); i++) {
+                    element_need_sum_part = multiplyUnits(element_need_sum_part, unitStrToElement(need_multiply_list.get(i)));
+                }
+            }
+            element_need_sum_list.add(element_need_sum_part);
+        }
+        // 再将所有加法部分汇总相加
+        Element element_result;
+        if (element_need_sum_list.size() == 1) {
+            element_result = element_need_sum_list.get(0);
+        } else {
+            element_result = sumUnits(element_need_sum_list.get(0), element_need_sum_list.get(1));
+            for (int i = 2; i < element_need_sum_list.size(); i++) {
+                element_result = sumUnits(element_result, element_need_sum_list.get(i));
+            }
+        }
+        return element_result;
     }
 
 }

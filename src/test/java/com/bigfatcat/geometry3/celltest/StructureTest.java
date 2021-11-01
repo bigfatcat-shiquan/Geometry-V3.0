@@ -3,6 +3,12 @@ package com.bigfatcat.geometry3.celltest;
 import com.bigfatcat.geometry3.core.structure.elements.*;
 import com.bigfatcat.geometry3.core.structure.relations.Equal;
 
+import static com.bigfatcat.geometry3.core.structure.elements.Segment.segment;
+import static com.bigfatcat.geometry3.core.structure.elements.Angle.angle;
+import static com.bigfatcat.geometry3.core.structure.elements.SumUnits.sumUnits;
+import static com.bigfatcat.geometry3.core.structure.elements.MultiplyUnits.multiplyUnits;
+import static com.bigfatcat.geometry3.core.structure.relations.Equal.equal;
+
 /**
  * 数据结构功能定义层测试篇
  * */
@@ -11,17 +17,17 @@ public class StructureTest {
     public static void main(String[] args) throws Exception {
 
         /*测试用例1，验证边、加和、乘积元素的使用正确*/
-        Segment x1 = Segment.segment("A", "B");
-        Segment x2 = Segment.segment("A", "C");
-        Segment x3 = Segment.segment("C", "A");
+        Segment x1 = segment("A", "B");
+        Segment x2 = segment("A", "C");
+        Segment x3 = segment("C", "A");
 
-        SumUnits z1 = SumUnits.sumUnits(SumUnits.sumUnits(x1, x3), SumUnits.sumUnits(x2, x3));
-        SumUnits z2 = SumUnits.sumUnits(z1, z1);
-        SumUnits z3 = SumUnits.sumUnits(SumUnits.sumUnits(x1, z1), SumUnits.sumUnits(x2, SumUnits.sumUnits(x3, x2)));
-        MultiplyUnits z4 = MultiplyUnits.multiplyUnits(z3, x3);
-        MultiplyUnits z5 = MultiplyUnits.multiplyUnits(x2, z2);
-        MultiplyUnits z6 = MultiplyUnits.multiplyUnits(z4, z3);
-        MultiplyUnits z7 = MultiplyUnits.multiplyUnits(z5, z2);
+        SumUnits z1 = sumUnits(sumUnits(x1, x3), sumUnits(x2, x3));
+        SumUnits z2 = sumUnits(z1, z1);
+        SumUnits z3 = sumUnits(sumUnits(x1, z1), sumUnits(x2, sumUnits(x3, x2)));
+        MultiplyUnits z4 = multiplyUnits(z3, x3);
+        MultiplyUnits z5 = multiplyUnits(x2, z2);
+        MultiplyUnits z6 = multiplyUnits(z4, z3);
+        MultiplyUnits z7 = multiplyUnits(z5, z2);
 
         System.out.print(z1.getGeometry_key() + "\n");
         System.out.print(z1.getUnit_counts() + "\n");
@@ -64,17 +70,17 @@ public class StructureTest {
 //        com.bigfatcat.geometry3.core.structure.elements.MultiplyUnits@7f31245a
 
         /*测试用例2，验证角、角度、加和元素的使用正确*/
-        Angle a1 = Angle.angle("C", "B", "A");
-        Angle a2 = Angle.angle("D", "B", "A");
-        Angle a3 = Angle.angle("A", "B", "D");
+        Angle a1 = angle("C", "B", "A");
+        Angle a2 = angle("D", "B", "A");
+        Angle a3 = angle("A", "B", "D");
         Degree a4 = Degree.degree(180);
         Degree a5 = Degree.degree(180);
 
-        SumUnits s1 = SumUnits.sumUnits(SumUnits.sumUnits(a1, a2), SumUnits.sumUnits(a2, a3));
-        SumUnits s2 = SumUnits.sumUnits(s1, s1);
-        SumUnits s3 = SumUnits.sumUnits(SumUnits.sumUnits(a1, s1), SumUnits.sumUnits(a2, SumUnits.sumUnits(a3, a2)));
-        SumUnits s4 = SumUnits.sumUnits(s2, a5);
-        SumUnits s5 = SumUnits.sumUnits(s3, a4);
+        SumUnits s1 = sumUnits(sumUnits(a1, a2), sumUnits(a2, a3));
+        SumUnits s2 = sumUnits(s1, s1);
+        SumUnits s3 = sumUnits(sumUnits(a1, s1), sumUnits(a2, sumUnits(a3, a2)));
+        SumUnits s4 = sumUnits(s2, a5);
+        SumUnits s5 = sumUnits(s3, a4);
 
         System.out.print(s1.getGeometry_key() + "\n");
         System.out.print(s1.getUnit_counts() + "\n");
@@ -163,13 +169,13 @@ public class StructureTest {
         System.out.print("\n");
 //        7*true
 //        6*false
-        x1 = Segment.segment("A", "B");
-        x2 = Segment.segment("C", "B");
-        x3 = Segment.segment("C", "D");
-        Segment x4 = Segment.segment("D", "C");
-        s1 = SumUnits.sumUnits(SumUnits.sumUnits(x3, x4), SumUnits.sumUnits(x1, x2));
-        s2 = SumUnits.sumUnits(x1, SumUnits.sumUnits(x3, x4));
-        s3 = SumUnits.sumUnits(x1, x2);
+        x1 = segment("A", "B");
+        x2 = segment("C", "B");
+        x3 = segment("C", "D");
+        Segment x4 = segment("D", "C");
+        s1 = sumUnits(sumUnits(x3, x4), sumUnits(x1, x2));
+        s2 = sumUnits(x1, sumUnits(x3, x4));
+        s3 = sumUnits(x1, x2);
         System.out.print(s2.getInnerOf(s3).getGeometry_key() + "\n");
         System.out.print(s1.getInnerOf(s2).getGeometry_key() + "\n");
         System.out.print(s1.getInnerOf(s1).getGeometry_key() + "\n");
@@ -195,9 +201,9 @@ public class StructureTest {
 //        true
 
         /*测试用例5，验证等量关系类相关附属方法的正确*/
-        Equal e1 = Equal.equal(a1, a2);
-        Equal e2 = Equal.equal(a1, a4);
-        Equal e3 = Equal.equal(a1, a5);
+        Equal e1 = equal(a1, a2);
+        Equal e2 = equal(a1, a4);
+        Equal e3 = equal(a1, a5);
         System.out.print(e1.getGeometry_key() + "\n");
         System.out.print(e2.getGeometry_key() + "\n");
         System.out.print(e3.getGeometry_key() + "\n");
@@ -211,7 +217,7 @@ public class StructureTest {
         System.out.print(e2.getInnerSetOf(e3) + "\n");
         System.out.print(e2.getExceptSetOf(e3) + "\n");
         System.out.print(e1.isContainedOf(e1) + "\n");
-        System.out.print(e2.isContainedOf(Equal.equal(e2.getInnerSetOf(e3))) + "\n");
+        System.out.print(e2.isContainedOf(equal(e2.getInnerSetOf(e3))) + "\n");
 //        ∠ABC=∠ABD
 //        180°=∠ABC
 //        180°=∠ABC

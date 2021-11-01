@@ -31,6 +31,15 @@ public interface ProblemService {
 
     /**修改一个题目*/
 
+
     /**解答一个题目*/
+    HashMap<String, Object> solveOneProblem(String problem_name,
+                                            HashSet<String> initial_points_set,
+                                            HashMap<String, Double> points_location_x,
+                                            HashMap<String, Double> points_location_y,
+                                            HashSet<String> initial_equals_str_set,
+                                            String need_prove_equal_str,
+                                            Integer max_deduce_times,
+                                            Integer max_complex_len) throws Exception;
 
 }
