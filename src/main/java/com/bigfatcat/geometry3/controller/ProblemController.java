@@ -16,7 +16,7 @@ import java.util.Map;
 
 /**
  * 题目相关交互控制器
- * 包括：新增题目，题目详情，开启解答题目，查看解答结果，查询题目列表
+ * 包括：新增题目，题目详情，开启解答题目并返回解答结果，查询题目列表
  * */
 @Controller
 public class ProblemController {
@@ -80,6 +80,32 @@ public class ProblemController {
     public ModelAndView getProblemPage(@RequestParam Integer id, Model model) {
         model.addAttribute("the_problem", problemService.getOneProblem(id));
         return new ModelAndView("problem_detail", "info", model);
+    }
+
+    /**
+     * POST请求
+     * 开启解答题目，进行题目自动推理，并在推理完成后返回推理日志结果
+     * */
+    @RequestMapping(value = "/solveProblem", method = RequestMethod.POST)
+    @ResponseBody
+    public String solveProblem(@RequestBody Map<String, String> map) {
+        // 解析请求载荷，得到题目信息以及推理参数高级设置信息
+        HashSet<String> initial_points_set = JSONObject.parseObject(
+                map.get("points_set"), new TypeReference<HashSet<String>>(){});
+        HashMap<String, Double> points_location_x = JSONObject.parseObject(
+                map.get("points_location_x"), new TypeReference<HashMap<String, Double>>(){});
+        HashMap<String, Double> points_location_y = JSONObject.parseObject(
+                map.get("points_location_y"), new TypeReference<HashMap<String, Double>>(){});
+        HashSet<String> initial_equals_str_set = JSONObject.parseObject(
+                map.get("initial_equals_str_set"), new TypeReference<HashSet<String>>(){});
+        String need_prove_equal_str = map.get("need_prove_equal_str");
+        // 调用题目解答服务，进行自动推理
+        
+        // 返回推理完成结果信息
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("success", true);
+        jsonObject.put("problem_solve_log", "");
+        return jsonObject.toJSONString();
     }
 
 }

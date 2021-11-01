@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import static java.lang.Math.*;
+import static com.bigfatcat.geometry3.core.structure.relations.Equal.equal;
 
 /**
  * 类：Graph 业务功能核心层：图对象
@@ -40,6 +41,9 @@ public class Graph {
     /**可以组成的三点共线的集合：这个图上的任意共线的三个点纳入该集合*/
     private final HashSet<String[]> collinear_set;
 
+    /**推理日志：记录这个图对象实例推导更多等量关系的过程*/
+    private final HashMap<String, LinkedList<String>> graph_log;
+
     /**定义图对象的构造函数*/
     public Graph(String graph_name) {
         this.graph_name = graph_name;
@@ -50,6 +54,11 @@ public class Graph {
         this.angle_equals_set = new HashSet<>();
         this.triangles_set = new HashSet<>();
         this.collinear_set = new HashSet<>();
+        this.graph_log = new HashMap<String, LinkedList<String>>() {{
+            put("complexity", new LinkedList<>());
+            put("because", new LinkedList<>());
+            put("so", new LinkedList<>());
+        }};
     }
 
     /**
@@ -171,6 +180,24 @@ public class Graph {
         }
         // 如果上述情况都没有，说明要查询的相等关系还没有被证明
         return false;
+    }
+
+    /**
+     * 在该图对象日志中增加一条记录
+     * 该方法一般用在推导发现满足某个定理或某个规则时，将其记录下来，以展现给前端的用户
+     * 一般以因为、所以的形式按顺序记录下来
+     * */
+    public void addNote(String complexity, String because, String so) {
+        if (!this.graph_log.get("so").contains(so)) {
+            this.graph_log.get("complexity").add(complexity);
+            this.graph_log.get("because").add(because);
+            this.graph_log.get("so").add(so);
+        }
+    }
+
+    /**获取该图对象的日志*/
+    public HashMap<String, LinkedList<String>> getGraph_log() {
+        return this.graph_log;
     }
 
     /**
@@ -334,6 +361,11 @@ public class Graph {
                                 // 判断新复合元素的长度有无超过限制参数的要求
                                 if (new_complex_unit.getLength() > max_complex_len) continue;
                                 this.addEqual(equal_type, complex_unit_1, new_complex_unit);
+                                // 记录日志，满足等价转化规则1
+                                this.addNote("detailed",
+                                        equal(complex_unit_1_sub_1, equal_2_unit_1).getGeometry_key(),
+                                        equal(complex_unit_1, new_complex_unit).getGeometry_key()
+                                );
                             }
                         }
                     }
@@ -360,6 +392,11 @@ public class Graph {
                                     }
                                     if (new_complex_unit.getLength() > max_complex_len) continue;
                                     this.addEqual(equal_type, complex_unit_1, new_complex_unit);
+                                    // 记录日志，满足等价转化规则1
+                                    this.addNote("detailed",
+                                            equal(complex_unit_1_sub_1_sub_1, equal_2_unit_1).getGeometry_key(),
+                                            equal(complex_unit_1, new_complex_unit).getGeometry_key()
+                                    );
                                 }
                             }
                         }
@@ -371,8 +408,14 @@ public class Graph {
                     if (!complex_unit_2.isSameClassOf(complex_unit_1)) continue;
                     Element inner_unit = ((ComplexElement) complex_unit_1).getInnerOf((ComplexElement) complex_unit_2);
                     if (inner_unit != null && !complex_unit_1.equals(complex_unit_2)) {
-                        this.addEqual(equal_type, ((ComplexElement) complex_unit_1).getExceptOf(inner_unit),
-                                                  ((ComplexElement) complex_unit_2).getExceptOf(inner_unit));
+                        Element new_unit_1 = ((ComplexElement) complex_unit_1).getExceptOf(inner_unit);
+                        Element new_unit_2 = ((ComplexElement) complex_unit_2).getExceptOf(inner_unit);
+                        this.addEqual(equal_type, new_unit_1, new_unit_2);
+                        // 记录日志，满足等价转化规则2
+                        this.addNote("detailed",
+                                equal(complex_unit_1, complex_unit_2).getGeometry_key(),
+                                equal(new_unit_1, new_unit_2).getGeometry_key()
+                        );
                     }
                 }
                 // 规则3和规则4一般情况只有边等量关系会出现，角或角度一般不会出现乘积

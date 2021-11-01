@@ -145,7 +145,7 @@
     cursor: pointer;
     float: left;
     margin-left: 150px;
-    margin-top: 50px;
+    margin-top: 40px;
 }
 #problem_solve_start_button > img{
     width: 200px;
@@ -159,6 +159,7 @@
     margin-top: 50px;
 }
 #problem_solve_setting_title > span{
+    color: rgb(117, 117, 130);
     font-weight: bold;
 }
 .problem_solve_setting_option{
