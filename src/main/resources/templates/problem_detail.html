@@ -3,7 +3,6 @@
 	<div th:replace="./base :: geometry3_public_resource"></div>
 	<head>
 		<link rel="stylesheet" type="text/css" href="../static/css/problem_detail.css"/>
-		<script src="../static/js/problem_detail.js"></script>
 		<meta charset="utf-8"/>
 		<title>Geometry3-题目详情</title>
 	</head>
@@ -89,5 +88,76 @@
 			<!-- 公共-页脚部分 -->
 			<div th:replace="./base :: geometry3_public_footer"></div>
 		</div>
+		<script th:inline="javascript">
+
+			// 初始化全局变量
+			var on_deducing = false;
+			var deduce_finished = false;
+
+			// 触发器
+			$(document).ready(function() {
+
+				// 文档加载完毕后解析题目详细信息
+				var problem_name = [[${info.the_problem.problem_name}]];
+				var points_set = [[${info.the_problem.initial_points_set}]];
+				var points_location_x = [[${info.the_problem.points_location_x}]];
+				var points_location_y = [[${info.the_problem.points_location_y}]];
+				var initial_equals_str_set = [[${info.the_problem.initial_equals_str_set}]];
+				var need_prove_equal_str = [[${info.the_problem.need_prove_equal_str}]];
+				var max_deduce_times;
+				var max_complex_len;
+
+				// 提交题目至后台进行解答，得到题目解答日志
+				$("#problem_solve_start_button").on("click", function() {
+					// 整理题目信息及参数信息
+					try {
+						max_deduce_times = parseInt($("#input_deduce_times").val());
+					}
+					catch(err) {
+						max_deduce_times = null;
+					}
+					try {
+						max_complex_len = parseInt($("#input_max_complex").val());
+					}
+					catch(err) {
+						max_complex_len = null;
+					}
+					var data_object = {
+						"problem_name": problem_name,
+						"points_set": JSON.stringify(points_set),
+						"points_location_x": JSON.stringify(points_location_x),
+						"points_location_y": JSON.stringify(points_location_y),
+						"initial_equals_str_set": JSON.stringify(initial_equals_str_set),
+						"need_prove_equal_str": need_prove_equal_str,
+						"max_deduce_times": max_deduce_times,
+						"max_complex_len": max_complex_len
+					};
+					alert(JSON.stringify(data_object));
+					// 异步请求解答题目服务
+					$.ajax({
+					    url: "/solveProblem",
+					    type: "POST",
+					    data: JSON.stringify(data_object),
+					    contentType: "application/json",
+
+					    success: function(data) {
+					        on_deducing = false;
+					        deduce_finished = true;
+							
+					    },
+					    beforeSend: function() {
+					        on_deducing = true;
+					        deduce_finished = false;
+					    },
+					    error: function () {
+					        on_deducing = false;
+					        $.messager.alert('错误', '后台解题过程出现故障');
+					    }
+					});
+				});
+
+			});
+
+		</script>
 	</body>
 </html>
