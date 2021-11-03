@@ -1098,7 +1098,7 @@ public class Graph {
             element_result = element_need_sum_list.get(0);
         } else {
             element_result = sumUnits(element_need_sum_list.get(0), element_need_sum_list.get(1));
-            for (int i = 2; i < element_need_sum_list.size(); i++) {
+            for (int i=2; i<element_need_sum_list.size(); i++) {
                 element_result = sumUnits(element_result, element_need_sum_list.get(i));
             }
         }

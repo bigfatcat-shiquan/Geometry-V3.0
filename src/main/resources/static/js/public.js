@@ -91,3 +91,20 @@ function mapToJson(this_map) {
 	})
 	return JSON.stringify(temp_object);
 }
+
+function getImagePortion(canvas, imgObj, startX, startY, cropWidth, cropHeight, newWidth, newHeight) {
+	// 构建结果图层
+	var tnCanvas = document.createElement('canvas');
+	var tnCanvasContext = tnCanvas.getContext('2d');
+	tnCanvas.width = newWidth;
+	tnCanvas.height = newHeight;
+	// 构建缓冲图层
+	var bufferCanvas = document.createElement('canvas');
+	var bufferContext = bufferCanvas.getContext('2d');
+	bufferCanvas.width = canvas.width();
+	bufferCanvas.height = canvas.height();
+	bufferContext.drawImage(imgObj, 0, 0, imgObj.width, imgObj.height, 0, 0, bufferCanvas.width, bufferCanvas.height);
+	// 将缓冲图层绘制到结果图层以实现图片截取
+	tnCanvasContext.drawImage(bufferCanvas, startX, startY, cropWidth, cropHeight, 0, 0, newWidth, newHeight);
+	return tnCanvas.toDataURL("image/png");
+}

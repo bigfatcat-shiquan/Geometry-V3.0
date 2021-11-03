@@ -74,10 +74,10 @@ public class ProblemServiceImpl implements ProblemService {
             the_problem_graph.addEqual(Graph.getMathStrType(equation_str), equal_element_array[0], equal_element_array[1]);
         }
         // 初始化推理参数设置
-        if (max_deduce_times == null) {
+        if (max_deduce_times == 0) {
             max_deduce_times = 5;
         }
-        if (max_complex_len == null) {
+        if (max_complex_len == 0) {
             max_complex_len = 3;
         }
         // 进行推理

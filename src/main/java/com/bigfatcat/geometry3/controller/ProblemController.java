@@ -89,7 +89,8 @@ public class ProblemController {
         );
         // 返回推理完成结果信息
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("success", solve_result.get("has_proved"));
+        jsonObject.put("success", true);
+        jsonObject.put("has_proved", solve_result.get("has_proved"));
         jsonObject.put("problem_solve_log", solve_result.get("log"));
         return jsonObject.toJSONString();
     }

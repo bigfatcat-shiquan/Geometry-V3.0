@@ -250,19 +250,37 @@ $(document).ready(function() {
 		
 		// 保存绘制结果操作
 		saveDraw = function() {
-			// 题目图片
-			var image = new Image();
-			image.src = document.getElementById("draw_canvas").toDataURL("image/png");
-			problem_picture = image.src;
+			var min_x = $("#draw_canvas").width() / 2;
+			var max_x = $("#draw_canvas").width() / 2 + 10;
+			var min_y = $("#draw_canvas").height() / 2;
+			var max_y = $("#draw_canvas").height() / 2 + 10;
+			var ratio = $("#draw_canvas").height() / $("#draw_canvas").width();
 			// 点坐标信息
 			points_set = new Set();
 			points_location_x = new Map();
 			points_location_y = new Map();
 			all_points.forEach(function(point_shape, point_name) {
+				let point_x = point_shape.position['x'];
+				let point_y = point_shape.position['y'];
 				points_set.add(point_name);
-				points_location_x.set(point_name, point_shape.position['x'].toFixed(2));
-				points_location_y.set(point_name, point_shape.position['y'].toFixed(2));
+				points_location_x.set(point_name, point_x.toFixed(2));
+				points_location_y.set(point_name, point_y.toFixed(2));
+				if (point_x < min_x) min_x = point_x;
+				if (point_x > max_x) max_x = point_x;
+				if (point_y < min_y) min_y = point_y;
+				if (point_y > max_y) max_y = point_y;
 			});
+			// 截取题目图片
+			var min_width = max_x - min_x + 120;
+			var min_height = max_y - min_y + 80;
+			var cropWidth = Math.max(min_width, min_height/ratio);
+			var cropHeight = Math.max(min_height, min_width*ratio);
+			var image = new Image();
+			image.src = document.getElementById("draw_canvas").toDataURL("image/png");
+			image.onload = function() {
+				problem_picture = getImagePortion($("#draw_canvas"), image, min_x-60, min_y-40,
+													cropWidth, cropHeight, cropWidth, cropHeight);
+			}
 			// 题目名称
 			$("#dialog_input_problem_name").dialog("open");
 		}
