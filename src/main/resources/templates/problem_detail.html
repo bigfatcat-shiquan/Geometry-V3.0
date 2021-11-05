@@ -47,16 +47,20 @@
 						</div>
 						<div id="problem_solve_log_content">
 							<table id="problem_solve_log_table">
-								<tr>
-									<th style="width:8%"></th>
-									<th style="width:92%"></th>
-								</tr>
-								<tr><td>∵</td><td>AB+BC=AC, AB+BC=BD</td></tr>
-								<tr><td>∴</td><td>AC=BD</td></tr>
-								<tr><td>∵</td><td>∠ABC+∠BDE=∠ADC, ∠ABC+∠BDE=∠AMC</td></tr>
-								<tr><td>∴</td><td>∠ADC=∠AMC</td></tr>
-								<tr><td>∵</td><td>AB=DE, BC=EF, ∠ABC=∠DEF</td></tr>
-								<tr><td>∴</td><td>🔺ABC≌🔺DEF</td></tr>
+								<thead>
+									<tr>
+										<th style="width:8%"></th>
+										<th style="width:92%"></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr><td>∵</td><td>AB+BC=AC, AB+BC=BD</td></tr>
+									<tr><td>∴</td><td>AC=BD</td></tr>
+									<tr><td>∵</td><td>∠ABC+∠BDE=∠ADC, ∠ABC+∠BDE=∠AMC</td></tr>
+									<tr><td>∴</td><td>∠ADC=∠AMC</td></tr>
+									<tr><td>∵</td><td>AB=DE, BC=EF, ∠ABC=∠DEF</td></tr>
+									<tr><td>∴</td><td>🔺ABC≌🔺DEF</td></tr>
+								</tbody>
 							</table>
 						</div>
 					</div>
@@ -93,6 +97,7 @@
 			// 初始化全局变量
 			var on_deducing = false;
 			var deduce_finished = false;
+			var problem_solve_response = null;
 
 			// 触发器
 			$(document).ready(function() {
@@ -149,11 +154,13 @@
 					    success: function(data) {
 					        on_deducing = false;
 					        deduce_finished = true;
-							changeLogContent(on_deducing, deduce_finished, data);
+							problem_solve_response = data;
+							changeLogContent(on_deducing, deduce_finished, problem_solve_response);
 					    },
 					    beforeSend: function() {
 					        on_deducing = true;
 					        deduce_finished = false;
+							problem_solve_response = null;
 							changeLogContent(on_deducing, deduce_finished, null);
 					    },
 					    error: function () {
@@ -166,7 +173,10 @@
 
 				// 更新题目解答日志状态
 				var changeLogContent = function(on_deducing, deduce_finished, data) {
-					if (on_deducing === false && deduce_finished === true) {
+					// 获取日志表格内容主体
+					var table_body = $("#problem_solve_log_table tbody");
+					// 根据当前状态采取不同更新措施
+					if (!on_deducing && deduce_finished) {
 						// 推导成功完成
 						var problem_solve_log = JSON.parse(data)['problem_solve_log'];
 						var problem_solve_log_complexity = problem_solve_log['complexity'];
@@ -174,23 +184,33 @@
 						var problem_solve_log_so = problem_solve_log['so'];
 						alert(JSON.parse(data)['has_proved']);
 						// 清空原有日志
-
+						table_body.empty();
 						// 写入日志内容
+						let is_simplified_version = $("#problem_solve_log_setting_detail").data('switch').checked;
 						for (var i=0; i<problem_solve_log_complexity.length; i++) {
 							// 简版日志下过滤掉细节内容
-							if ($("#problem_solve_log_setting_detail").data('switch').checked &&
-									problem_solve_log_complexity[i] === "detailed") continue;
-							$("#problem_solve_log_table").append(
+							if (is_simplified_version && problem_solve_log_complexity[i] === "detailed") continue;
+							table_body.append(
 									"<tr><td>∵</td><td>" + problem_solve_log_because[i] + "</td></tr>");
-							$("#problem_solve_log_table").append(
+							table_body.append(
 									"<tr><td>∵</td><td>" + problem_solve_log_so[i] + "</td></tr>");
 						}
-
+					} else if (on_deducing && !deduce_finished) {
+						// 正在推导中
+						table_body.empty();
+					} else if (!on_deducing && !deduce_finished) {
+						// 未进行推导或推导失败
+						table_body.empty();
 					}
 				}
 
 				// 切换日志简版/详版效果
-
+				$("#problem_solve_log_setting_detail").on("click", function() {
+					setTimeout(1000);
+					if (!on_deducing && deduce_finished) {
+						changeLogContent(on_deducing, deduce_finished, problem_solve_response);
+					}
+				});
 
 			});
 

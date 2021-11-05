@@ -73,6 +73,7 @@ public class ProblemServiceImpl implements ProblemService {
             Element[] equal_element_array = Graph.equationStrToElement(equation_str);
             the_problem_graph.addEqual(Graph.getMathStrType(equation_str), equal_element_array[0], equal_element_array[1]);
         }
+        System.out.print("[ProblemService SolveOneProblem] Problem Information Has Received \n");
         // 初始化推理参数设置
         if (max_deduce_times == 0) {
             max_deduce_times = 5;
@@ -82,8 +83,10 @@ public class ProblemServiceImpl implements ProblemService {
         }
         // 进行推理
         for (int deduce_no=1; deduce_no<=max_deduce_times; deduce_no++) {
+            System.out.print("[ProblemService SolveOneProblem] Start Deduce No " + deduce_no + " ...... \n");
             the_problem_graph.deduceByAll(deduce_no, max_complex_len);
         }
+        System.out.print("[ProblemService SolveOneProblem] Deduction Has Finished! \n");
         // 推理完成，检查待求证结论是否已被证明
         Boolean has_proved;
         Element[] need_prove_equal_element_array = Graph.equationStrToElement(need_prove_equal_str);
