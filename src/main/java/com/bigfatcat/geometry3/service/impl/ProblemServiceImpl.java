@@ -87,6 +87,7 @@ public class ProblemServiceImpl implements ProblemService {
             the_problem_graph.deduceByAll(deduce_no, max_complex_len);
         }
         System.out.print("[ProblemService SolveOneProblem] Deduction Has Finished! \n");
+        the_problem_graph.displayGraphInfo();
         // 推理完成，检查待求证结论是否已被证明
         Boolean has_proved;
         Element[] need_prove_equal_element_array = Graph.equationStrToElement(need_prove_equal_str);

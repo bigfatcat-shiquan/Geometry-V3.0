@@ -1046,7 +1046,7 @@ public class Graph {
                 return degree(Integer.parseInt(unit_str.substring(0, unit_str.length()-1)));
             }
             else if (unit_str.contains("∠")) {
-                return angle(unit_str.substring(0, 1), unit_str.substring(1, 2), unit_str.substring(2, 3));
+                return angle(unit_str.substring(1, 2), unit_str.substring(2, 3), unit_str.substring(3, 4));
             }
             else {
                 return segment(unit_str.substring(0, 1), unit_str.substring(1, 2));
