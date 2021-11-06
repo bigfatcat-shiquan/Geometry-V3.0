@@ -193,7 +193,7 @@
 							table_body.append(
 									"<tr><td>∵</td><td>" + problem_solve_log_because[i] + "</td></tr>");
 							table_body.append(
-									"<tr><td>∵</td><td>" + problem_solve_log_so[i] + "</td></tr>");
+									"<tr><td>∴</td><td>" + problem_solve_log_so[i] + "</td></tr>");
 						}
 					} else if (on_deducing && !deduce_finished) {
 						// 正在推导中
@@ -206,7 +206,7 @@
 
 				// 切换日志简版/详版效果
 				$("#problem_solve_log_setting_detail").on("click", function() {
-					setTimeout(1000);
+					setTimeout(function(){}, 1000);
 					if (!on_deducing && deduce_finished) {
 						changeLogContent(on_deducing, deduce_finished, problem_solve_response);
 					}

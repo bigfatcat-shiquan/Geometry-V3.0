@@ -73,7 +73,7 @@ public class ProblemController {
      * POST请求
      * 开启解答题目，进行题目自动推理，并在推理完成后返回推理日志结果
      * */
-    @RequestMapping(value = "/solveProblem", method = RequestMethod.POST)
+    @RequestMapping(value = "/solveProblem", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     @ResponseBody
     public String solveProblem(@RequestBody Map<String, String> map) throws Exception{
         // 解析请求载荷，得到题目信息以及推理参数高级设置信息, 调用题目解答服务，进行自动推理
