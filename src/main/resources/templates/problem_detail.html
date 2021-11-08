@@ -53,14 +53,7 @@
 										<th style="width:92%"></th>
 									</tr>
 								</thead>
-								<tbody>
-									<tr><td>∵</td><td>AB+BC=AC, AB+BC=BD</td></tr>
-									<tr><td>∴</td><td>AC=BD</td></tr>
-									<tr><td>∵</td><td>∠ABC+∠BDE=∠ADC, ∠ABC+∠BDE=∠AMC</td></tr>
-									<tr><td>∴</td><td>∠ADC=∠AMC</td></tr>
-									<tr><td>∵</td><td>AB=DE, BC=EF, ∠ABC=∠DEF</td></tr>
-									<tr><td>∴</td><td>🔺ABC≌🔺DEF</td></tr>
-								</tbody>
+								<tbody></tbody>
 							</table>
 						</div>
 					</div>
@@ -114,6 +107,9 @@
 
 				// 提交题目至后台进行解答，得到题目解答日志
 				$("#problem_solve_start_button").on("click", function() {
+					// 仅能提交一次，提交后按钮失效
+					$("#problem_solve_start_button").unbind("click");
+					$("#problem_solve_start_button").css("cursor", "default");
 					// 整理题目信息及参数信息
 					try {
 						max_deduce_times = parseInt($("#input_deduce_times").val());
@@ -156,16 +152,18 @@
 					        deduce_finished = true;
 							problem_solve_response = data;
 							changeLogContent(on_deducing, deduce_finished, problem_solve_response);
+							changePageStatus(on_deducing, deduce_finished, problem_solve_response);
 					    },
 					    beforeSend: function() {
 					        on_deducing = true;
 					        deduce_finished = false;
 							problem_solve_response = null;
 							changeLogContent(on_deducing, deduce_finished, null);
+							changePageStatus(on_deducing, deduce_finished, null);
 					    },
 					    error: function () {
 					        on_deducing = false;
-					        $.messager.alert('错误', '后台解题过程出现故障');
+					        $.messager.alert('错误', '后台解题过程出现故障，请检查题目录入信息是否规范');
 							changeLogContent(on_deducing, deduce_finished, null);
 					    }
 					});
@@ -173,6 +171,10 @@
 
 				// 更新题目解答日志状态
 				var changeLogContent = function(on_deducing, deduce_finished, data) {
+					// 日志显示更新状态
+					$("#problem_solve_log_content img").remove();
+					$("#problem_solve_log_content").prepend("<img style='width: 40px; height: 40px; margin: auto' " +
+							"src='../static/img/gif/loading_2.gif' alt='日志更新中'/>");
 					// 获取日志表格内容主体
 					var table_body = $("#problem_solve_log_table tbody");
 					// 根据当前状态采取不同更新措施
@@ -182,7 +184,6 @@
 						var problem_solve_log_complexity = problem_solve_log['complexity'];
 						var problem_solve_log_because = problem_solve_log['because'];
 						var problem_solve_log_so = problem_solve_log['so'];
-						alert(JSON.parse(data)['has_proved']);
 						// 清空原有日志
 						table_body.empty();
 						// 写入日志内容
@@ -195,22 +196,53 @@
 							table_body.append(
 									"<tr><td>∴</td><td>" + problem_solve_log_so[i] + "</td></tr>");
 						}
+						// 日志更新完成，解除更新状态
+						$("#problem_solve_log_content img").remove();
 					} else if (on_deducing && !deduce_finished) {
-						// 正在推导中
+						// 正在推导中，日志更新中
 						table_body.empty();
 					} else if (!on_deducing && !deduce_finished) {
-						// 未进行推导或推导失败
-						table_body.empty();
+						// 未进行推导或推导失败，日志无法更新，解除更新状态
+						$("#problem_solve_log_content img").remove();
 					}
 				}
 
 				// 切换日志简版/详版效果
 				$("#problem_solve_log_setting_detail").on("click", function() {
-					setTimeout(function(){}, 1000);
+					setTimeout(function(){}, 200);
 					if (!on_deducing && deduce_finished) {
 						changeLogContent(on_deducing, deduce_finished, problem_solve_response);
 					}
 				});
+
+				// 更新页面解答过程进度展示
+				var changePageStatus = function (on_deducing, deduce_finished, data) {
+					if (on_deducing && !deduce_finished) {
+						$("#problem_solve_start_button").empty().append(
+								"<img style='width: 200px; height: 20px; margin-top: 90px' " +
+								"src='../static/img/gif/loading_1.gif' alt='正在解答中'/>");
+						$("#problem_solve_setting").empty().append("<div>正在自动推理中，可能需要一两分钟...</div>" +
+								"<div>推理时间取决于题目中点的数量与复杂程度</div>");
+						$("#problem_solve_setting div").css({"margin-top": "45px", "font-style": "italic"});
+					} else if (!on_deducing && deduce_finished) {
+						$("#problem_solve_start_button").empty();
+						$("#problem_solve_setting").empty();
+						let has_proved = JSON.parse(data)['has_proved'];
+						if (has_proved) {
+							$("#problem_solve_start_button").append("<img style='width: 200px; height: 200px;' " +
+									"src='../static/img/icons/solve_success.png' alt='已成功证明'/>");
+							$("#problem_solve_setting").append("<div>程序已成功证明出题目！</div>" +
+									"<div>使用的关键性定理以及推理记录参见上方日志</div>");
+							$("#problem_solve_setting div").css({"margin-top": "45px", "font-style": "italic"});
+						} else {
+							$("#problem_solve_start_button").append("<img style='width: 200px; height: 200px;' " +
+									"src='../static/img/icons/solve_unsuccess.png' alt='未成功证明'/>");
+							$("#problem_solve_setting").append("<div>程序未能证明出题目...</div>" +
+									"<div>使用简单的几何定理无法完成证明，可以添加辅助点再进行尝试</div>");
+							$("#problem_solve_setting div").css({"margin-top": "45px", "font-style": "italic"});
+						}
+					}
+				}
 
 			});
 
