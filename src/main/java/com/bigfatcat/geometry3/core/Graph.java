@@ -568,6 +568,8 @@ public class Graph {
                             angle(congruent_result[0][0], congruent_result[0][2], congruent_result[0][1]),
                             angle(congruent_result[1][0], congruent_result[1][2], congruent_result[1][1]));
                 }
+                // 若这对三角形已满足全等，则不必再往下判断是否满足相似
+                if (congruent_result != null) continue;
                 // 判断这对三角形是否满足规则4，相似三角形定理
                 String[][] similar_result = this.isSimilar(triangle_1, triangle_2);
                 if (similar_result != null) {
@@ -615,34 +617,50 @@ public class Graph {
                                     angle(out_point, point_vertex, points_aside[0]),
                                     angle(out_point, point_vertex, points_aside[1])))
                     ) {
+                        boolean coexist_circle_result = false;
                         if (this.queryEqual("ang", degree(180),
                                 sumUnits(
                                         angle(points_aside[0], point_vertex, points_aside[1]),
-                                        angle(points_aside[0], out_point, points_aside[1]))) ||
-                                this.queryEqual("ang",
-                                        angle(out_point, point_vertex, points_aside[0]),
-                                        angle(out_point, points_aside[1], points_aside[0])) ||
-                                this.queryEqual("ang",
-                                        angle(out_point, point_vertex, points_aside[1]),
-                                        angle(out_point, points_aside[0], points_aside[1]))
+                                        angle(points_aside[0], out_point, points_aside[1])))
                         ) {
-                            // 记录日志，满足四点共圆定理
+                            coexist_circle_result = true;
+                            // 记录日志，满足四点共圆定理条件对角互补
                             this.addNote("simple",
                                     angle(points_aside[0], point_vertex, points_aside[1]).getGeometry_key()
                                             + "+"
                                             + angle(points_aside[0], out_point, points_aside[1]).getGeometry_key()
-                                            + "=180°"
-                                            + " 或 "
-                                            + angle(out_point, point_vertex, points_aside[0]).getGeometry_key()
+                                            + "=180°",
+                                    toSortString(new String[]{points_aside[0], point_vertex, points_aside[1], out_point})
+                                            + "四点共圆"
+                            );
+                        } else if (this.queryEqual("ang",
+                                        angle(out_point, point_vertex, points_aside[0]),
+                                        angle(out_point, points_aside[1], points_aside[0]))
+                        ) {
+                            coexist_circle_result = true;
+                            // 记录日志，满足四点共圆定理条件圆周角相等
+                            this.addNote("simple",
+                                    angle(out_point, point_vertex, points_aside[0]).getGeometry_key()
                                             + "="
-                                            + angle(out_point, points_aside[1], points_aside[0]).getGeometry_key()
-                                            + " 或 "
-                                            + angle(out_point, point_vertex, points_aside[1]).getGeometry_key()
+                                            + angle(out_point, points_aside[1], points_aside[0]).getGeometry_key(),
+                                    toSortString(new String[]{points_aside[0], point_vertex, points_aside[1], out_point})
+                                            + "四点共圆"
+                            );
+                        } else if (this.queryEqual("ang",
+                                        angle(out_point, point_vertex, points_aside[1]),
+                                        angle(out_point, points_aside[0], points_aside[1]))
+                        ) {
+                            coexist_circle_result = true;
+                            // 记录日志，满足四点共圆定理条件圆周角相等
+                            this.addNote("simple",
+                                    angle(out_point, point_vertex, points_aside[1]).getGeometry_key()
                                             + "="
                                             + angle(out_point, points_aside[0], points_aside[1]).getGeometry_key(),
                                     toSortString(new String[]{points_aside[0], point_vertex, points_aside[1], out_point})
                                             + "四点共圆"
                             );
+                        }
+                        if (coexist_circle_result) {
                             this.addEqual("ang",
                                     angle(out_point, point_vertex, points_aside[0]),
                                     angle(out_point, points_aside[1], points_aside[0]));
@@ -659,7 +677,6 @@ public class Graph {
                     }
                 }
             }
-
         }
     }
 
