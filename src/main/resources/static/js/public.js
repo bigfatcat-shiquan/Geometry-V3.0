@@ -112,7 +112,7 @@ function getImagePortion(canvas, imgObj, startX, startY, cropWidth, cropHeight, 
 function scrollBatchAppend(content_object, scroll_object, html_list, batch_size=30) {
 	// 先对列表html元素按顺序分组
 	var html_groups = [];
-	var html_group;
+	var html_group = [];
 	for (var i=0; i<html_list.length; i++) {
 		if (i % batch_size === 0) {
 			html_group = [];

@@ -106,10 +106,18 @@
 				var max_deduce_times;
 				var max_complex_len;
 
+				// 开启题目解答按钮的鼠标效果
+				$("#problem_solve_start_button").mouseover(function() {
+					$("#problem_solve_start_button img").css("padding", "10px")
+				});
+				$("#problem_solve_start_button").mouseout(function() {
+					$("#problem_solve_start_button img").css("padding", "0")
+				});
+
 				// 提交题目至后台进行解答，得到题目解答日志
 				$("#problem_solve_start_button").on("click", function() {
 					// 仅能提交一次，提交后按钮失效
-					$("#problem_solve_start_button").unbind("click");
+					$("#problem_solve_start_button").unbind("mouseover").unbind("mouseout").unbind("click");
 					$("#problem_solve_start_button").css("cursor", "default");
 					// 整理题目信息及参数信息
 					try {
@@ -235,7 +243,6 @@
 								"src='../static/img/gif/loading_1.gif' alt='正在解答中'/>");
 						$("#problem_solve_setting").append("<div>正在自动推理中，可能需要一两分钟...</div>" +
 								"<div>推理时间取决于题目中点的数量与复杂程度</div>");
-
 					} else if (!on_deducing && deduce_finished) {
 						if (has_proved) {
 							$("#problem_solve_start_button").append("<img style='width: 200px; height: 200px;' " +
