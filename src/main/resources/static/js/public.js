@@ -108,3 +108,28 @@ function getImagePortion(canvas, imgObj, startX, startY, cropWidth, cropHeight, 
 	tnCanvasContext.drawImage(bufferCanvas, startX, startY, cropWidth, cropHeight, 0, 0, newWidth, newHeight);
 	return tnCanvas.toDataURL("image/png");
 }
+
+function scrollBatchAppend(content_object, scroll_object, html_list, batch_size=30) {
+	// 先对列表html元素按顺序分组
+	var html_groups = [];
+	var html_group;
+	for (var i=0; i<html_list.length; i++) {
+		if (i % batch_size === 0) {
+			html_group = [];
+			html_groups.push(html_group);
+		}
+		html_group.push(html_list[i]);
+	}
+	html_groups.push(html_group);
+	// 第一组先加入，并计数
+	html_groups[0].forEach((k) => content_object.append(k));
+	var count = 1;
+	// 绑定滚轮事件，分批次渲染
+	scroll_object.scroll(function() {
+		let ratio = $(this).scrollTop() / $(this).height();
+		if(ratio > count && count < html_groups.length){
+			html_groups[count].forEach((k) => content_object.append(k));
+			count = parseInt(ratio) + 1;
+		}
+	});
+}
