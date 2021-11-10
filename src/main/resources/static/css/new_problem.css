@@ -108,7 +108,7 @@
 }
 #button_submit_input_condition{
 	float: left;
-	margin-left: 120px;
+	margin-left: 60px;
 }
 #total_known_conditions{
 	width: 500px;
@@ -153,7 +153,7 @@
 }
 #button_submit_need_prove{
 	float: left;
-	margin-left: 120px;
+	margin-left: 60px;
 }
 #final_need_prove{
 	width: 500px;

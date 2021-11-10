@@ -290,7 +290,7 @@ $(document).ready(function() {
 	$("#button_submit_input_condition").on("click", function() {
 		var condition_str_left = $("#new_conditions_input_left").val();
 		var condition_str_right = $("#new_conditions_input_right").val();
-		if (condition_str_left !== '' && condition_str_right !== '') {
+		if (checkMathStrInput([condition_str_left, condition_str_right])) {
 			var condition_type = $("#new_condition_type_selector").val();
 			var the_new_condition = condition_str_left + condition_type + condition_str_right;
 			if (initial_equals_str_set.has(the_new_condition)) {
@@ -316,7 +316,7 @@ $(document).ready(function() {
 	$("#button_submit_need_prove").on("click", function() {
 		var condition_str_left = $("#new_need_prove_input_left").val();
 		var condition_str_right = $("#new_need_prove_input_right").val();
-		if (condition_str_left !== '' && condition_str_right !== '') {
+		if (checkMathStrInput([condition_str_left, condition_str_right])) {
 			var condition_type = $("#new_need_prove_type_selector").val();
 			var the_need_prove = condition_str_left + condition_type + condition_str_right;
 			if (need_prove_equal_str != null) {
@@ -335,7 +335,37 @@ $(document).ready(function() {
 			$("#final_need_prove_str").text("");
 		}
 	});
-	
+
+	// 数学表达式输入校验
+	function checkMathStrInput(math_str_list=[]) {
+		var check_ok = true;
+		var legal_char;
+		math_str_list.forEach(function(math_str) {
+			// 检查是否为空字符串
+			if (math_str === '') {
+				check_ok = false;
+				return;
+			}
+			// 检查是否在规范字符列表中
+			if (math_str.indexOf('°') !== -1) {
+				legal_char = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '∠', '°', '+', '*', '(', ')'];
+			} else {
+				legal_char = ['∠', '+', '*', '(', ')'];
+			}
+			for(let math_char of math_str){
+				if (!legal_char.includes(math_char) && !points_set.has(math_char)) {
+					$.messager.alert({title:'无效',
+						msg:'输入的数学表达式 ' + math_str + ' 不符合规范，' +
+							'请输入与上方所绘制图形相匹配的表达式，且倍数或次方请转化为加法或乘法形式输入',
+						width: 600});
+					check_ok = false;
+					return;
+				}
+			}
+		});
+		return check_ok;
+	}
+
 	// 保存并提交题目操作，异步请求服务
 	$("#button_start_the_new_problem").mouseover(function() {
 		if ($(this).is(":animated")) {
