@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" xmlns:th="http://www.thymeleaf.org">
+    <div th:replace="./base :: geometry3_public_resource"></div>
+    <head>
+        <link rel="stylesheet" type="text/css" href="../static/css/problem_change.css"/>
+        <script src="../static/js/problem_edit.js"></script>
+        <meta charset="utf-8"/>
+        <title>Geometry3-题目修改</title>
+    </head>
+    <body>
+        <div class="all_container">
+            <!-- 公共-页面前置部分 -->
+            <div th:replace="./base :: geometry3_public_nav"></div>
+            <!-- 正文部分 -->
+            <div id="problem_change">
+                <!-- 第一环节，画图 -->
+                <div id="draw_problem">
+                    <div id="draw_guide" class="step_guide">
+                        <img class="guide_icon" src="../static/img/icons/no_1.png" alt="第一步"/>
+                        <span>在这里画出你的图形</span>
+                    </div>
+                    <div id="draw_tool_buttons">
+                        <a id="button_draw_select" class="easyui-linkbutton button_draw_1">
+                            <img src="../static/img/buttons/draw_button_select.png" alt="画板选择按钮"/>
+                        </a>
+                        <a id="button_draw_point" class="easyui-linkbutton button_draw_1">
+                            <img src="../static/img/buttons/draw_button_point.png" alt="画板绘制点按钮"/>
+                        </a>
+                        <a id="button_draw_line" class="easyui-linkbutton button_draw_1">
+                            <img src="../static/img/buttons/draw_button_line.png" alt="画板绘制线段按钮"/>
+                        </a>
+                        <a id="button_draw_delete" class="easyui-linkbutton button_draw_1">
+                            <img src="../static/img/buttons/draw_button_delete.png" alt="画板删除按钮"/>
+                        </a>
+                        <a id="button_draw_save" class="easyui-linkbutton button_draw_1">
+                            <img src="../static/img/buttons/draw_button_save.png" alt="画板保存按钮"/>
+                        </a>
+                    </div>
+                    <canvas id="draw_canvas"></canvas>
+                    <div id="dialog_rename_point_name" class="easyui-dialog" title="点重命名" closed="true"
+                         buttons="#dialog_rename_point_name_buttons">
+                        <input type="text"/>
+                    </div>
+                    <div id="dialog_rename_point_name_buttons">
+                        <a class="easyui-linkbutton" onclick="renamePoint()">确定</a>
+                    </div>
+                    <div id="dialog_input_problem_name" class="easyui-dialog" title="请输入题目名称" closed="true"
+                         buttons="#dialog_input_problem_name_buttons">
+                        <input type="text"/>
+                    </div>
+                    <div id="dialog_input_problem_name_buttons">
+                        <a class="easyui-linkbutton" onclick="setProblemName()">确定</a>
+                    </div>
+                </div>
+                <!-- 第二环节，输入已知等量关系 -->
+                <div id="input_known_conditions">
+                    <div id="input_known_conditions_guide" class="step_guide">
+                        <img class="guide_icon" src="../static/img/icons/no_2.png" alt="第二步"/>
+                        <span>在这里输入题目初始已知条件</span>
+                    </div>
+                    <div id="input_new_known_conditions">
+                        <div>输入题目初始条件(每次一条)</div>
+                        <div id="input_new_known_conditions_box" class="input_condition_box">
+                            <input id="new_conditions_input_left" type="text"/>
+                            <select id="new_condition_type_selector">
+                                <option value="=">=</option>
+                                <option value=">">></option>
+                            </select>
+                            <input id="new_conditions_input_right" type="text"/>
+                        </div>
+                        <div class="input_tool_buttons">
+                            <a class="easyui-linkbutton button_input">∠</a>
+                            <a class="easyui-linkbutton button_input">°</a>
+                            <a class="easyui-linkbutton button_input">+</a>
+                            <a class="easyui-linkbutton button_input">*</a>
+                            <a id="button_submit_input_condition" class="easyui-linkbutton button_submit_1">提交</a>
+                        </div>
+                    </div>
+                    <div id="total_known_conditions">
+                        <div>
+                            <span>已输入的已知条件：</span>
+                            <span id="total_known_conditions_count">0个</span>
+                        </div>
+                        <ul id="total_known_conditions_list"></ul>
+                    </div>
+                </div>
+                <!-- 第三环节，输入待求证等量关系 -->
+                <div id="input_need_prove">
+                    <div id="input_need_prove_guide" class="step_guide">
+                        <img class="guide_icon" src="../static/img/icons/no_3.png" alt="第三步"/>
+                        <span>在这里输入题目待求证的等量关系</span>
+                    </div>
+                    <div id="input_new_need_prove">
+                        <div>输入题目待求证等量关系</div>
+                        <div id="input_new_need_prove_box" class="input_condition_box">
+                            <input id="new_need_prove_input_left" type="text"/>
+                            <select id="new_need_prove_type_selector">
+                                <option value="=">=</option>
+                                <option value=">">></option>
+                            </select>
+                            <input id="new_need_prove_input_right" type="text"/>
+                        </div>
+                        <div class="input_tool_buttons">
+                            <a class="easyui-linkbutton button_input">∠</a>
+                            <a class="easyui-linkbutton button_input">°</a>
+                            <a class="easyui-linkbutton button_input">+</a>
+                            <a class="easyui-linkbutton button_input">*</a>
+                            <a id="button_submit_need_prove" class="easyui-linkbutton button_submit_1">提交</a>
+                        </div>
+                    </div>
+                    <div id="final_need_prove">
+                        <div>待求证等量关系式为：</div>
+                        <div id="final_need_prove_str"></div>
+                        <a id="button_delete_need_prove" class="easyui-linkbutton button_submit_1">清除</a>
+                    </div>
+                </div>
+                <!-- 第四环节，提交修改该题目 -->
+                <div id="change_the_problem">
+                    <div id="change_the_problem_guide" class="step_guide">
+                        <img class="guide_icon" src="../static/img/icons/no_4.png" alt="第四步"/>
+                        <span>题目录入完成，提交并修改该题目</span>
+                    </div>
+                    <div id="change_the_problem_content">
+                        <a id="button_change_the_problem" href="javascript:void(0)">
+                            <img src="../static/img/buttons/change_problem.png" alt="修改此题目"/>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- 公共-页脚部分 -->
+            <div th:replace="./base :: geometry3_public_footer"></div>
+        </div>
+        <script th:inline="javascript">
+
+            $(document).ready(function() {
+
+                // 文档加载完毕后解析题目原有详细信息
+                var problem_id = [[${info.the_problem.problem_id}]];
+                problem_name = [[${info.the_problem.problem_name}]];
+
+                // 将原有题目详细信息填入修改页面
+                [[${info.the_problem.initial_points_set}]].forEach(function(point_name) {
+                    addPoint([[${info.the_problem.points_location_x}]][point_name],
+                             [[${info.the_problem.points_location_y}]][point_name], point_name)});
+                [[${info.the_problem.initial_equals_str_set}]].forEach((condition) => addNewCondition(condition));
+                setNeedProve([[${info.the_problem.need_prove_equal_str}]]);
+
+                // 提交并修改题目按钮效果
+                $("#button_change_the_problem").mouseover(function () {
+                    if ($(this).is(":animated")) {
+                        $(this).stop();
+                    }
+                    $(this).animate({opacity: 0.5}, "fast")
+                });
+                $("#button_change_the_problem").mouseout(function () {
+                    if ($(this).is(":animated")) {
+                        $(this).stop();
+                    }
+                    $(this).animate({opacity: 1.0}, "fast")
+                });
+                $("#button_change_the_problem").on("click", function () {
+                    // 整理题目信息并校验
+                    if (problem_name === null || need_prove_equal_str === null || points_set.size === 0) {
+                        $.messager.alert('无效', '题目信息缺失：没有绘制题目图并保存，或没有输入待求证结论信息');
+                        return;
+                    }
+                    var data_object = {
+                        "problem_id": problem_id,
+                        "problem_name": problem_name,
+                        "problem_picture": problem_picture,
+                        "points_set": setToJson(points_set),
+                        "points_location_x": mapToJson(points_location_x),
+                        "points_location_y": mapToJson(points_location_y),
+                        "initial_equals_str_set": setToJson(initial_equals_str_set),
+                        "need_prove_equal_str": need_prove_equal_str
+                    };
+                    // 异步请求保存该题目，并转到该题目详情页
+                    $.ajax({
+                        url: "/changeProblem",
+                        type: "POST",
+                        data: JSON.stringify(data_object),
+                        contentType: "application/json",
+                        success: function () {
+                            window.location.replace("/getProblemPage" + "?id=" + problem_id);
+                        },
+                        error: function () {
+                            $.messager.alert('错误', '修改题目信息出现错误');
+                        }
+                    });
+                });
+
+            });
+
+        </script>
+    </body>
+</html>

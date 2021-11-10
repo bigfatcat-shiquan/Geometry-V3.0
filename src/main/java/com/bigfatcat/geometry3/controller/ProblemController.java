@@ -16,7 +16,7 @@ import java.util.Map;
 
 /**
  * 题目相关交互控制器
- * 包括：新增题目，题目详情，开启解答题目并返回解答结果，查询题目列表
+ * 包括：新增题目，题目详情，题目修改，题目删除，查询题目列表，开启解答题目并返回解答结果
  * */
 @Controller
 public class ProblemController {
@@ -67,6 +67,41 @@ public class ProblemController {
     public ModelAndView getProblemPage(@RequestParam Integer id, Model model) {
         model.addAttribute("the_problem", problemService.getOneProblem(id));
         return new ModelAndView("problem_detail", "info", model);
+    }
+
+    /**
+     * GET请求
+     * 打开相对应ID的题目修改页
+     * */
+    @RequestMapping(value = "/changeProblemPage", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView changeProblemPage(@RequestParam Integer id, Model model) {
+        model.addAttribute("the_problem", problemService.getOneProblem(id));
+        return new ModelAndView("problem_change", "info", model);
+    }
+
+    /**
+     * POST请求
+     * 提交题目信息，修改数据库中题目信息并保存
+     * */
+    @RequestMapping(value = "/changeProblem", method = RequestMethod.POST)
+    @ResponseBody
+    public String changeProblem(@RequestBody Map<String, String> map) {
+        // 解析请求载荷，得到题目信息, 调用修改题目服务
+        Integer matched_num = problemService.changeOneProblem(
+                Integer.valueOf(map.get("problem_id")),
+                map.get("problem_name"),
+                map.get("problem_picture"),
+                JSONObject.parseObject(map.get("points_set"), new TypeReference<HashSet<String>>(){}),
+                JSONObject.parseObject(map.get("points_location_x"), new TypeReference<HashMap<String, Double>>(){}),
+                JSONObject.parseObject(map.get("points_location_y"), new TypeReference<HashMap<String, Double>>(){}),
+                JSONObject.parseObject(map.get("initial_equals_str_set"), new TypeReference<HashSet<String>>(){}),
+                map.get("need_prove_equal_str"));
+        // 返回回执信息
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("success", true);
+        jsonObject.put("matched_num", matched_num);
+        return jsonObject.toJSONString();
     }
 
     /**

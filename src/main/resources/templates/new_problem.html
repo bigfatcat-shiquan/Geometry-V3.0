@@ -3,7 +3,7 @@
 	<div th:replace="./base :: geometry3_public_resource"></div>
 	<head>
 		<link rel="stylesheet" type="text/css" href="../static/css/new_problem.css"/>
-		<script src="../static/js/new_problem.js"></script>
+		<script src="../static/js/problem_edit.js"></script>
 		<meta charset="utf-8"/>
 		<title>Geometry3-创建新题目</title>
 	</head>
@@ -130,5 +130,56 @@
 			<!-- 公共-页脚部分 -->
 			<div th:replace="./base :: geometry3_public_footer"></div>
 		</div>
+		<script>
+
+			$(document).ready(function() {
+
+				// 保存并提交题目按钮效果
+				$("#button_start_the_new_problem").mouseover(function () {
+					if ($(this).is(":animated")) {
+						$(this).stop();
+					}
+					$(this).animate({opacity: 0.5}, "fast")
+				});
+				$("#button_start_the_new_problem").mouseout(function () {
+					if ($(this).is(":animated")) {
+						$(this).stop();
+					}
+					$(this).animate({opacity: 1.0}, "fast")
+				});
+				$("#button_start_the_new_problem").on("click", function () {
+					// 整理题目信息并校验
+					if (problem_name === null || need_prove_equal_str === null || points_set.size === 0) {
+						$.messager.alert('无效', '题目信息缺失：没有绘制题目图并保存，或没有输入待求证结论信息');
+						return;
+					}
+					var data_object = {
+						"problem_name": problem_name,
+						"problem_picture": problem_picture,
+						"problem_author_id": problem_author_id,
+						"points_set": setToJson(points_set),
+						"points_location_x": mapToJson(points_location_x),
+						"points_location_y": mapToJson(points_location_y),
+						"initial_equals_str_set": setToJson(initial_equals_str_set),
+						"need_prove_equal_str": need_prove_equal_str
+					};
+					// 异步请求保存该题目，并转到该题目详情页
+					$.ajax({
+						url: "/startNewProblem",
+						type: "POST",
+						data: JSON.stringify(data_object),
+						contentType: "application/json",
+						success: function (data) {
+							window.location.replace("/getProblemPage" + "?id=" + JSON.parse(data)["problem_id"]);
+						},
+						error: function () {
+							$.messager.alert('错误', '提交题目信息出现错误');
+						}
+					});
+				});
+
+			});
+
+		</script>
 	</body>
 </html>

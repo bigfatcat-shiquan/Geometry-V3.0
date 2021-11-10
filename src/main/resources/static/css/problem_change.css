@@ -1,0 +1,195 @@
+/* 公共-背景裁剪 */
+.geometry3_background_img{
+    height: 2400px;
+}
+
+/* 修改题目页正文 */
+#problem_change{
+    width: 1251px;
+    height: 2100px;
+    margin: 80px auto auto;
+    padding-top: 60px;
+    padding-left: 100px;
+}
+
+/* 公共，本页面指引框、输入框、按钮 */
+.step_guide{
+    width: 1000px;
+    height: 40px;
+}
+.step_guide > img{
+    width: 70px;
+    height: 40px;
+    float: left;
+}
+.step_guide > span{
+    height: 40px;
+    float: left;
+    font-size: 30px;
+    font-weight: bold;
+}
+.input_tool_buttons{
+    margin-top: 30px;
+    padding-left: 30px;
+}
+.button_input{
+    float: left;
+    margin-left: 30px;
+}
+
+/* 第一环节，画图 */
+#draw_problem{
+    width: 1000px;
+    height: 700px;
+}
+#draw_tool_buttons{
+    width: 60px;
+    height: 600px;
+    float: left;
+    margin-left: 30px;
+    margin-top: 10px;
+}
+#draw_tool_buttons a{
+    margin-top: 20px;
+}
+#draw_canvas{
+    width: 900px;
+    height: 600px;
+    float: left;
+    margin-top: 10px;
+    margin-left: 10px;
+    border: 3px solid #9d9895;
+    border-radius: 8px;
+}
+#dialog_rename_point_name{
+    width: 150px;
+    height: 50px;
+    padding: 10px 20px;
+}
+#dialog_rename_point_name > input{
+    width: 100px;
+    height: 25px;
+    border: 2px solid #9d9895;
+    border-radius: 4px;
+    font-size: 14px;
+}
+#dialog_input_problem_name{
+    width: 350px;
+    height: 70px;
+    padding: 10px 20px;
+}
+#dialog_input_problem_name > input{
+    width: 300px;
+    height: 30px;
+    border: 2px solid #9d9895;
+    border-radius: 4px;
+    font-size: 15px;
+    text-align: center;
+}
+
+/* 第二环节，输入已知等量关系 */
+#input_known_conditions{
+    width: 1200px;
+    height: 400px;
+    margin-top: 60px;
+}
+#input_new_known_conditions{
+    width: 700px;
+    height: 200px;
+    float: left;
+    margin-top: 40px;
+    padding-left: 20px;
+}
+#input_new_known_conditions div:nth-child(1){
+    width: 600px;
+}
+#input_new_known_conditions_box{
+    margin-top: 20px;
+}
+#button_submit_input_condition{
+    float: left;
+    margin-left: 60px;
+}
+#total_known_conditions{
+    width: 500px;
+    height: 350px;
+    float: left;
+}
+#total_known_conditions_list{
+    width: 500px;
+    height: 300px;
+    overflow: auto;
+}
+#total_known_conditions_list li{
+    margin-top: 5px;
+}
+.button_condition_delete{
+    width: 70px;
+    height: 26px;
+    float: right;
+    margin-right: 30px;
+    border: 2px solid #9d9895;
+    border-radius: 8px;
+}
+
+/* 第三环节，输入待求证等量关系 */
+#input_need_prove{
+    width: 1200px;
+    height: 300px;
+    margin-top: 60px;
+}
+#input_new_need_prove{
+    width: 700px;
+    height: 200px;
+    float: left;
+    margin-top: 40px;
+    padding-left: 20px;
+}
+#input_new_need_prove div:nth-child(1){
+    width: 600px;
+}
+#input_new_need_prove_box{
+    margin-top: 20px;
+}
+#button_submit_need_prove{
+    float: left;
+    margin-left: 60px;
+}
+#final_need_prove{
+    width: 500px;
+    height: 200px;
+    float: left;
+    margin-top: 40px;
+}
+#final_need_prove_str{
+    width: 500px;
+    height: 50px;
+    margin-top: 20px;
+    overflow: auto;
+}
+#button_delete_need_prove{
+    margin-top: 30px;
+    margin-left: 50px;
+}
+
+/* 第四环节，提交并修改该题目 */
+#change_the_problem{
+    width: 1000px;
+    height: 200px;
+    margin-top: 60px;
+}
+#change_the_problem_content{
+    width: 1000px;
+    height: 150px;
+    padding-top: 80px;
+}
+#change_the_problem_content > a {
+    width: 150px;
+    height: 150px;
+    float: left;
+    margin-left: 400px;
+}
+#change_the_problem_content > a > img{
+    width: 150px;
+    height: 150px;
+}

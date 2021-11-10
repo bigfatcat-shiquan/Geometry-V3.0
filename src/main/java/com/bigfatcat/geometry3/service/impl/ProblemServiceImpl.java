@@ -19,7 +19,7 @@ import java.util.HashSet;
  * 保存新题目
  * 获取一个题目
  * 修改一个题目
- * 删除题目
+ * 删除一个题目
  * 查找多个题目
  * 解答一个题目
  * */
@@ -52,6 +52,23 @@ public class ProblemServiceImpl implements ProblemService {
     @Override
     public Problem getOneProblem(Integer problem_id) {
         return problemDao.selectOne(problem_id);
+    }
+
+    /**修改一个题目，并返回数据库中匹配到的记录行数*/
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    @Override
+    public Integer changeOneProblem(Integer problem_id,
+                                    String problem_name,
+                                    String problem_picture,
+                                    HashSet<String> initial_points_set,
+                                    HashMap<String, Double> points_location_x,
+                                    HashMap<String, Double> points_location_y,
+                                    HashSet<String> initial_equals_str_set,
+                                    String need_prove_equal_str) {
+        Problem the_problem = new Problem(problem_name, problem_picture, null, initial_points_set,
+                points_location_x, points_location_y, initial_equals_str_set, need_prove_equal_str);
+        the_problem.setProblem_id(problem_id);
+        return problemDao.updateOne(the_problem);
     }
 
     /**解答一个题目，返回解答该题目的最终结果与过程日志*/
