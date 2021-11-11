@@ -23,14 +23,17 @@
 						<img th:src="${info.the_problem.problem_picture}" src="" alt="题目图片"/>
 					</div>
 					<div id="problem_show_known_conditions">
-						<div style="font-weight: bold">已知条件：</div>
+						<div id="show_and_change">
+							<div style="height: 30px; font-weight: bold">已知条件：</div>
+							<a id="button_change_problem" class="easyui-linkbutton">修改题目</a>
+						</div>
 						<ul id="known_conditions_list">
 							<li th:each="equal_str :${info.the_problem.initial_equals_str_set}"
 								th:text="${equal_str}" style="margin-top: 5px"></li>
 						</ul>
 					</div>
 					<div id="problem_show_need_prove">
-						<div style="font-weight: bold">求证：</div>
+						<div style="height: 30px; font-weight: bold">求证：</div>
 						<div id="need_prove_content" th:text="${info.the_problem.need_prove_equal_str}"></div>
 					</div>
 				</div>
@@ -105,6 +108,11 @@
 				var need_prove_equal_str = [[${info.the_problem.need_prove_equal_str}]];
 				var max_deduce_times;
 				var max_complex_len;
+
+				// 修改题目按钮效果
+				$("#button_change_problem").on("click", function() {
+					window.location.href = "/changeProblemPage" + "?id=" + [[${info.the_problem.problem_id}]];
+				});
 
 				// 开启题目解答按钮的鼠标效果
 				$("#problem_solve_start_button").mouseover(function() {

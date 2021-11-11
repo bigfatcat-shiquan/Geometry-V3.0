@@ -57,6 +57,14 @@
     height: 210px;
     padding-left: 20px;
 }
+#show_and_change > div{
+    float: left;
+}
+#show_and_change > a{
+    float: left;
+    margin-left: 320px;
+    border: 2px solid #9d9895;
+}
 #known_conditions_list{
     width: 500px;
     height: 160px;
