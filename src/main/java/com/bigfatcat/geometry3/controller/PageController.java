@@ -22,6 +22,15 @@ public class PageController {
 
     /**
      * GET请求
+     * 打开登录页
+     * */
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String login() {
+        return "login";
+    }
+
+    /**
+     * GET请求
      * 打开创建新题目页
      * */
     @RequestMapping(value = "/newProblem", method = RequestMethod.GET)
