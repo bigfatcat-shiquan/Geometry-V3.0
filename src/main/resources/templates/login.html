@@ -3,6 +3,7 @@
     <head>
         <link rel="stylesheet" type="text/css" href="../static/css/public.css"/>
         <link rel="stylesheet" type="text/css" href="../static/css/login.css"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
         <meta charset="UTF-8">
         <title>Geometry3-登录</title>
     </head>
@@ -15,14 +16,20 @@
             <!-- 正文登录部分 -->
             <div id="geometry3_login">
                 <div id="login_panel">
-                    <div style="font-weight: bold">欢迎使用Geometry几何解题软件！</div>
-                    <form id="login_form" enctype="application/x-www-form-urlencoded" method="post" action="/userLogin">
+                    <div style="font-size: 22px; font-weight: bold">欢迎使用Geometry几何解题软件！</div>
+                    <div id="login_form">
                         <p>用户名:</p>
-                        <input type="text" name="user_name"/>
+                        <div id="input_user_name" class="input-group input-group">
+                            <span class="input-group-addon">*</span>
+                            <input type="text" class="form-control" placeholder="请输入用户名">
+                        </div>
                         <p>密码:</p>
-                        <input type="password" name="user_password"/>
-                        <input type="submit"/>
-                    </form>
+                        <div id="input_password" class="input-group input-group">
+                            <span class="input-group-addon">*</span>
+                            <input type="text" class="form-control" placeholder="请输入密码">
+                        </div>
+                        <button id="button_login" type="button" class="btn btn-default">登录</button>
+                    </div>
                 </div>
             </div>
         </div>
