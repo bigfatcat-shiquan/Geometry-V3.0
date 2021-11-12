@@ -12,4 +12,8 @@ public interface UserDao {
 
     Integer deleteOne(@Param("user_id") Integer user_id);
 
+    Integer updateOne(@Param("user") User user);
+
+    User selectOne(@Param("user_name") String user_name, @Param("user_password") String user_password);
+
 }

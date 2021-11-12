@@ -13,8 +13,17 @@
                 <img src="../static/img/large_image/geometry3_login_background.jpg" alt="登录背景图">
             </div>
             <!-- 正文登录部分 -->
-            <div class="geometry3_login">
-
+            <div id="geometry3_login">
+                <div id="login_panel">
+                    <div style="font-weight: bold">欢迎使用Geometry几何解题软件！</div>
+                    <form id="login_form" enctype="application/x-www-form-urlencoded" method="post" action="/userLogin">
+                        <p>用户名:</p>
+                        <input type="text" name="user_name"/>
+                        <p>密码:</p>
+                        <input type="password" name="user_password"/>
+                        <input type="submit"/>
+                    </form>
+                </div>
             </div>
         </div>
         <script>

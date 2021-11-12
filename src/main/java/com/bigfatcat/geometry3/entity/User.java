@@ -1,7 +1,6 @@
 package com.bigfatcat.geometry3.entity;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * 实体类：User
@@ -21,8 +20,6 @@ public class User {
 
     private Date register_date;
 
-    private List<Problem> problem_list;
-
     public User() {}
 
     public User(String user_name,
@@ -33,6 +30,18 @@ public class User {
         this.user_password = user_password;
         this.user_nickname = user_nickname;
         this.user_picture = user_picture;
+    }
+
+    public void setUser_id(Integer user_id) {
+        this.user_id = user_id;
+    }
+
+    public Integer getUser_id() {
+        return this.user_id;
+    }
+
+    public void setRegister_date(Date register_date) {
+        this.register_date = register_date;
     }
 
 }

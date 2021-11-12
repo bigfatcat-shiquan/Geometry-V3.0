@@ -63,7 +63,6 @@ public class ProblemController {
      * 请求对应ID的题目详细信息，并打开相应题目详情页
      * */
     @RequestMapping(value = "/getProblemPage", method = RequestMethod.GET)
-    @ResponseBody
     public ModelAndView getProblemPage(@RequestParam Integer id, Model model) {
         model.addAttribute("the_problem", problemService.getOneProblem(id));
         return new ModelAndView("problem_detail", "info", model);
@@ -74,7 +73,6 @@ public class ProblemController {
      * 打开相对应ID的题目修改页
      * */
     @RequestMapping(value = "/changeProblemPage", method = RequestMethod.GET)
-    @ResponseBody
     public ModelAndView changeProblemPage(@RequestParam Integer id, Model model) {
         model.addAttribute("the_problem", problemService.getOneProblem(id));
         return new ModelAndView("problem_change", "info", model);

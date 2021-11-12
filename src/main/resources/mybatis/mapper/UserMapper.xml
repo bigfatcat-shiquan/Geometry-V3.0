@@ -28,4 +28,23 @@
         </where>
     </delete>
 
+    <update id="updateOne" parameterType="user">
+        UPDATE user
+        <set>
+            <if test="user.user_password != null">user_password = #{user.user_password}, </if>
+            <if test="user.user_nickname != null">user_nickname = #{user.user_nickname}, </if>
+            <if test="user.user_picture != null">user_picture = #{user.user_picture}</if>
+        </set>
+        <where>
+            user_id = #{user.user_id}
+        </where>
+    </update>
+
+    <select id="selectOne" resultMap="userMap">
+        SELECT user_id, user_name, user_password, user_nickname, user_picture, register_date FROM user
+        <where>
+            user_name = #{user_name} and user_password = #{user_password}
+        </where>
+    </select>
+
 </mapper>

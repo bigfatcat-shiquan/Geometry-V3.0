@@ -15,3 +15,31 @@
 }
 
 /* 登录页正文 */
+#geometry3_login{
+    width: 100%;
+    height: 100%;
+}
+
+/* 登录面板及其详细内容 */
+#login_panel{
+    width: 400px;
+    height: 500px;
+    background: #E0ECFF;
+    border: 3px solid #9d9895;
+    border-radius: 8px;
+    margin-left: 65%;
+    margin-top: 5%;
+    padding-left: 20px;
+    padding-top: 30px;
+}
+#login_form p{
+    font-weight: bold;
+    margin-top: 20px;
+    display: block;
+}
+#login_form input{
+    width: 300px;
+    height: 30px;
+    text-align: left;
+    margin-top: 20px;
+}
