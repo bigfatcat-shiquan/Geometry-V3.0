@@ -32,6 +32,7 @@ public class UserServiceImpl implements UserService {
                                String user_picture) {
         User the_new_user = new User(user_name, user_password, user_nickname, user_picture);
         the_new_user.setRegister_date(new Date(System.currentTimeMillis()));
+        if (userDao.selectAllNames().contains(user_name)) return -999;
         userDao.insertOne(the_new_user);
         return the_new_user.getUser_id();
     }

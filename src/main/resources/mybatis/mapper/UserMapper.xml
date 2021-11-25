@@ -47,4 +47,15 @@
         </where>
     </select>
 
+    <select id="selectOneByName" resultMap="userMap" parameterType="java.lang.String">
+        SELECT user_id, user_name, user_password, user_nickname, user_picture, register_date FROM user
+        <where>
+            user_name = #{user_name}
+        </where>
+    </select>
+
+    <select id="selectAllNames" resultMap="java.lang.String">
+        SELECT user_name FROM user
+    </select>
+
 </mapper>

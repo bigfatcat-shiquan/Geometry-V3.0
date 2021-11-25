@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 /**
@@ -35,10 +39,13 @@ public class UserController {
                 map.get("user_password"),
                 map.get("user_nickname"),
                 map.get("user_picture"));
+        // 判断是否注册成功
+        boolean success = the_new_user_id != -999;
+        String message = success ? "注册成功" : "用户名已被注册，请更换";
         // 返回回执信息
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("success", true);
-        jsonObject.put("user_id", the_new_user_id);
+        jsonObject.put("success", success);
+        jsonObject.put("message", message);
         return jsonObject.toJSONString();
     }
 
@@ -48,13 +55,25 @@ public class UserController {
      * */
     @RequestMapping(value = "/userLogin", method = RequestMethod.POST)
     @ResponseBody
-    public String userLogin(@RequestBody Map<String, String> map) {
+    public String userLogin(@RequestBody Map<String, String> map,
+                            HttpSession session, HttpServletRequest request, HttpServletResponse response) {
         // 尝试使用用户提交的信息进行登录
         User the_user = userService.getOneUser(map.get("user_name"), map.get("user_password"));
+        // 判断是否登录成功
+        boolean success = the_user != null;
+        String message = success ? "登录成功" : "用户名或密码错误";
+        // 登陆成功写入cookie和session
+        if (success) {
+            session.setAttribute("session_user", the_user);
+            Cookie cookie = new Cookie("cookie_username", the_user.getUser_name());
+            cookie.setMaxAge(3 * 24 * 60 * 60);
+            cookie.setPath(request.getContextPath());
+            response.addCookie(cookie);
+        }
         // 返回回执信息
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("success", the_user!=null);
-        jsonObject.put("the_user", the_user);
+        jsonObject.put("success", success);
+        jsonObject.put("message", message);
         return jsonObject.toJSONString();
     }
 

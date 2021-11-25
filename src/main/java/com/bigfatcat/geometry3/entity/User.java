@@ -40,6 +40,14 @@ public class User {
         return this.user_id;
     }
 
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
+    }
+
+    public String getUser_name() {
+        return this.user_name;
+    }
+
     public void setRegister_date(Date register_date) {
         this.register_date = register_date;
     }

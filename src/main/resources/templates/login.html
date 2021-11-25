@@ -35,6 +35,39 @@
         </div>
         <script>
 
+            // 触发器
+            $(document).ready(function() {
+
+                // 用户登录按钮效果
+                $("#button_login").on("click", function() {
+                    // 整理用户登录信息
+                    var data_object = {
+                        "user_name": $("#input_user_name input").val(),
+                        "user_password": $("#input_password input").val()
+                    };
+                    // 异步请求登录服务
+                    $.ajax({
+                        url: "/userLogin",
+                        type: "POST",
+                        data: JSON.stringify(data_object),
+                        contentType: "application/json",
+                        dataType: "text",
+                        success: function(data) {
+                            var login_result = JSON.parse(data);
+                            if (login_result['success']) {
+                                $.messager.alert('成功', login_result['message']);
+                            } else {
+                                $.messager.alert('失败', login_result['message']);
+                            }
+                        },
+                        error: function() {
+                            $.messager.alert('错误', '后台登录系统出现故障!');
+                        }
+                    });
+                });
+
+            });
+
         </script>
     </body>
 </html>

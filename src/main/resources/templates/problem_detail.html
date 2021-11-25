@@ -178,7 +178,7 @@
 							changeLogContent();
 							changePageStatus();
 					    },
-					    error: function () {
+					    error: function() {
 					        on_deducing = false;
 					        $.messager.alert('错误', '后台解题过程出现故障!');
 							changeLogContent();
@@ -189,10 +189,12 @@
 
 				// 解析解题服务响应内容
 				var parseSolveResponse = function(problem_solve_response) {
+					// 解析json
+					var problem_solve_answer = JSON.parse(problem_solve_response);
 					// 解析是否已被证明
-					has_proved = JSON.parse(problem_solve_response)['has_proved'];
+					has_proved = problem_solve_answer['has_proved'];
 					// 解析日志内容，区分简版与详版
-					var problem_solve_log = JSON.parse(problem_solve_response)['problem_solve_log'];
+					var problem_solve_log = problem_solve_answer['problem_solve_log'];
 					var problem_solve_log_complexity = problem_solve_log['complexity'];
 					var problem_solve_log_because = problem_solve_log['because'];
 					var problem_solve_log_so = problem_solve_log['so'];
