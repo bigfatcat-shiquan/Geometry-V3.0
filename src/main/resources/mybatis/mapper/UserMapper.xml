@@ -54,7 +54,7 @@
         </where>
     </select>
 
-    <select id="selectAllNames" resultMap="java.lang.String">
+    <select id="selectAllNames" resultType="java.lang.String">
         SELECT user_name FROM user
     </select>
 

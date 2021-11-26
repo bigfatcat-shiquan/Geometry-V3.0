@@ -36,9 +36,9 @@ public class Geometry3WebConfig extends WebMvcConfigurationSupport {
     public void addInterceptors(InterceptorRegistry registry) {
         // 登录拦截器配置
         InterceptorRegistration loginInterceptorRegistration = registry.addInterceptor(loginInterceptor);
-        loginInterceptorRegistration.addPathPatterns("/*");
-        loginInterceptorRegistration.excludePathPatterns("/home");
-        loginInterceptorRegistration.excludePathPatterns("/login");
+        loginInterceptorRegistration.addPathPatterns("/newProblem");
+        loginInterceptorRegistration.addPathPatterns("/getProblemPage");
+        loginInterceptorRegistration.addPathPatterns("/changeProblemPage");
     }
 
 }
