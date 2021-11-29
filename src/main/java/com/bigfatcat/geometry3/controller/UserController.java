@@ -14,11 +14,12 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 
 /**
  * 用户相关交互控制器
- * 包括：用户注册，用户登录，用户修改个人信息
+ * 包括：用户注册，用户登录，获取当前页面会话用户，用户修改个人信息
  * */
 @Controller
 public class UserController {
@@ -74,6 +75,32 @@ public class UserController {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("success", success);
         jsonObject.put("message", message);
+        return jsonObject.toJSONString();
+    }
+
+    /**
+     * GET请求
+     * 获取当前页面会话用户信息
+     * */
+    @RequestMapping(value = "/getCurrentUser", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public String getCurrentUser(HttpSession session) {
+        // 尝试使用用户提交的信息进行登录
+        User current_user = (User) session.getAttribute("session_user");
+        // 判断是否登录成功
+        boolean success = current_user != null;
+        String message = success ? "已登录状态" : "未登录状态";
+        // 返回回执信息
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("success", success);
+        jsonObject.put("message", message);
+        if (success) {
+            jsonObject.put("user_name", current_user.getUser_name());
+            jsonObject.put("user_nickname", current_user.getUser_nickname());
+            jsonObject.put("user_picture", current_user.getUser_picture());
+            jsonObject.put("register_date", new SimpleDateFormat("yyyy-MM-dd").format(
+                                                                                current_user.getRegister_date()));
+        }
         return jsonObject.toJSONString();
     }
 

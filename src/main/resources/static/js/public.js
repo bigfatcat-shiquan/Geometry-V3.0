@@ -3,9 +3,39 @@ var current_input_box = null;
 
 // 公共触发器
 $(document).ready(function() {
-	
+
+	// 用户登录状态检查
+	$.ajax({
+		url: "/getCurrentUser",
+		type: "GET",
+		dataType: "text",
+		success: function(data) {
+			var login_status_result = JSON.parse(data);
+			if (login_status_result['success']) {
+				// 已登录，则更新头像等信息
+				$("#login_status_href").css("display", "none");
+				$("#login_status_picture").attr("src", login_status_result['user_picture']).css("display", "block");
+				$("#detail_user_name").text("用户名： " + login_status_result['user_name']);
+				$("#detail_user_nickname").text("昵称： " + login_status_result['user_nickname']);
+				$("#detail_register_date").text("注册时间： " + login_status_result['register_date']);
+			}
+		},
+		error: function() {
+			$.messager.alert('错误', '后台系统获取用户信息出现故障!');
+		}
+	});
+
+	// 鼠标悬停用户头像，弹出选项卡效果
+	$("#login_status_picture").mouseover(function() {
+		$("#user_info_panel").css("left", $(this).offset().left - 50).css("top", $(this).offset().top + 45);
+		$("#user_info_panel").css("display", "block");
+	});
+	$("#login_status_picture").mouseout(function() {
+		$("#user_info_panel").css("display", "none");
+	});
+
 	// 鼠标悬停header模块时，下划线效果
-	let header_href_texts = $(".header_content a");
+	let header_href_texts = $(".header_href");
 	let line = $("#header_text_underline");   
 	header_href_texts.mouseover(function() {   
 		if (line.is(":animated")) {

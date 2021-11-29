@@ -20,7 +20,7 @@
     height: 100%;
 }
 
-/* 登录面板及其详细内容 */
+/* 登录或注册面板 */
 #login_panel{
     width: 400px;
     height: 500px;
@@ -31,6 +31,11 @@
     margin-top: 5%;
     padding-left: 20px;
     padding-top: 30px;
+}
+
+/* 登录表单 */
+#login_form{
+    display: inline;
 }
 #login_form p{
     font-weight: bold;
@@ -51,6 +56,47 @@
     display: block;
 }
 #button_register{
+    width: 80px;
+    float: left;
+    margin-left: 60px;
+    margin-top: 30px;
+    display: block;
+}
+
+/* 注册表单 */
+#register_form{
+    display: none;
+}
+#register_form p{
+    font-weight: bold;
+    margin-top: 20px;
+    display: block;
+}
+#register_form > .input-group{
+    width: 300px;
+    height: 30px;
+    text-align: left;
+    margin-top: 10px;
+}
+#register_upLoadImg{
+    width: 250px;
+    float: left;
+}
+#register_showImg{
+    width: 30px;
+    height: 30px;
+    float: left;
+    margin-left: 20px;
+    display: none;
+}
+#button_register_submit{
+    width: 80px;
+    float: left;
+    margin-left: 60px;
+    margin-top: 30px;
+    display: block;
+}
+#button_register_back{
     width: 80px;
     float: left;
     margin-left: 60px;

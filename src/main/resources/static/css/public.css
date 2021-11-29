@@ -42,46 +42,50 @@ html{
 	height: 75px;
 	margin: auto;
 }
-.header_content img:nth-child(1){
+.geometry3_logo{
 	width: 55px;
 	height: 50px;
 	float: left;
 	margin-top: 10px;
 }
+.header_href{
+	color: #000;
+	text-decoration:none;
+}
 .header_content a:nth-child(2){
 	float: left;
 	margin-top: 25px;
 	margin-left: 150px;
-	color: #000;
-	text-decoration:none;
 }
 .header_content a:nth-child(3){
 	float: left;
 	margin-top: 25px;
 	margin-left: 70px;
-	color: #000;
-	text-decoration:none;
 }
 .header_content a:nth-child(4){
 	float: left;
 	margin-top: 25px;
 	margin-left: 70px;
-	color: #000;
-	text-decoration:none;
 }
 .header_content a:nth-child(5){
 	float: left;
 	margin-top: 25px;
 	margin-left: 70px;
-	color: #000;
-	text-decoration:none;
 }
-.header_content a:nth-child(6){
+#login_status{
 	float: right;
-	margin-top: 25px;
+	margin-top: 15px;
 	margin-right: 10px;
-	color: #000;
-	text-decoration:none;
+}
+#login_status_href{
+	margin-top: 10px;
+	display: block;
+}
+#login_status_picture{
+	width: 40px;
+	height: 40px;
+	display: none;
+	cursor: pointer;
 }
 #header_text_underline{
 	position: absolute;
@@ -89,6 +93,22 @@ html{
 	top: 58px;
 	border-bottom: solid 2px black;
 	width: 0;
+}
+#user_info_panel{
+	width: 200px;
+	height: 150px;
+	background: #ffffff;
+	border: 3px solid #9d9895;
+	border-radius: 8px;
+	position: absolute;
+	z-index: 12;
+	padding-left: 20px;
+	display: none;
+}
+.user_panel_details{
+	margin-top: 15px;
+	font-size: 10px;
+	font-weight: bold;
 }
 
 /* 公共-页脚部分 */

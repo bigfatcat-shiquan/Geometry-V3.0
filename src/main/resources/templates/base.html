@@ -26,15 +26,25 @@
             <!-- 公共-页眉部分 -->
             <header class="geometry3_header">
                 <div class="header_content">
-                    <img src="../static/img/geometry3_logo.png" alt="logo图"/>
-                    <a href="/home">GeometryV3</a>
-                    <a href="#">公共题库</a>
-                    <a href="#">我的题库</a>
-                    <a href="/newProblem">新的题目</a>
-                    <a href="/login">登录</a>
+                    <img class="geometry3_logo" src="../static/img/geometry3_logo.png" alt="logo图"/>
+                    <a class="header_href" href="/home">GeometryV3</a>
+                    <a class="header_href" href="#">公共题库</a>
+                    <a class="header_href" href="#">我的题库</a>
+                    <a class="header_href" href="/newProblem">新的题目</a>
+                    <div id="login_status">
+                        <a id="login_status_href" class="header_href" href="/login">登录</a>
+                        <img id="login_status_picture" src="" alt="用户头像"/>
+                    </div>
                     <span id="header_text_underline"></span>
                 </div>
             </header>
+            <!-- 公共-游离用户信息面板 -->
+            <div id="user_info_panel">
+                <div id="detail_user_name" class="user_panel_details">用户名： </div>
+                <div id="detail_user_nickname" class="user_panel_details">昵称： </div>
+                <div id="detail_register_date" class="user_panel_details">注册时间： </div>
+                <div class="user_panel_details">点击修改个人信息...</div>
+            </div>
         </div>
         <!-- 公共-页脚部分 -->
         <div th:fragment="geometry3_public_footer" class="geometry3_public_footer">

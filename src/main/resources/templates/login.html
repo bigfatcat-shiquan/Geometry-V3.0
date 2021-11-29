@@ -21,15 +21,39 @@
                         <p>用户名:</p>
                         <div id="input_user_name" class="input-group">
                             <span class="input-group-addon">*</span>
-                            <input type="text" class="form-control" placeholder="请输入用户名">
+                            <input type="text" class="form-control" placeholder="请输入用户名" maxlength="10">
                         </div>
                         <p>密码:</p>
                         <div id="input_password" class="input-group">
                             <span class="input-group-addon">*</span>
-                            <input type="password" class="form-control" placeholder="请输入密码">
+                            <input type="password" class="form-control" placeholder="请输入密码" maxlength="10">
                         </div>
                         <button id="button_login" type="button" class="btn btn-default">登录</button>
                         <button id="button_register" type="button" class="btn btn-default">注册</button>
+                    </div>
+                    <div id="register_form">
+                        <p>用户名:</p>
+                        <div id="register_user_name" class="input-group">
+                            <span class="input-group-addon">*</span>
+                            <input type="text" class="form-control" placeholder="请输入用户名" maxlength="10">
+                        </div>
+                        <p>密码:</p>
+                        <div id="register_password" class="input-group">
+                            <span class="input-group-addon">*</span>
+                            <input type="password" class="form-control" placeholder="密码不少于6位" maxlength="10">
+                        </div>
+                        <p>昵称:</p>
+                        <div id="register_nickname" class="input-group">
+                            <span class="input-group-addon">*</span>
+                            <input type="text" class="form-control" placeholder="请输入昵称" maxlength="10">
+                        </div>
+                        <p>上传头像图片（小于5MB）:</p>
+                        <div id="register_picture" class="input-group">
+                            <input type="file" id="register_upLoadImg" accept="image/png,image/jpg,image/jpeg">
+                            <img id="register_showImg" src="" alt="已上传的头像"/>
+                        </div>
+                        <button id="button_register_submit" type="button" class="btn btn-default">提交注册</button>
+                        <button id="button_register_back" type="button" class="btn btn-default">返回登录</button>
                     </div>
                 </div>
             </div>
@@ -65,6 +89,86 @@
                             $.messager.alert('错误', '后台登录系统出现故障!');
                         }
                     });
+                });
+
+                // 用户头像图片上传
+                var user_img_base64;
+                document.getElementById("register_upLoadImg").onchange = function() {
+                    const file = this.files[0];
+                    if (!['image/png', 'image/jpg', 'image/jpeg'].includes(file.type)) {
+                        $.messager.alert('无效', '仅支持png, jpg, jpeg格式文件！');
+                        return;
+                    }
+                    if (file.size > 5 * 1024 * 1024) {
+                        $.messager.alert('无效', '请选择5MB以内的图片!');
+                        return;
+                    }
+                    if (typeof FileReader === 'function') {
+                        const reader = new FileReader();
+                        reader.readAsDataURL(file);
+                        reader.onload = (event) => {
+                            user_img_base64 = event.target.result;
+                            $("#register_showImg").attr("src", user_img_base64).css("display", "block");
+                        }
+                    } else {
+                        alert('对不起，您的浏览器版本过低，不能正常上传图片！');
+                    }
+                }
+
+                // 用户注册按钮效果
+                $("#button_register_submit").on("click", function() {
+                    // 整理用户注册信息
+                    var data_object = {
+                        "user_name": $("#register_user_name input").val(),
+                        "user_password": $("#register_password input").val(),
+                        "user_nickname": $("#register_nickname input").val(),
+                        "user_picture": user_img_base64
+                    };
+                    // 校验用户注册信息
+                    if (data_object["user_name"].length < 1) {
+                        $.messager.alert('无效', "未输入用户名");
+                        return;
+                    }
+                    if (data_object["user_password"].length < 6) {
+                        $.messager.alert('无效', "密码少于6位");
+                        return;
+                    }
+                    if (data_object["user_nickname"].length < 1) {
+                        $.messager.alert('无效', "未输入昵称");
+                        return;
+                    }
+                    // 异步请求注册新用户服务
+                    $.ajax({
+                        url: "/userRegister",
+                        type: "POST",
+                        data: JSON.stringify(data_object),
+                        contentType: "application/json",
+                        dataType: "text",
+                        success: function(data) {
+                            var login_result = JSON.parse(data);
+                            if (login_result['success']) {
+                                $.messager.alert('成功', login_result['message']);
+                                window.location.replace("/login");
+                            } else {
+                                $.messager.alert('失败', login_result['message']);
+                            }
+                        },
+                        error: function() {
+                            $.messager.alert('错误', '后台注册系统出现故障!');
+                        }
+                    });
+                });
+
+                // 用户进入注册按钮效果
+                $("#button_register").on("click", function() {
+                    $("#login_form").css("display", "none");
+                    $("#register_form").css("display", "inline");
+                });
+
+                // 用户返回登录按钮效果
+                $("#button_register_back").on("click", function() {
+                    $("#login_form").css("display", "inline");
+                    $("#register_form").css("display", "none");
                 });
 
             });
