@@ -1,6 +1,6 @@
 package com.bigfatcat.geometry3.core.structure.elements;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 类：Degree 角度元素
@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class Degree extends Element{
 
     /**定义全局所出现的所有角度元素的带索引集合*/
-    private final static HashMap<String, Degree> global_all_degrees = new HashMap<>();
+    private final static ConcurrentHashMap<String, Degree> global_all_degrees = new ConcurrentHashMap<>();
 
     /**定义角度元素的唯一字符串编码*/
     private final String geometry_key;

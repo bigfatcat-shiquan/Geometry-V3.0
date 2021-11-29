@@ -4,8 +4,8 @@ import com.bigfatcat.geometry3.core.structure.elements.Element;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 类：Equal 相等关系式
@@ -16,7 +16,7 @@ import java.util.HashSet;
 public class Equal {
 
     /**定义全局所出现的所有相等关系式的带索引集合*/
-    private final static HashMap<String, Equal> global_all_equals = new HashMap<>();
+    private final static ConcurrentHashMap<String, Equal> global_all_equals = new ConcurrentHashMap<>();
 
     /**定义相等关系式的唯一字符串编码*/
     private final String geometry_key;

@@ -2,8 +2,8 @@ package com.bigfatcat.geometry3.core.structure.elements;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 类：Segment 边元素
@@ -13,7 +13,7 @@ import java.util.HashSet;
 public class Segment extends Element{
 
     /**定义全局所出现的所有边元素的带索引集合*/
-    private final static HashMap<String, Segment> global_all_segments = new HashMap<>();
+    private final static ConcurrentHashMap<String, Segment> global_all_segments = new ConcurrentHashMap<>();
 
     /**定义边元素的唯一字符串编码*/
     private final String geometry_key;

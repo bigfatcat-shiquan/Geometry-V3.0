@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 类：SumUnits 加和元素
@@ -15,7 +16,7 @@ import java.util.Map.Entry;
 public class SumUnits extends ComplexElement{
 
     /**定义全局所出现的所有加和元素的带索引集合*/
-    private final static HashMap<String, SumUnits> global_all_sumUnits = new HashMap<>();
+    private final static ConcurrentHashMap<String, SumUnits> global_all_sumUnits = new ConcurrentHashMap<>();
 
     /**定义加和元素的唯一字符串编码*/
     private final String geometry_key;

@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 类：MultiplyUnits 乘积元素
@@ -15,7 +16,7 @@ import java.util.Map.Entry;
 public class MultiplyUnits extends ComplexElement{
 
     /**定义全局所出现的所有乘积元素的带索引集合*/
-    private final static HashMap<String, MultiplyUnits> global_all_multiplyUnits = new HashMap<>();
+    private final static ConcurrentHashMap<String, MultiplyUnits> global_all_multiplyUnits = new ConcurrentHashMap<>();
 
     /**定义乘积元素的唯一字符串编码*/
     private final String geometry_key;
