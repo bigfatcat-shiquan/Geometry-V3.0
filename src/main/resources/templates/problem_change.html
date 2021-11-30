@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-cmn-Hans" xmlns:th="http://www.thymeleaf.org">
-    <div th:replace="./base :: geometry3_public_resource"></div>
+    <div th:replace="~{base :: geometry3_public_resource}"></div>
     <head>
         <link rel="stylesheet" type="text/css" href="../static/css/problem_change.css"/>
         <script src="../static/js/problem_edit.js"></script>
@@ -10,7 +10,7 @@
     <body>
         <div class="all_container">
             <!-- 公共-页面前置部分 -->
-            <div th:replace="./base :: geometry3_public_nav"></div>
+            <div th:replace="~{base :: geometry3_public_nav}"></div>
             <!-- 正文部分 -->
             <div id="problem_change">
                 <!-- 第一环节，画图 -->
@@ -128,7 +128,7 @@
                 </div>
             </div>
             <!-- 公共-页脚部分 -->
-            <div th:replace="./base :: geometry3_public_footer"></div>
+            <div th:replace="~{base :: geometry3_public_footer}"></div>
         </div>
         <script th:inline="javascript">
 

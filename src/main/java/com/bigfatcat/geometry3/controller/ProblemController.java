@@ -12,13 +12,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
 /**
  * 题目相关交互控制器
- * 包括：新增题目，题目详情，题目修改，题目删除，查询题目列表，开启解答题目并返回解答结果
+ * 包括：新增题目，题目详情，题目修改，开启解答题目并返回解答结果，打开公共或个人题库
  * */
 @Controller
 public class ProblemController {
@@ -157,6 +158,60 @@ public class ProblemController {
         jsonObject.put("has_proved", solve_result.get("has_proved"));
         jsonObject.put("problem_solve_log", solve_result.get("log"));
         return jsonObject.toJSONString();
+    }
+
+    /**
+     * GET请求
+     * 请求所有用户创建的所有题目信息，并打开公共题库页
+     * */
+    @RequestMapping(value = "/problemBankPublic", method = RequestMethod.GET)
+    public ModelAndView getProblemBankPublic(Model model) {
+        model.addAttribute("public", true);
+        model.addAttribute("title", "公共题库");
+        model.addAttribute("problems",
+                problemService.getProblemList(
+                        null,
+                        null,
+                        null,
+                        null)
+        );
+        return new ModelAndView("problem_bank", "info", model);
+    }
+
+    /**
+     * GET请求
+     * 请求当前会话用户创建的所有题目信息，并打开个人题库页
+     * */
+    @RequestMapping(value = "/problemBankPrivate", method = RequestMethod.GET)
+    public ModelAndView getProblemBankPrivate(HttpSession session, Model model) {
+        User current_user = (User) session.getAttribute("session_user");
+        model.addAttribute("public", false);
+        model.addAttribute("title", "我的题库");
+        model.addAttribute("problems",
+                problemService.getProblemList(
+                        current_user.getUser_id(),
+                        null,
+                        null,
+                        null)
+        );
+        return new ModelAndView("problem_bank", "info", model);
+    }
+
+    /**
+     * POST请求
+     * 请求筛选查询题库中的题目信息
+     * */
+    @RequestMapping(value = "/filterProblems", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public String filterProblems(@RequestBody Map<String, String> map) {
+        return JSON.toJSONString(
+                problemService.getProblemList(
+                        Integer.valueOf(map.get("problem_author_id")),
+                        map.get("problem_name"),
+                        JSONObject.parseObject(map.get("start_dt"), new TypeReference<Date>(){}),
+                        JSONObject.parseObject(map.get("end_dt"), new TypeReference<Date>(){})
+                )
+        );
     }
 
 }

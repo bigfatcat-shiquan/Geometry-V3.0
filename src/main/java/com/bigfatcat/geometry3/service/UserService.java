@@ -7,7 +7,6 @@ import com.bigfatcat.geometry3.entity.User;
  * 创建新用户
  * 查找一个用户
  * 修改一个用户
- * 删除一个用户
  * */
 public interface UserService {
 

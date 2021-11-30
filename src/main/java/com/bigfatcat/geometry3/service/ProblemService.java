@@ -2,17 +2,18 @@ package com.bigfatcat.geometry3.service;
 
 import com.bigfatcat.geometry3.entity.Problem;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * 接口：ProblemService 题目相关服务
  * 保存新题目
  * 获取一个题目
  * 修改一个题目
- * 删除一个题目
- * 查找多个题目
  * 解答一个题目
+ * 查找多个题目
  * */
 public interface ProblemService {
 
@@ -48,5 +49,11 @@ public interface ProblemService {
                                             String need_prove_equal_str,
                                             Integer max_deduce_times,
                                             Integer max_complex_len) throws Exception;
+
+    /**查找多个题目*/
+    List<Problem> getProblemList(Integer problem_author_id,
+                                 String problem_name,
+                                 Date start_dt,
+                                 Date end_dt);
 
 }

@@ -13,15 +13,15 @@ import javax.annotation.Resource;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * 接口实现类：ProblemServiceImpl 实现题目相关服务
  * 保存新题目
  * 获取一个题目
  * 修改一个题目
- * 删除一个题目
- * 查找多个题目
  * 解答一个题目
+ * 查找多个题目
  * */
 @Service("problemService")
 public class ProblemServiceImpl implements ProblemService {
@@ -115,6 +115,16 @@ public class ProblemServiceImpl implements ProblemService {
         result_map.put("has_proved", has_proved);
         result_map.put("log", the_problem_graph.getGraph_log());
         return result_map;
+    }
+
+    /**查找多个题目，返回题目对象列表*/
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    @Override
+    public List<Problem> getProblemList(Integer problem_author_id,
+                                        String problem_name,
+                                        Date start_dt,
+                                        Date end_dt) {
+        return problemDao.select(problem_author_id, problem_name, start_dt, end_dt);
     }
 
 }

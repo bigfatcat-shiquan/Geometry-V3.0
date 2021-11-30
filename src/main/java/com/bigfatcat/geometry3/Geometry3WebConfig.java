@@ -37,6 +37,7 @@ public class Geometry3WebConfig extends WebMvcConfigurationSupport {
         InterceptorRegistration loginInterceptorRegistration = registry.addInterceptor(loginInterceptor);
         loginInterceptorRegistration.addPathPatterns("/newProblem");
         loginInterceptorRegistration.addPathPatterns("/changeProblemPage");
+        loginInterceptorRegistration.addPathPatterns("/problemBankPrivate");
     }
 
 }

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" xmlns:th="http://www.thymeleaf.org">
+    <div th:replace="~{base :: geometry3_public_resource}"></div>
+    <head>
+        <link rel="stylesheet" type="text/css" href="../static/css/problem_bank.css"/>
+        <meta charset="utf-8"/>
+        <title th:text="'Geometry3-' + ${info.title}"></title>
+    </head>
+    <body>
+        <div class="all_container">
+            <!-- 公共-页面前置部分 -->
+            <div th:replace="~{base :: geometry3_public_nav}"></div>
+            <!-- 正文部分 -->
+            <div id="problem_bank">
+                <!-- 题库标题 -->
+                <div id="problem_bank_title">
+                    <p th:text="'题目总数: ' + ${info.problems.size()}" style="font-weight: bold"></p>
+                    <p th:text="'用户名: ' + ${#session.getAttribute('session_user').user_id}" style="font-weight: bold"></p>
+                </div>
+                <!-- 题库内容 -->
+                <div id="problem_bank_content">
+                    <ul id="problem_board_list">
+                        <li class="problem_board_li" th:each="problem :${info.problems}">
+                            <div class="problem_board">
+                                <img class="problem_board_picture" th:src="${problem.problem_picture}" src="" alt="题目图片">
+                                <div class="problem_board_info">
+                                    <p th:text="|题目名称:   ${problem.problem_name}|"></p>
+                                    <p th:text="|作者ID:   ${problem.problem_author_id}|"></p>
+                                    <p th:text="|求证:   ${problem.need_prove_equal_str}|"></p>
+                                    <p th:text="|创建时间:   ${#dates.format(problem.create_date, 'yyyy-MM-dd')}|"></p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- 公共-页脚部分 -->
+            <div th:replace="~{base :: geometry3_public_footer}"></div>
+        </div>
+        <script th:inline="javascript">
+
+        </script>
+    </body>
+</html>

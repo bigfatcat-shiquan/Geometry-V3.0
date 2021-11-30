@@ -15,7 +15,6 @@ import java.util.Date;
  * 创建新用户
  * 查找一个用户
  * 修改一个用户
- * 删除一个用户
  * */
 @Service("userService")
 public class UserServiceImpl implements UserService {
