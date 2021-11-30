@@ -288,6 +288,7 @@ $(document).ready(function() {
 												cropWidth, cropHeight, cropWidth, cropHeight);
 		}
 		// 题目名称
+		$("#dialog_input_problem_name").children("input").val(problem_name);
 		$("#dialog_input_problem_name").dialog("open");
 	}
 	

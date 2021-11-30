@@ -52,7 +52,7 @@ public class UserController {
 
     /**
      * POST请求
-     * 提交用户登录信息，获取用户详细信息
+     * 提交用户登录信息，进入用户会话，刷新cookie
      * */
     @RequestMapping(value = "/userLogin", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     @ResponseBody
@@ -85,9 +85,8 @@ public class UserController {
     @RequestMapping(value = "/getCurrentUser", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
     @ResponseBody
     public String getCurrentUser(HttpSession session) {
-        // 尝试使用用户提交的信息进行登录
+        // 尝试获取当前页面会话所保存用户
         User current_user = (User) session.getAttribute("session_user");
-        // 判断是否登录成功
         boolean success = current_user != null;
         String message = success ? "已登录状态" : "未登录状态";
         // 返回回执信息

@@ -169,8 +169,15 @@
 						type: "POST",
 						data: JSON.stringify(data_object),
 						contentType: "application/json",
+						dataType: "text",
 						success: function (data) {
-							window.location.replace("/getProblemPage" + "?id=" + JSON.parse(data)["problem_id"]);
+							var response_result = JSON.parse(data);
+							if (response_result['success']) {
+								$.messager.alert('成功', response_result['message']);
+								window.location.replace("/getProblemPage" + "?id=" + response_result["problem_id"]);
+							} else {
+								$.messager.alert('失败', response_result['message']);
+							}
 						},
 						error: function () {
 							$.messager.alert('错误', '提交题目信息出现错误');

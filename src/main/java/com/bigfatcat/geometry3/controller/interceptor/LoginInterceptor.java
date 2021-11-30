@@ -25,10 +25,17 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, @NotNull HttpServletResponse response,
                              @NotNull Object handler) throws Exception {
-        // 拦截并检查请求cookie
+        // 拦截并检查session，如果有效则放行
+        HttpSession session = request.getSession();
+        if(session.getAttribute("session_user") != null) {
+            System.out.print("[Check Session] Active! Session ID: " + session.getId() + " \n");
+            return true;
+        }
+        // 无效session，则拦截并检查请求cookie
         Cookie[] cookies = request.getCookies();
         // 没有cookie，则跳转到登陆页面
         if (cookies == null) {
+            System.out.print("[Check Cookie] No Cookie! \n");
             response.sendRedirect(request.getContextPath() + "/login");
             return false;
         }
@@ -44,14 +51,13 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (!StringUtils.isEmpty(cookie_username)) {
             User this_user = userDao.selectOneByName(cookie_username);
             if (this_user != null) {
-                HttpSession session = request.getSession();
-                if(session.getAttribute("session_user") == null) {
-                    session.setAttribute("session_user", this_user);
-                }
+                System.out.print("[Check Cookie] Cookie Active! User Name: "+ this_user.getUser_name() + " \n");
+                session.setAttribute("session_user", this_user);
                 return true;
             }
         }
         // 其他不合规情况，跳转到登陆页面
+        System.out.print("[Check Cookie] Cookie Invalid! \n");
         response.sendRedirect(request.getContextPath() + "/login");
         return false;
     }

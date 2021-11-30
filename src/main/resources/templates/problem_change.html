@@ -137,6 +137,7 @@
                 // 文档加载完毕后解析题目原有详细信息
                 var problem_id = [[${info.the_problem.problem_id}]];
                 problem_name = [[${info.the_problem.problem_name}]];
+                problem_author_id = [[${info.the_problem.problem_author_id}]];
 
                 // 将原有题目详细信息填入修改页面
                 [[${info.the_problem.initial_points_set}]].forEach(function(point_name) {
@@ -168,6 +169,7 @@
                         "problem_id": problem_id,
                         "problem_name": problem_name,
                         "problem_picture": problem_picture,
+                        "problem_author_id": problem_author_id,
                         "points_set": setToJson(points_set),
                         "points_location_x": mapToJson(points_location_x),
                         "points_location_y": mapToJson(points_location_y),
@@ -180,8 +182,15 @@
                         type: "POST",
                         data: JSON.stringify(data_object),
                         contentType: "application/json",
-                        success: function () {
-                            window.location.replace("/getProblemPage" + "?id=" + problem_id);
+                        dataType: "text",
+                        success: function (data) {
+                            var response_result = JSON.parse(data);
+                            if (response_result['success']) {
+                                $.messager.alert('成功', response_result['message']);
+                                window.location.replace("/getProblemPage" + "?id=" + problem_id);
+                            } else {
+                                $.messager.alert('失败', response_result['message']);
+                            }
                         },
                         error: function () {
                             $.messager.alert('错误', '修改题目信息出现错误');

@@ -21,12 +21,11 @@ public class Geometry3WebConfig extends WebMvcConfigurationSupport {
 
     /**
      * 静态文件访问路由配置
-     * 包括：static目录下文件、html模板文件
+     * 包括：static目录下文件
      * */
     @Override
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
-        registry.addResourceHandler("/*.html").addResourceLocations("classpath:/templates/");
     }
 
     /**
@@ -37,7 +36,6 @@ public class Geometry3WebConfig extends WebMvcConfigurationSupport {
         // 登录拦截器配置
         InterceptorRegistration loginInterceptorRegistration = registry.addInterceptor(loginInterceptor);
         loginInterceptorRegistration.addPathPatterns("/newProblem");
-        loginInterceptorRegistration.addPathPatterns("/getProblemPage");
         loginInterceptorRegistration.addPathPatterns("/changeProblemPage");
     }
 
