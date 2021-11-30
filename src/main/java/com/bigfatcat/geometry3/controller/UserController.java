@@ -19,7 +19,7 @@ import java.util.Map;
 
 /**
  * 用户相关交互控制器
- * 包括：用户注册，用户登录，获取当前页面会话用户，用户修改个人信息
+ * 包括：用户注册，用户登录，获取当前页面会话用户，用户修改个人信息，用户注销
  * */
 @Controller
 public class UserController {
@@ -124,6 +124,29 @@ public class UserController {
         jsonObject.put("success", success);
         jsonObject.put("message", message);
         jsonObject.put("matched_num", matched_num);
+        return jsonObject.toJSONString();
+    }
+
+    /**
+     * POST请求
+     * 用户登出，注销当前会话用户信息
+     * */
+    @RequestMapping(value = "/userLogout", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public String userLogout(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+        // 清除cookie和session用户信息
+        session.removeAttribute("session_user");
+        Cookie cookie = new Cookie("cookie_username", null);
+        cookie.setMaxAge(0);
+        cookie.setPath(request.getContextPath());
+        response.addCookie(cookie);
+        // 判断是否注销成功
+        boolean success = true;
+        String message = "注销成功";
+        // 返回回执信息
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("success", success);
+        jsonObject.put("message", message);
         return jsonObject.toJSONString();
     }
 

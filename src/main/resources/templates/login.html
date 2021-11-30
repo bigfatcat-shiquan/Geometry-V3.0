@@ -81,6 +81,7 @@
                             var login_result = JSON.parse(data);
                             if (login_result['success']) {
                                 $.messager.alert('成功', login_result['message']);
+                                window.location.replace("/home");
                             } else {
                                 $.messager.alert('失败', login_result['message']);
                             }
@@ -92,7 +93,7 @@
                 });
 
                 // 用户头像图片上传
-                var user_img_base64;
+                var user_img_base64 = null;
                 document.getElementById("register_upLoadImg").onchange = function() {
                     const file = this.files[0];
                     if (!['image/png', 'image/jpg', 'image/jpeg'].includes(file.type)) {
@@ -137,6 +138,10 @@
                         $.messager.alert('无效', "未输入昵称");
                         return;
                     }
+                    if (data_object["user_picture"] == null) {
+                        $.messager.alert('无效', "未上传头像图片");
+                        return;
+                    }
                     // 异步请求注册新用户服务
                     $.ajax({
                         url: "/userRegister",
@@ -145,12 +150,12 @@
                         contentType: "application/json",
                         dataType: "text",
                         success: function(data) {
-                            var login_result = JSON.parse(data);
-                            if (login_result['success']) {
-                                $.messager.alert('成功', login_result['message']);
+                            var register_result = JSON.parse(data);
+                            if (register_result['success']) {
+                                $.messager.alert('成功', register_result['message']);
                                 window.location.replace("/login");
                             } else {
-                                $.messager.alert('失败', login_result['message']);
+                                $.messager.alert('失败', register_result['message']);
                             }
                         },
                         error: function() {

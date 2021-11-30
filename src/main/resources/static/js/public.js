@@ -34,6 +34,26 @@ $(document).ready(function() {
 		$("#user_info_panel").css("display", "none");
 	});
 
+	// 点击用户头像，注销用户信息
+	$("#login_status_picture").click(function() {
+		$.ajax({
+			url: "/userLogout",
+			type: "POST",
+			dataType: "text",
+			success: function(data) {
+				var logout_result = JSON.parse(data);
+				if (logout_result['success']) {
+					window.location.replace("/login");
+				} else {
+					$.messager.alert('失败', '注销失败!');
+				}
+			},
+			error: function() {
+				$.messager.alert('错误', '后台系统注销功能出现故障!');
+			}
+		});
+	});
+
 	// 鼠标悬停header模块时，下划线效果
 	let header_href_texts = $(".header_href");
 	let line = $("#header_text_underline");   
