@@ -14,25 +14,36 @@
             <div id="problem_bank">
                 <!-- 题库标题 -->
                 <div id="problem_bank_title">
-                    <p th:text="'题目总数: ' + ${info.problems_count}" style="font-weight: bold"></p>
+                    <p id="title_content"><span style="font-weight: bold">题目总数:&emsp;</span>
+                        <span th:text="${info.problems_count}"></span></p>
+                    <input id="query_name" class="easyui-textbox"
+                           data-options="iconCls:'icon-search',prompt:'题目名称'">
+                    <input id="query_start_dt" type="text" class="easyui-datebox"
+                           data-options="prompt:'起始日期范围',editable:false">
+                    <input id="query_end_dt" type="text" class="easyui-datebox"
+                           data-options="prompt:'截至日期范围',editable:false">
+                    <a id="button_query_problems" class="easyui-linkbutton">筛选查询</a>
                 </div>
                 <!-- 题库内容 -->
                 <div id="problem_bank_content">
                     <ul id="problem_board_list">
                         <li class="problem_board_li" th:each="problem :${info.problems}">
-                            <div class="problem_board">
+                            <div class="problem_board" th:data-problem_id="${problem.problem_id}">
                                 <img class="problem_board_picture" th:src="${problem.problem_picture}" src="" alt="题目图片">
                                 <div class="problem_board_info">
-                                    <p th:text="|题目名称:   ${problem.problem_name}|"></p>
-                                    <p th:text="|作者ID:   ${problem.problem_author_id}|"></p>
-                                    <p th:text="|求证:   ${problem.need_prove_equal_str}|"></p>
-                                    <p th:text="|创建时间:   ${#dates.format(problem.create_date, 'yyyy-MM-dd')}|"></p>
+                                    <p><span style="font-weight: bold">题目名称:&emsp;</span>
+                                        <span th:text="${problem.problem_name}"></span></p>
+                                    <p><span style="font-weight: bold">作者ID:&emsp;</span>
+                                        <span th:text="${problem.problem_author_id}"></span></p>
+                                    <p><span style="font-weight: bold">求证:&emsp;</span>
+                                        <span th:text="${problem.need_prove_equal_str}"></span></p>
+                                    <p><span style="font-weight: bold">创建时间:&emsp;</span>
+                                        <span th:text="${#dates.format(problem.create_date, 'yyyy-MM-dd')}"></span></p>
                                 </div>
                             </div>
                         </li>
                     </ul>
-                    <div id="problem_pagination" class="easyui-pagination" data-options="total:10,pageSize:3"
-                         style="background:#efefef;border:1px solid #ccc;"></div>
+                    <div id="problem_pagination" class="easyui-pagination"></div>
                 </div>
             </div>
             <!-- 公共-页脚部分 -->
@@ -40,8 +51,92 @@
         </div>
         <script th:inline="javascript">
 
+            // 初始化全局变量
+            const PROBLEMS_PAGE_SIZE = 3;
+            var currentPageNumber = 1;
+
             // 触发器
             $(document).ready(function() {
+
+                // 初始化分页组件及响应事件
+                $("#problem_pagination").pagination({
+                    total: [[${info.problems_count}]],
+                    pageSize: PROBLEMS_PAGE_SIZE,
+                    pageList: [PROBLEMS_PAGE_SIZE],
+                    onSelectPage: function(pageNumber){
+                        $(this).pagination('loading');
+                        currentPageNumber = pageNumber;
+                        queryProblems();
+                        $(this).pagination('loaded');
+                    }
+                });
+
+                // 点击筛选查询按钮事件
+                $("#button_query_problems").click(function() {
+                    $("#problem_pagination").pagination({pageNumber: 1});
+                    currentPageNumber = 1;
+                    queryProblems();
+                });
+
+                // 异步请求分页内容方法
+                var queryProblems = function() {
+                    // 整理筛选参数信息
+                    var data_object = {
+                        "problem_author_id": [[${info.session_user_id}]],
+                        "problem_name": $("#query_name").textbox('getText'),
+                        "start_dt": $("#query_start_dt").textbox('getText'),
+                        "end_dt": $("#query_end_dt").textbox('getText'),
+                        "page_num": currentPageNumber
+                    };
+                    // 异步请求批量查询服务
+                    $.ajax({
+                        url: "/filterProblems",
+                        type: "POST",
+                        data: JSON.stringify(data_object),
+                        contentType: "application/json",
+                        dataType: "text",
+                        success: function(data) {
+                            var query_result = JSON.parse(data);
+                            refreshProblems(query_result['problems_count'], query_result['problems']);
+                        },
+                        error: function() {
+                            $.messager.alert('错误', '后台系统查询出现故障!');
+                        }
+                    });
+                }
+
+                // 更新题目显示列表内容
+                var refreshProblems = function(problems_count, problems) {
+                    $("#title_content span:nth-child(2)").text(problems_count);
+                    $("#problem_pagination").pagination({total: problems_count});
+                    $("#problem_board_list").empty();
+                    for (var i=0; i<problems.length; i++) {
+                        let problem = problems[i];
+                        $("#problem_board_list").append(`
+                            <li class="problem_board_li">
+                                <div class="problem_board" data-problem_id=${problem.problem_id}>
+                                    <img class="problem_board_picture" src=${problem.problem_picture} alt="题目图片">
+                                    <div class="problem_board_info">
+                                        <p><span style="font-weight: bold">题目名称:&emsp;</span>
+                                            <span>${problem.problem_name}</span></p>
+                                        <p><span style="font-weight: bold">作者ID:&emsp;</span>
+                                            <span>${problem.problem_author_id}</span></p>
+                                        <p><span style="font-weight: bold">求证:&emsp;</span>
+                                            <span>${problem.need_prove_equal_str}</span></p>
+                                        <p><span style="font-weight: bold">创建时间:&emsp;</span>
+                                            <span>${new Date(problem.create_date).Format("yyyy-MM-dd")}</span></p>
+                                    </div>
+                                </div>
+                            </li>
+                            `);
+                    }
+                    $.parser.parse($("#problem_board_list"));
+                }
+
+                // 鼠标悬停和点击题目面板效果
+                $(".problem_board").click(function() {
+                    alert($(this).data('problem_id'))
+                });
 
             });
 

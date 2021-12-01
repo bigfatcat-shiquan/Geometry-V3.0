@@ -16,6 +16,21 @@
     width: 1000px;
     height: 50px;
 }
+#problem_bank_title p{
+    float: left;
+}
+#problem_bank_title input{
+    width: 150px;
+}
+#problem_bank_title .textbox{
+    float: left;
+    margin-left: 70px;
+    display: block;
+}
+#button_query_problems{
+    float: left;
+    margin-left: 70px;
+}
 
 /* 题库内容 */
 #problem_bank_content{
@@ -32,6 +47,7 @@
     border: 3px solid #9d9895;
     border-radius: 10px;
     margin-top: 10px;
+    cursor: pointer;
 }
 .problem_board_picture{
     width: 390px;
@@ -49,9 +65,11 @@
     overflow: hidden;
 }
 .problem_board_info p{
-    font-size: 20px;
+    font-size: 15px;
     margin-top: 40px;
 }
 #problem_pagination{
+    background:#efefef;
+    border:1px solid #ccc;
     margin-top: 20px;
 }

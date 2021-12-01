@@ -7,6 +7,7 @@ import com.bigfatcat.geometry3.entity.Problem;
 import com.bigfatcat.geometry3.entity.User;
 import com.bigfatcat.geometry3.service.ProblemService;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
-import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -178,7 +180,7 @@ public class ProblemController {
                 1,
                 PROBLEMS_PAGE_SIZE
         );
-        model.addAttribute("public", true);
+        model.addAttribute("session_user_id", -1);
         model.addAttribute("title", "公共题库");
         model.addAttribute("problems", page_info.getList());
         model.addAttribute("problems_count", page_info.getTotal());
@@ -192,15 +194,16 @@ public class ProblemController {
     @RequestMapping(value = "/problemBankPrivate", method = RequestMethod.GET)
     public ModelAndView getProblemBankPrivate(HttpSession session, Model model) {
         User current_user = (User) session.getAttribute("session_user");
+        Integer current_user_id = current_user.getUser_id();
         PageInfo<Problem> page_info = problemService.getProblemList(
-                current_user.getUser_id(),
+                current_user_id,
                 null,
                 null,
                 null,
                 1,
                 PROBLEMS_PAGE_SIZE
         );
-        model.addAttribute("public", false);
+        model.addAttribute("session_user_id", current_user_id);
         model.addAttribute("title", "我的题库");
         model.addAttribute("problems", page_info.getList());
         model.addAttribute("problems_count", page_info.getTotal());
@@ -213,12 +216,19 @@ public class ProblemController {
      * */
     @RequestMapping(value = "/filterProblems", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     @ResponseBody
-    public String filterProblems(@RequestBody Map<String, String> map) {
+    public String filterProblems(@RequestBody Map<String, String> map) throws ParseException {
+        // 解析请求载荷，得到查询参数信息
+        int problem_author_id = Integer.parseInt(map.get("problem_author_id"));
+        String problem_name = map.get("problem_name");
+        String start_dt_str = map.get("start_dt");
+        String end_dt = map.get("end_dt");
+        SimpleDateFormat dt_format = new SimpleDateFormat("yyyy-MM-dd");
+        // 调用查询题目列表服务
         PageInfo<Problem> page_info = problemService.getProblemList(
-                Integer.valueOf(map.get("problem_author_id")),
-                map.get("problem_name"),
-                JSONObject.parseObject(map.get("start_dt"), new TypeReference<Date>(){}),
-                JSONObject.parseObject(map.get("end_dt"), new TypeReference<Date>(){}),
+                problem_author_id == -1 ? null : problem_author_id,
+                StringUtils.isEmpty(problem_name) ? null : problem_name,
+                StringUtils.isEmpty(start_dt_str) ? null : dt_format.parse(start_dt_str),
+                StringUtils.isEmpty(end_dt) ? null : dt_format.parse(end_dt),
                 Integer.valueOf(map.get("page_num")),
                 PROBLEMS_PAGE_SIZE
         );
