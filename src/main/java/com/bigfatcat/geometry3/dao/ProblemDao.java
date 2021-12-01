@@ -24,4 +24,9 @@ public interface ProblemDao {
                          @Param("start_dt") Date start_dt,
                          @Param("end_dt") Date end_dt);
 
+    Integer count(@Param("problem_author_id") Integer problem_author_id,
+                  @Param("problem_name") String problem_name,
+                  @Param("start_dt") Date start_dt,
+                  @Param("end_dt") Date end_dt);
+
 }

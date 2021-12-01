@@ -14,8 +14,7 @@
             <div id="problem_bank">
                 <!-- 题库标题 -->
                 <div id="problem_bank_title">
-                    <p th:text="'题目总数: ' + ${info.problems.size()}" style="font-weight: bold"></p>
-                    <p th:text="'用户名: ' + ${#session.getAttribute('session_user').user_id}" style="font-weight: bold"></p>
+                    <p th:text="'题目总数: ' + ${info.problems_count}" style="font-weight: bold"></p>
                 </div>
                 <!-- 题库内容 -->
                 <div id="problem_bank_content">
@@ -32,12 +31,19 @@
                             </div>
                         </li>
                     </ul>
+                    <div id="problem_pagination" class="easyui-pagination" data-options="total:10,pageSize:3"
+                         style="background:#efefef;border:1px solid #ccc;"></div>
                 </div>
             </div>
             <!-- 公共-页脚部分 -->
             <div th:replace="~{base :: geometry3_public_footer}"></div>
         </div>
         <script th:inline="javascript">
+
+            // 触发器
+            $(document).ready(function() {
+
+            });
 
         </script>
     </body>

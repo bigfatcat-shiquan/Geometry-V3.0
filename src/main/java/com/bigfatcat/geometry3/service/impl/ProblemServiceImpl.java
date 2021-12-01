@@ -5,6 +5,8 @@ import com.bigfatcat.geometry3.core.structure.elements.Element;
 import com.bigfatcat.geometry3.service.ProblemService;
 import com.bigfatcat.geometry3.dao.ProblemDao;
 import com.bigfatcat.geometry3.entity.Problem;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,7 @@ import java.util.List;
  * 修改一个题目
  * 解答一个题目
  * 查找多个题目
+ * 统计题目数量
  * */
 @Service("problemService")
 public class ProblemServiceImpl implements ProblemService {
@@ -117,7 +120,7 @@ public class ProblemServiceImpl implements ProblemService {
         return result_map;
     }
 
-    /**查找多个题目，返回题目对象列表*/
+    /**查找多个题目，返回题目对象列表或分页对象*/
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     @Override
     public List<Problem> getProblemList(Integer problem_author_id,
@@ -125,6 +128,28 @@ public class ProblemServiceImpl implements ProblemService {
                                         Date start_dt,
                                         Date end_dt) {
         return problemDao.select(problem_author_id, problem_name, start_dt, end_dt);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    @Override
+    public PageInfo<Problem> getProblemList(Integer problem_author_id,
+                                            String problem_name,
+                                            Date start_dt,
+                                            Date end_dt,
+                                            Integer page_num,
+                                            Integer page_size) {
+        PageHelper.startPage(page_num, page_size);
+        return new PageInfo<>(problemDao.select(problem_author_id, problem_name, start_dt, end_dt));
+    }
+
+    /**统计题目数量，返回符合筛选条件的题目记录数*/
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    @Override
+    public Integer countProblem(Integer problem_author_id,
+                                String problem_name,
+                                Date start_dt,
+                                Date end_dt) {
+        return problemDao.count(problem_author_id, problem_name, start_dt, end_dt);
     }
 
 }

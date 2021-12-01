@@ -3,8 +3,10 @@ package com.bigfatcat.geometry3.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.bigfatcat.geometry3.entity.Problem;
 import com.bigfatcat.geometry3.entity.User;
 import com.bigfatcat.geometry3.service.ProblemService;
+import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,8 @@ import java.util.Map;
  * */
 @Controller
 public class ProblemController {
+
+    private final static int PROBLEMS_PAGE_SIZE = 3;
 
     @Resource(name = "problemService")
     private ProblemService problemService;
@@ -166,15 +170,18 @@ public class ProblemController {
      * */
     @RequestMapping(value = "/problemBankPublic", method = RequestMethod.GET)
     public ModelAndView getProblemBankPublic(Model model) {
+        PageInfo<Problem> page_info = problemService.getProblemList(
+                null,
+                null,
+                null,
+                null,
+                1,
+                PROBLEMS_PAGE_SIZE
+        );
         model.addAttribute("public", true);
         model.addAttribute("title", "公共题库");
-        model.addAttribute("problems",
-                problemService.getProblemList(
-                        null,
-                        null,
-                        null,
-                        null)
-        );
+        model.addAttribute("problems", page_info.getList());
+        model.addAttribute("problems_count", page_info.getTotal());
         return new ModelAndView("problem_bank", "info", model);
     }
 
@@ -185,15 +192,18 @@ public class ProblemController {
     @RequestMapping(value = "/problemBankPrivate", method = RequestMethod.GET)
     public ModelAndView getProblemBankPrivate(HttpSession session, Model model) {
         User current_user = (User) session.getAttribute("session_user");
+        PageInfo<Problem> page_info = problemService.getProblemList(
+                current_user.getUser_id(),
+                null,
+                null,
+                null,
+                1,
+                PROBLEMS_PAGE_SIZE
+        );
         model.addAttribute("public", false);
         model.addAttribute("title", "我的题库");
-        model.addAttribute("problems",
-                problemService.getProblemList(
-                        current_user.getUser_id(),
-                        null,
-                        null,
-                        null)
-        );
+        model.addAttribute("problems", page_info.getList());
+        model.addAttribute("problems_count", page_info.getTotal());
         return new ModelAndView("problem_bank", "info", model);
     }
 
@@ -204,14 +214,18 @@ public class ProblemController {
     @RequestMapping(value = "/filterProblems", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     @ResponseBody
     public String filterProblems(@RequestBody Map<String, String> map) {
-        return JSON.toJSONString(
-                problemService.getProblemList(
-                        Integer.valueOf(map.get("problem_author_id")),
-                        map.get("problem_name"),
-                        JSONObject.parseObject(map.get("start_dt"), new TypeReference<Date>(){}),
-                        JSONObject.parseObject(map.get("end_dt"), new TypeReference<Date>(){})
-                )
+        PageInfo<Problem> page_info = problemService.getProblemList(
+                Integer.valueOf(map.get("problem_author_id")),
+                map.get("problem_name"),
+                JSONObject.parseObject(map.get("start_dt"), new TypeReference<Date>(){}),
+                JSONObject.parseObject(map.get("end_dt"), new TypeReference<Date>(){}),
+                Integer.valueOf(map.get("page_num")),
+                PROBLEMS_PAGE_SIZE
         );
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("problems", page_info.getList());
+        jsonObject.put("problems_count", page_info.getTotal());
+        return jsonObject.toJSONString();
     }
 
 }

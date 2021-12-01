@@ -1,6 +1,7 @@
 package com.bigfatcat.geometry3.service;
 
 import com.bigfatcat.geometry3.entity.Problem;
+import com.github.pagehelper.PageInfo;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import java.util.List;
  * 修改一个题目
  * 解答一个题目
  * 查找多个题目
+ * 统计题目数量
  * */
 public interface ProblemService {
 
@@ -55,5 +57,18 @@ public interface ProblemService {
                                  String problem_name,
                                  Date start_dt,
                                  Date end_dt);
+
+    PageInfo<Problem> getProblemList(Integer problem_author_id,
+                                     String problem_name,
+                                     Date start_dt,
+                                     Date end_dt,
+                                     Integer page_num,
+                                     Integer page_size);
+
+    /**统计题目数量*/
+    Integer countProblem(Integer problem_author_id,
+                         String problem_name,
+                         Date start_dt,
+                         Date end_dt);
 
 }

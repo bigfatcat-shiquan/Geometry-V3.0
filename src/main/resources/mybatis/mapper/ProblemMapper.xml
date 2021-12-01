@@ -89,4 +89,14 @@
         </where>
     </select>
 
+    <select id="count" resultType="int">
+        SELECT count(1) FROM problem
+        <where>
+            <if test="problem_author_id != null">problem_author_id = #{problem_author_id}</if>
+            <if test="problem_name != null">and problem_name LIKE concat('%',#{problem_name},'%')</if>
+            <if test="start_dt != null">and create_date &gt;= #{start_dt}</if>
+            <if test="end_dt != null">and create_date &lt;= #{end_dt}</if>
+        </where>
+    </select>
+
 </mapper>
