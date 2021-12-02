@@ -130,12 +130,19 @@
                             </li>
                             `);
                     }
-                    $.parser.parse($("#problem_board_list"));
                 }
 
                 // 鼠标悬停和点击题目面板效果
-                $(".problem_board").click(function() {
-                    alert($(this).data('problem_id'))
+                $("#problem_board_list").on("mouseover", "li .problem_board",function() {
+                    if ($(this).is(":animated")) $(this).stop();
+                    $(this).animate({backgroundColor: '#fffacd'}, 100);
+                });
+                $("#problem_board_list").on("mouseout", "li .problem_board",function() {
+                    if ($(this).is(":animated")) $(this).stop();
+                    $(this).animate({backgroundColor: '#ffffff'}, 100);
+                });
+                $("#problem_board_list").on("click", "li .problem_board",function() {
+                    window.location.href = "/getProblemPage" + "?id=" + $(this).data("problem_id");
                 });
 
             });

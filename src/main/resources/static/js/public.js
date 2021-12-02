@@ -77,13 +77,13 @@ $(document).ready(function() {
 		if ($(this).is(":animated")) {
 			$(this).stop();
 		}
-		$(this).animate({opacity: 0.5}, "fast")
+		$(this).animate({opacity: 0.5}, "fast");
 	});
 	guide_icons.mouseout(function() {
 		if ($(this).is(":animated")) {
 			$(this).stop();
 		}
-		$(this).animate({opacity: 1.0}, "fast")
+		$(this).animate({opacity: 1.0}, "fast");
 	});
 	
 	// 输入工具按钮效果
