@@ -21,18 +21,20 @@
         <result property="initial_equals_str_set" column="initial_equals_str_set"
                 typeHandler="com.bigfatcat.geometry3.dao.handler.SetToVarcharTypeHandler"/>
         <result property="need_prove_equal_str" column="need_prove_equal_str"/>
+        <result property="hard_level" column="hard_level"/>
     </resultMap>
 
     <insert id="insertOne" parameterType="problem" useGeneratedKeys="true" keyProperty="problem_id">
         INSERT INTO problem (problem_id, problem_name, problem_picture, problem_author_id, create_date,
-        initial_points_set, points_location_x, points_location_y, initial_equals_str_set, need_prove_equal_str)
+        initial_points_set, points_location_x, points_location_y, initial_equals_str_set, need_prove_equal_str, hard_level)
         VALUES (null, #{problem.problem_name}, #{problem.problem_picture}, #{problem.problem_author_id},
         #{problem.create_date},
         #{problem.initial_points_set, typeHandler=com.bigfatcat.geometry3.dao.handler.SetToVarcharTypeHandler},
         #{problem.points_location_x, typeHandler=com.bigfatcat.geometry3.dao.handler.HashMapToVarcharTypeHandler},
         #{problem.points_location_y, typeHandler=com.bigfatcat.geometry3.dao.handler.HashMapToVarcharTypeHandler},
         #{problem.initial_equals_str_set, typeHandler=com.bigfatcat.geometry3.dao.handler.SetToVarcharTypeHandler},
-        #{problem.need_prove_equal_str})
+        #{problem.need_prove_equal_str},
+        #{problem.hard_level})
     </insert>
 
     <delete id="deleteOne" parameterType="int">
@@ -63,7 +65,8 @@
                 initial_equals_str_set = #{problem.initial_equals_str_set, 
                 typeHandler=com.bigfatcat.geometry3.dao.handler.SetToVarcharTypeHandler},
             </if>
-            <if test="problem.need_prove_equal_str != null">need_prove_equal_str = #{problem.need_prove_equal_str}</if>
+            <if test="problem.need_prove_equal_str != null">need_prove_equal_str = #{problem.need_prove_equal_str}, </if>
+            <if test="problem.hard_level != null">hard_level = #{problem.hard_level}</if>
         </set>
         <where>
             problem_id = #{problem.problem_id}
@@ -72,7 +75,7 @@
 
     <select id="selectOne" resultMap="problemMap" parameterType="int">
         SELECT problem_id, problem_name, problem_picture, problem_author_id, create_date, initial_points_set,
-        points_location_x, points_location_y, initial_equals_str_set, need_prove_equal_str FROM problem
+        points_location_x, points_location_y, initial_equals_str_set, need_prove_equal_str, hard_level FROM problem
         <where>
             problem_id = #{problem_id}
         </where>
@@ -80,7 +83,7 @@
 
     <select id="select" resultMap="problemMap">
         SELECT problem_id, problem_name, problem_picture, problem_author_id, create_date, initial_points_set,
-        points_location_x, points_location_y, initial_equals_str_set, need_prove_equal_str FROM problem
+        points_location_x, points_location_y, initial_equals_str_set, need_prove_equal_str, hard_level FROM problem
         <where>
             <if test="problem_author_id != null">problem_author_id = #{problem_author_id}</if>
             <if test="problem_name != null">and problem_name LIKE concat('%',#{problem_name},'%')</if>

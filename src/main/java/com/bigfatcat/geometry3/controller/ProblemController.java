@@ -48,14 +48,16 @@ public class ProblemController {
         Integer the_new_problem_id = null;
         if (success) {
             the_new_problem_id = problemService.saveNewProblem(
-                map.get("problem_name"),
-                map.get("problem_picture"),
-                current_user.getUser_id(),
-                JSONObject.parseObject(map.get("points_set"), new TypeReference<HashSet<String>>(){}),
-                JSONObject.parseObject(map.get("points_location_x"), new TypeReference<HashMap<String, Double>>(){}),
-                JSONObject.parseObject(map.get("points_location_y"), new TypeReference<HashMap<String, Double>>(){}),
-                JSONObject.parseObject(map.get("initial_equals_str_set"), new TypeReference<HashSet<String>>(){}),
-                map.get("need_prove_equal_str"));
+                    map.get("problem_name"),
+                    map.get("problem_picture"),
+                    current_user.getUser_id(),
+                    JSONObject.parseObject(map.get("points_set"), new TypeReference<HashSet<String>>(){}),
+                    JSONObject.parseObject(map.get("points_location_x"), new TypeReference<HashMap<String, Double>>(){}),
+                    JSONObject.parseObject(map.get("points_location_y"), new TypeReference<HashMap<String, Double>>(){}),
+                    JSONObject.parseObject(map.get("initial_equals_str_set"), new TypeReference<HashSet<String>>(){}),
+                    map.get("need_prove_equal_str"),
+                    Integer.parseInt(map.get("hard_level"))
+            );
         }
         // 返回回执信息
         JSONObject jsonObject = new JSONObject();
@@ -118,14 +120,16 @@ public class ProblemController {
         // 解析请求载荷，得到题目信息, 调用修改题目服务
         if (success) {
             matched_num = problemService.changeOneProblem(
-                Integer.valueOf(map.get("problem_id")),
-                map.get("problem_name"),
-                map.get("problem_picture"),
-                JSONObject.parseObject(map.get("points_set"), new TypeReference<HashSet<String>>(){}),
-                JSONObject.parseObject(map.get("points_location_x"), new TypeReference<HashMap<String, Double>>(){}),
-                JSONObject.parseObject(map.get("points_location_y"), new TypeReference<HashMap<String, Double>>(){}),
-                JSONObject.parseObject(map.get("initial_equals_str_set"), new TypeReference<HashSet<String>>(){}),
-                map.get("need_prove_equal_str"));
+                    Integer.valueOf(map.get("problem_id")),
+                    map.get("problem_name"),
+                    map.get("problem_picture"),
+                    JSONObject.parseObject(map.get("points_set"), new TypeReference<HashSet<String>>(){}),
+                    JSONObject.parseObject(map.get("points_location_x"), new TypeReference<HashMap<String, Double>>(){}),
+                    JSONObject.parseObject(map.get("points_location_y"), new TypeReference<HashMap<String, Double>>(){}),
+                    JSONObject.parseObject(map.get("initial_equals_str_set"), new TypeReference<HashSet<String>>(){}),
+                    map.get("need_prove_equal_str"),
+                    Integer.parseInt(map.get("hard_level"))
+            );
             // 判断是否修改成功
             if (matched_num != 1) {
                 success = false;

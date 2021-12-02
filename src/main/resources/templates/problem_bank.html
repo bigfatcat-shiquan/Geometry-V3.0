@@ -40,6 +40,13 @@
                                     <p><span style="font-weight: bold">创建时间:&emsp;</span>
                                         <span th:text="${#dates.format(problem.create_date, 'yyyy-MM-dd')}"></span></p>
                                 </div>
+                                <div class="problem_board_additional_info">
+                                    <p>题目难度</p>
+                                    <div class="hard_level" th:data-hard_level="${problem.hard_level}">
+                                        <img src="../static/img/icons/hard_level_star.png" alt="难度星级"
+                                             th:each="i :${#numbers.sequence(1, problem.hard_level)}"/>
+                                    </div>
+                                </div>
                             </div>
                         </li>
                     </ul>
@@ -126,10 +133,19 @@
                                         <p><span style="font-weight: bold">创建时间:&emsp;</span>
                                             <span>${new Date(problem.create_date).Format("yyyy-MM-dd")}</span></p>
                                     </div>
+                                    <div class="problem_board_additional_info">
+                                        <p>题目难度</p>
+                                        <div class="hard_level" data-hard_level=${problem.hard_level}></div>
+                                    </div>
                                 </div>
                             </li>
                             `);
                     }
+                    $(".hard_level").each(function() {
+                        for (i=0; i<$(this).data("hard_level"); i++) {
+                            $(this).append(`<img src="../static/img/icons/hard_level_star.png" alt="难度星级"/>`)
+                        }
+                    });
                 }
 
                 // 鼠标悬停和点击题目面板效果

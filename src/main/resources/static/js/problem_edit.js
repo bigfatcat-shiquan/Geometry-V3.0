@@ -7,6 +7,7 @@ var points_location_x = new Map();
 var points_location_y = new Map();
 var initial_equals_str_set = new Set();
 var need_prove_equal_str = null;
+var hard_level = null;
 
 // 初始化全局方法
 var addPoint;
@@ -247,6 +248,7 @@ $(document).ready(function() {
 	}
 	setProblemName = function () {
 		problem_name = $("#dialog_input_problem_name").children("input").val();
+		hard_level = $("#hard_level_selector").val();
 		if (problem_name === "") {
 			problem_name = "未命名题目";
 		}

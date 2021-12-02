@@ -75,7 +75,7 @@
 }
 #dialog_input_problem_name{
 	width: 350px;
-	height: 70px;
+	height: 120px;
 	padding: 10px 20px;
 }
 #dialog_input_problem_name > input{
@@ -85,6 +85,20 @@
 	border-radius: 4px;
 	font-size: 15px;
 	text-align: center;
+}
+#input_hard_level{
+	width: 300px;
+	height: 30px;
+	margin-top: 25px;
+}
+#input_hard_level > p{
+	font-size: 15px;
+	font-weight: bold;
+	float: left;
+}
+#input_hard_level #hard_level_selector{
+	float: left;
+	margin-left: 20px;
 }
 
 /* 第二环节，输入已知等量关系 */

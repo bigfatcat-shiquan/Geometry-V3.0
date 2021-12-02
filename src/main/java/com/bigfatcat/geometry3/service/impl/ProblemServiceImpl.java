@@ -42,9 +42,10 @@ public class ProblemServiceImpl implements ProblemService {
                                   HashMap<String, Double> points_location_x,
                                   HashMap<String, Double> points_location_y,
                                   HashSet<String> initial_equals_str_set,
-                                  String need_prove_equal_str) {
+                                  String need_prove_equal_str,
+                                  Integer hard_level) {
         Problem the_new_problem = new Problem(problem_name, problem_picture, problem_author_id, initial_points_set,
-                points_location_x, points_location_y, initial_equals_str_set, need_prove_equal_str);
+                points_location_x, points_location_y, initial_equals_str_set, need_prove_equal_str, hard_level);
         the_new_problem.setCreate_date(new Date(System.currentTimeMillis()));
         problemDao.insertOne(the_new_problem);
         return the_new_problem.getProblem_id();
@@ -67,9 +68,10 @@ public class ProblemServiceImpl implements ProblemService {
                                     HashMap<String, Double> points_location_x,
                                     HashMap<String, Double> points_location_y,
                                     HashSet<String> initial_equals_str_set,
-                                    String need_prove_equal_str) {
+                                    String need_prove_equal_str,
+                                    Integer hard_level) {
         Problem the_problem = new Problem(problem_name, problem_picture, null, initial_points_set,
-                points_location_x, points_location_y, initial_equals_str_set, need_prove_equal_str);
+                points_location_x, points_location_y, initial_equals_str_set, need_prove_equal_str, hard_level);
         the_problem.setProblem_id(problem_id);
         return problemDao.updateOne(the_problem);
     }

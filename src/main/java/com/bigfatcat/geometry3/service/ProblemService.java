@@ -27,7 +27,8 @@ public interface ProblemService {
                            HashMap<String, Double> points_location_x,
                            HashMap<String, Double> points_location_y,
                            HashSet<String> initial_equals_str_set,
-                           String need_prove_equal_str);
+                           String need_prove_equal_str,
+                           Integer hard_level);
 
     /**获取一个题目*/
     Problem getOneProblem(Integer problem_id);
@@ -40,7 +41,8 @@ public interface ProblemService {
                              HashMap<String, Double> points_location_x,
                              HashMap<String, Double> points_location_y,
                              HashSet<String> initial_equals_str_set,
-                             String need_prove_equal_str);
+                             String need_prove_equal_str,
+                             Integer hard_level);
 
     /**解答一个题目*/
     HashMap<String, Object> solveOneProblem(String problem_name,

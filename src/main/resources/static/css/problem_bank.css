@@ -68,6 +68,29 @@
     font-size: 15px;
     margin-top: 40px;
 }
+.problem_board_additional_info{
+    width: 280px;
+    height: 300px;
+    float: left;
+    padding-left: 50px;
+}
+.problem_board_additional_info p {
+    width: 200px;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 70px;
+}
+.problem_board_additional_info .hard_level {
+    width: 200px;
+    height: 40px;
+    margin-top: 30px;
+}
+.problem_board_additional_info .hard_level img{
+    width: 40px;
+    height: 40px;
+    float: left;
+}
 #problem_pagination{
     background:#efefef;
     border:1px solid #ccc;

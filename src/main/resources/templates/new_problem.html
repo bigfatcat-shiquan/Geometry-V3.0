@@ -47,6 +47,16 @@
 					<div id="dialog_input_problem_name" class="easyui-dialog" title="请输入题目名称" closed="true"
 						 buttons="#dialog_input_problem_name_buttons">
 						<input type="text"/>
+						<div id="input_hard_level">
+							<p>题目难度</p>
+							<select id="hard_level_selector">
+								<option value="1">一星</option>
+								<option value="2">二星</option>
+								<option value="3">三星</option>
+								<option value="4">四星</option>
+								<option value="5">五星</option>
+							</select>
+						</div>
 					</div>
 					<div id="dialog_input_problem_name_buttons">
 						<a class="easyui-linkbutton" onclick="setProblemName()">确定</a>
@@ -161,7 +171,8 @@
 						"points_location_x": mapToJson(points_location_x),
 						"points_location_y": mapToJson(points_location_y),
 						"initial_equals_str_set": setToJson(initial_equals_str_set),
-						"need_prove_equal_str": need_prove_equal_str
+						"need_prove_equal_str": need_prove_equal_str,
+						"hard_level": hard_level
 					};
 					// 异步请求保存该题目，并转到该题目详情页
 					$.ajax({
