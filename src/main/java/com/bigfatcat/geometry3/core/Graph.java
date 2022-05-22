@@ -615,7 +615,12 @@ public class Graph {
                             angle(points_aside[0], point_vertex, points_aside[1]),
                             sumUnits(
                                     angle(out_point, point_vertex, points_aside[0]),
-                                    angle(out_point, point_vertex, points_aside[1])))
+                                    angle(out_point, point_vertex, points_aside[1]))) &&
+                            this.queryEqual("ang",
+                                    angle(out_point, points_aside[1], point_vertex),
+                                    sumUnits(
+                                            angle(out_point, points_aside[1], points_aside[0]),
+                                            angle(point_vertex, points_aside[1], points_aside[0])))
                     ) {
                         boolean coexist_circle_result = false;
                         if (this.queryEqual("ang", degree(180),
