@@ -13,8 +13,8 @@
     <groupId>com.bigfatcat</groupId>
     <artifactId>Geometry3</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Geometry Version 3 Project</name>
-    <description>The Project To Solving Geometry Problem Automatically</description>
+    <name>Geometry3</name>
+    <description>The Project To Solve Geometry Problem Automatically</description>
 
     <properties>
         <java.version>1.8</java.version>

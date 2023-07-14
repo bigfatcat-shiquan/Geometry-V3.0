@@ -6,7 +6,8 @@ Rectification for Geometry from simple script to a Java project on Aug 2021
 * cd /scripts/ddl/
 * run geometry3.sql
 * then run user.sql and problem.sql
-* build to jar 
+* mvn package to jar 
 
 ### Run
-* run com.bigfatcat.geometry3.Geometry3Application on your server
+* java -jar Geometry3-xxx.jar
+* open your browser to http://localhost:8080/login
