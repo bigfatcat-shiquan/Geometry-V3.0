@@ -1,7 +1,7 @@
 CREATE TABLE problem (
     `problem_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
     `problem_name` varchar(256) NOT NULL,
-    `problem_picture` varchar(4096) NOT NULL,
+    `problem_picture` MEDIUMTEXT NOT NULL,
     `problem_author_id` bigint(20) unsigned NOT NULL,
     `create_date` date NOT NULL,
     `initial_points_set` varchar(512) NOT NULL,
